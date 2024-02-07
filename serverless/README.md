@@ -11,6 +11,20 @@ Copy, Paste, Edit.  Copy the SWML example, paste into a new SWML bin and edit.
 
 # Calling with PSTN
 
+Using a PSTN phone number to dial to your Digital Employee.
+
+###
+
+### Assing a SWML Bin to a phone number
+
+* Edit an existing phone number
+* In the `HANDLE USING` section, select `a SWML Script`
+* In the `WHEN A CALL COMES IN` section select the SWML Bin to use.
+
+![image](https://github.com/signalwire/digital_employees/assets/13131198/2feb0525-1e87-4ff7-928d-341b5f940190)
+
+
+![image](https://github.com/signalwire/digital_employees/assets/13131198/f39b5e40-719d-47d4-aa10-ffcefd3b6b78)
 
 
 
@@ -18,14 +32,14 @@ Copy, Paste, Edit.  Copy the SWML example, paste into a new SWML bin and edit.
 
 Using a sip address to dial to your Digital Employee via a Domain App. 
 
-## Create a SWML Bin
+### Create a SWML Bin
 
 * Create a SWML Bin from one of the examples.
 
 ![image](https://github.com/signalwire/digital_employees/assets/13131198/85a36e64-8ec0-426c-a412-c6d1a4b412dd)
 
 
-## Create a Domain App
+### Create a Domain App
 
 * Create the Domain App if one doesn't exist or if you want a new one.
 * In the `HANDLE USING` section, select `a SWML Script`
@@ -36,7 +50,7 @@ Using a sip address to dial to your Digital Employee via a Domain App.
 ![image](https://github.com/signalwire/digital_employees/assets/13131198/9140e2c9-48ff-4338-a31f-55400f3489d4)
 
 
-## Assign to a Domain App
+### Assign to a Domain App
 
 * Assign the SWML Bin to an existing Domain App.
 * In the `HANDLE USING` section, select `a SWML Script`
@@ -49,7 +63,7 @@ Using a sip address to dial to your Digital Employee via a Domain App.
 ![image](https://github.com/signalwire/digital_employees/assets/13131198/9140e2c9-48ff-4338-a31f-55400f3489d4)
 
 
-## Make Call
+### Make Call
 
 
-Now you can make a call with `sip:Call-This@len-Call.dapp.signalwire.com`
+Now you can make a call to your digital employee with `sip:Call-This@len-Call.dapp.signalwire.com`
