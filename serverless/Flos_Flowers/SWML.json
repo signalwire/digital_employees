@@ -1,0 +1,125 @@
+{
+  "version": "1.0.0",
+  "sections": {
+    "main": [
+      {
+        "answer": {}
+      },
+      {
+        "record_call": {
+          "format": "wav",
+          "stereo": "true"
+        }
+      },
+      {
+        "ai": {
+          "post_prompt": {
+            "text": "Summerize the conversation including all order details",
+            "top_p": 0.1,
+            "temperature": 0.1
+          },
+          "post_prompt_auth_user": "change-me",
+          "params": {
+            "local_tz": "America/New_York",
+            "swaig_allow_settings": "true",
+            "verbose_logs": "true",
+            "swaig_post_swml_vars": "true",
+            "swaig_post_conversation": "true",
+            "swaig_allow_swml": "true",
+            "debug_webhook_url": "change-me"
+          },
+          "post_prompt_url": "change-me",
+          "prompt": {
+            "top_p": 0.1,
+            "text": "# Personality and Introduction\r\n\r\nYour name is flo and you work for Flow's Flowers. Greet the user with that information.\r\n\r\n# Your Skills, Knowledge, and Behavior\r\n\r\nFour types of flowers available. Those are roses, tulips, lillies and dasies\r\n\r\n# Send Flowers\r\n\r\nHere are the media urls for the flower types\r\nhttps://flosflowers.signalwire.me/assets/roses.png\r\nhttps://flosflowers.signalwire.me/assets/tulips.png\r\nhttps://flosflowers.signalwire.me/assets/lillies.png\r\nhttps://flosflowers.signalwire.me/assets/daisies.png\r\n\r\n\r\n\r\n# Static message\r\n\r\nAlways include this in the message: You can send flowers by visiting https://flosflowers.signalwire.me or call +13374356937\r\n\r\n# Step 1\r\n\r\nAsk for flower type\r\n\r\n# Step 2\r\n\r\nAsk for the recipents phone number\r\n\r\n# Step 3\r\n\r\nAsk what message the user would like to send\r\n\r\n# Step 4\r\n\r\nRead back the number the user gave you. Give an opportunity to get the recipents phone number and message again if corrections are needed.\r\n\r\n# Step 5\r\n\r\nSend flowers\r\n\r\n# Step 6\r\n\r\nAsk if there is anything else you can help the user with",
+            "temperature": 0.1
+          },
+          "hints": [
+            "florist",
+            "virtual flowers",
+            "roses",
+            "tulips",
+            "dasies",
+            "lillies"
+          ],
+          "SWAIG": {
+            "defaults": {
+              "web_hook_auth_user": "change-me",
+              "web_hook_url": "change-me",
+              "web_hook_auth_password": "change-me"
+            },
+            "functions": [
+              {
+                "argument": {
+                  "properties": {
+                    "to": {
+                      "type": "string",
+                      "description": "The users number in e.164 format"
+                    },
+                    "media": {
+                      "type": "string",
+                      "description": "the media URL to send to the user"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "the message to send to the user"
+                    }
+                  },
+                  "type": "object"
+                },
+                "data_map": {
+                  "expressions": [
+                    {
+                      "output": {
+                        "action": [
+                          {
+                            "SWML": {
+                              "sections": {
+                                "main": [
+                                  {
+                                    "send_sms": {
+                                      "media": [
+                                        "${args.media}"
+                                      ],
+                                      "body": "${args.message}, Reply STOP to stop.",
+                                      "region": "us",
+                                      "from_number": "+13374356937",
+                                      "to_number": "${args.to}"
+                                    }
+                                  }
+                                ]
+                              },
+                              "version": "1.0.0"
+                            }
+                          }
+                        ],
+                        "response": "Message sent."
+                      },
+                      "pattern": ".*",
+                      "string": "${args.message}"
+                    }
+                  ]
+                },
+                "purpose": "use to send text messages to a user",
+                "function": "send_mms"
+              }
+            ]
+          },
+          "post_prompt_auth_password": "change-me",
+          "languages": [
+            {
+              "code": "en-US",
+              "engine": "elevenlabs",
+              "fillers": [
+                "one moment",
+                "one moment please"
+              ],
+              "name": "English",
+              "voice": "josh"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
