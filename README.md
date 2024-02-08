@@ -10,9 +10,7 @@ Quick links to Serverless and Server examples.
 
 ## Server
 
-* Zen
+* [Zen](https://github.com/signalwire/digital_employees/tree/main/server/Perl_Examples/Zen)
 * [Bobby's Table](https://github.com/signalwire/digital_employees/tree/main/server/Perl_Examples/BobbysTable.ai)
-* Flo's Flowers
 * MFA
-* Weather Bot
 * Arduino Temperature & Humidity Sensor Bot
