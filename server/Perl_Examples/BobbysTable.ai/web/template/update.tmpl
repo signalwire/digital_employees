@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Welcome to Bobby's Table</title>
+  <meta http-equiv="refresh" content="300">
+  <link rel="stylesheet" href="/assets/style.css" type="text/css">
+  <link rel="icon" type="image/png" href="/assets/bobbystable.png">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-F08E6T2HQL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-F08E6T2HQL');
+  </script>
+</head>
+<!--
+ __      ___         _                                    _          _   _              __        ___ 
+ \ \    / / |_  __ _| |_   __ _ _ _ ___   _  _ ___ _  _  | |___  ___| |_(_)_ _  __ _   / _|___ _ |__ \
+  \ \/\/ /| ' \/ _` |  _| / _` | '_/ -_) | || / _ \ || | | / _ \/ _ \ / / | ' \/ _` | |  _/ _ \ '_|/_/
+   \_/\_/ |_||_\__,_|\__| \__,_|_| \___|  \_, \___/\_,_| |_\___/\___/_\_\_|_||_\__, | |_| \___/_| (_) 
+                                          |__/                                 |___/                 
+-->
+<body>
+  <header>
+    <center>
+      <h2 style="color:black"><TMPL_VAR name="slogan"/></h2>
+      <table border="1" style="border-collapse: collapse; width: 100%; margin: auto;">
+	<tr>
+	  <td style="text-align: right;">
+	    <a href="https://xkcd.com/327/"><img src="/assets/bobbystable.png" alt="Bobby's Table" style="width: 150px; height: 150px;"></a>
+	  </td>
+	  <td style="text-align: lef;">
+	    <p style="color:black"><b>Bobby's Table</b><br/>
+	      327 Drop Table Lane<br/>
+	      Pompano Beach, FL 33060<br/>
+	      For Reservations Call:<br/>
+	      <a href="tel:+17544326229">+1 (754) 43-BOBBY</a><br/>
+	      <a href="https://signalwire.com/products/ai-agent?utm_source=bobbystable.ai">View Our Menu</a> | <a href="/update">Update Reservation</a>
+	    </p>
+	  </td>
+	</tr>
+      </table>
+    </center>
+  </header>
+  <center><h2>Update Reservation</h2></center>
+  <div style="text-align: center;">
+    <table border="1" style="border-collapse: collapse; width: 90%; margin: auto;">
+      <TMPL_IF name="message">
+	<tr>
+	  <td style="text-align: center;">
+	    <p style="color:white"><TMPL_VAR name="message"></p>
+	  </td>
+	</tr>
+      </TMPL_IF>
+      <TMPL_IF name="error">
+	<tr>
+	  <td style="text-align: center;">
+	    <p style="color:red"><TMPL_VAR name="error"></p>
+	  </td>
+	</tr>
+      </TMPL_IF>
+      <TMPL_IF name="update_step_1">
+	<tr>
+	  <td style="text-align: center;">
+	    <form action="/update" method="post">
+	      <input type="hidden" name="action" value="update_step_2">
+	      <p style="color:white">What phone number was the reservation under?</p>
+	      <input type="text" name="customer_phone" value="<TMPL_VAR name="customer_phone">">
+	      <p><input type="checkbox" name="terms" value="terms"><small> I agree to the <a href="https://signalwire.com/terms">Terms of Service</a> and <a href="https://signalwire.com/privacy">Privacy Policy</small></a>.</p>
+	      <br/>
+	      <input type="submit" value="Next">
+	    </form>
+	  </td>
+	</tr>
+      </TMPL_IF>
+      <TMPL_IF name="update_step_2">
+	<tr>
+	  <td style="text-align: center;">
+	    <form action="/update" method="post">
+	      <input type="hidden" name="action" value="update_step_3">
+	      <input type="hidden" name="customer_phone" value="<TMPL_VAR name="customer_phone">">
+	      <input type="hidden" name="mfa_id" value="<TMPL_VAR name="mfa_id">">
+	      <p style="color:white">Input the code?</p>
+	      <input type="text" name="mfa_token">
+	      <br/>
+	      <br/>
+	      <input type="submit" value="Next">
+	    </form>
+	  </td>
+	</tr>
+      </TMPL_IF>
+      <TMPL_IF name="update_step_3">
+	<tr>
+	  <td style="text-align: center;">
+	    <form action="/update" method="post">
+	      <input type="hidden" name="action" value="update">
+	      <input type="hidden" name="reservation_id" value="<TMPL_VAR name="reservation_id">">
+	      <input type="hidden" name="mfa_id" value="<TMPL_VAR name="mfa_id">">
+	      <input type="hidden" name="mfa_token" value="<TMPL_VAR name="mfa_token">">
+	      <input type="hidden" name="customer_phone" value="<TMPL_VAR name="customer_phone">">
+	      <p style="color:white">What is the new name of the reservation?</p>
+	      <input type="text" name="customer_name" value="<TMPL_VAR name="customer_name">">
+	      <p style="color:white">What is the email address for this reservation?</p>
+	      <input type="text" name="customer_email" value="<TMPL_VAR name="customer_email">">
+	      <p style="color:white">Size of party:</p>
+	      <select id="party_size" name="party_size">
+		<option value="1" <TMPL_VAR name="s1">>1</option>
+		<option value="2" <TMPL_VAR name="s2">>2</option>
+		<option value="3" <TMPL_VAR name="s3">>3</option>
+		<option value="4" <TMPL_VAR name="s4">>4</option>
+		<option value="5" <TMPL_VAR name="s5">>5</option>
+		<option value="6" <TMPL_VAR name="s6">>6</option>
+		<option value="7" <TMPL_VAR name="s7">>7</option>
+		<option value="8" <TMPL_VAR name="s8">>8</option>
+		<option value="9" <TMPL_VAR name="s9">>9</option>
+		<option value="10" <TMPL_VAR name="s10">>10</option>
+		<option value="11" <TMPL_VAR name="s11">>11</option>
+		<option value="12" <TMPL_VAR name="s12">>12</option>
+		<option value="13" <TMPL_VAR name="s13">>13</option>
+		<option value="14" <TMPL_VAR name="s14">>14</option>
+		<option value="15" <TMPL_VAR name="s15">>15</option>
+		<option value="16" <TMPL_VAR name="s16">>16</option>
+              </select>
+	      <p style="color:white">What is the new date of the reservation?</p>
+	      <input type="date" name="reservation_date" value="<TMPL_VAR name="reservation_date">">
+	      <p style="color:white">What is the new time of the reservation?</p>
+	      <input type="time" name="reservation_time" min="14:00" max="22:00" value="<TMPL_VAR name="reservation_time">">
+	      <br/>
+	      <input type="submit" value="Update">
+	    </form>
+	    <form action="/update" method="post">
+              <input type="hidden" name="action" value="cancel">
+              <input type="hidden" name="reservation_id" value="<TMPL_VAR name="reservation_id">">
+              <input type="hidden" name="reservation_key" value="<TMPL_VAR name="reservation_key">">
+              <input type="hidden" name="customer_phone" value="<TMPL_VAR name="customer_phone">">
+              <br/>
+              <input type="submit" value="Cancel">
+            </form>
+	  </td>
+	</tr>
+      </TMPL_IF>
+      <TMPL_IF name="thank_you">
+	<tr>
+	  <td style="text-align: center;">
+	    <p style="color:white"><TMPL_VAR name="thank_you"></p>
+	  </td>
+	</tr>
+      </TMPL_IF>
+    </table>
+  </div>
+  <br/>
+  <br/>
+  <br/>
+  <center>
+    <table border="1" style="border-collapse: collapse; width: 30%; margin: auto;">
+      <tr>
+	<td style="text-align: center;">
+	  <a href="https://xkcd.com/2716/"><img src="/assets/dinedash.png" alt="Order via DineDash" style="width: 100px; height: 100px;"></a>
+	</td>
+	<td style="text-align: center;">
+	  <a href="https://xkcd.com/356/"><img src="/assets/mealzoom.png" alt="Order via MealZoom" style="width: 100px; height: 100px;"></a>
+	</td>
+	<td style="text-align: center;">
+	  <a href="https://xkcd.com/915/"><img src="/assets/rapidfeast.png" alt="Order via RapidFeast" style="width: 100px; height: 100px;"></a>
+	</td>
+	<td style="text-align: center;">
+	  <a href="https://xkcd.com/1803/"><img src="/assets/crintaspot.png" alt="Review us on CrintaSpot" style="width: 100px; height: 100px;"></a>
+	</td>
+      </tr>
+    </table>
+  </center>
+  <div class="pi-container">
+    <a href="https://www.youtube.com/watch?v=As4gzzCQJ84" class="pi-link"><span class="pi-symbol">&pi;</span></a>
+  </div>
+  <footer>
+    <center>
+      <p style="color:white">Contact <a href="mailto:bobby@bobbystable.ai">Bobby</a>, or for reservations call <a href="tel:+17544326229">+1 (754) 43-BOBBY</a>.</p>
+      <p style="color:white"><small>Powered by <a href="https://signalwire.com/?utm_source=bobbystable.ai">SignalWire</a></small></p>
+    </center>
+  </footer>
+</body>
+</html>
