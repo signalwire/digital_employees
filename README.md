@@ -11,7 +11,7 @@ Quick links to Serverless and Server examples.
 ## Server
 
 * Zen
-* Bobby's Table
+* [Bobby's Table](https://github.com/signalwire/digital_employees/tree/main/server/Perl_Examples/BobbysTable.ai)
 * Flo's Flowers
 * MFA
 * Weather Bot
