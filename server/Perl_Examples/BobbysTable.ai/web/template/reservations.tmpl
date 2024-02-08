@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Welcome to Bobby's Table</title>
+  <meta http-equiv="refresh" content="300">
+  <link rel="stylesheet" href="/assets/style.css" type="text/css">
+  <link rel="icon" type="image/png" href="/assets/bobbystable.png">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-F08E6T2HQL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-F08E6T2HQL');
+  </script>
+</head>
+<!--
+ __      ___         _                                    _          _   _              __        ___ 
+ \ \    / / |_  __ _| |_   __ _ _ _ ___   _  _ ___ _  _  | |___  ___| |_(_)_ _  __ _   / _|___ _ |__ \
+  \ \/\/ /| ' \/ _` |  _| / _` | '_/ -_) | || / _ \ || | | / _ \/ _ \ / / | ' \/ _` | |  _/ _ \ '_|/_/
+   \_/\_/ |_||_\__,_|\__| \__,_|_| \___|  \_, \___/\_,_| |_\___/\___/_\_\_|_||_\__, | |_| \___/_| (_) 
+                                          |__/                                 |___/                 
+-->
+<body>
+  <header>
+    <center>
+      <h2 style="color:black"><TMPL_VAR name="slogan"/></h2>
+      <table border="1" style="border-collapse: collapse; width: 100%; margin: auto;">
+	<tr>
+	  <td style="text-align: right;">
+	    <a href="https://xkcd.com/327/"><img src="/assets/bobbystable.png" alt="Bobby's Table" style="width: 150px; height: 150px;"></a>
+	  </td>
+	  <td style="text-align: left;">
+	    <p style="color:black"><b>Bobby's Table</b><br/>
+	      327 Drop Table Lane<br/>
+	      Pompano Beach, FL 33060<br/>
+	      For Reservations Call:<br/>
+	       <a href="tel:+17544326229">+1 (754) 43-BOBBY</a><br/>
+	      <a href="https://signalwire.com/products/ai-agent?utm_source=bobbystable.ai">View Our Menu</a> | <a href="/update">Update Reservation</a>
+	    </p>
+	  </td>
+	</tr>
+      </table>
+    </center>
+  </header>
+  <center><h2>Current Reservations</h2></center>
+  <!--
+  <table>
+    <tr>
+      <td style="text-align: right;">
+	<TMPL_IF name="yesterday_url">
+	  <a href="<TMPL_VAR name="yesterday_url"/>">< Yesterday</a>
+	</TMPL_IF>
+      </td>
+      <td style="text-align: left;">
+	<TMPL_IF name="tomorrow_url">
+	  <a href="<TMPL_VAR name="tomorrow_url"/>">Tomorrow ></a>
+	</TMPL_IF>
+      </td>
+    </tr>
+  </table>
+  -->
+  <div style="text-align: center;">
+    <table border="1" style="border-collapse: collapse; width: 90%; margin: auto;">
+      <tr>
+	<th>Date</th>
+	<th>Time</th>
+	<th>Party Size</th>
+	<th>Guest Name</th>
+	<th>Guest Number</th>
+      </tr>
+      <TMPL_LOOP name="table_contents">
+	<tr>
+	  <td><TMPL_VAR name="reservation_date"/></td>
+	  <td><TMPL_VAR name="reservation_time"/></td>
+	  <td><TMPL_VAR name="party_size"/></td>
+	  <td><TMPL_VAR name="customer_name"/></td>
+	  <td><TMPL_VAR name="customer_phone"/></td>
+	</tr>
+      </TMPL_LOOP>
+    </table>
+  </div>
+  <!--
+  <table>
+    <tr>
+      <td style="text-align: right;">
+	<TMPL_IF name="yesterday_url">
+	  <a href="<TMPL_VAR name="yesterday_url"/>">< Yesterday</a>
+	</TMPL_IF>
+      </td>
+      <td style="text-align: left;">
+	<TMPL_IF name="tomorrow_url">
+	  <a href="<TMPL_VAR name="tomorrow_url"/>">Tomorrow ></a>
+	</TMPL_IF>
+      </td>
+    </tr>
+  </table>
+  -->
+  <br/>
+  <br/>
+  <br/>
+  <center>
+    <table border="1" style="border-collapse: collapse; width: 30%; margin: auto;">
+      <tr>
+	<td style="text-align: center;">
+	  <a href="https://xkcd.com/2716/"><img src="/assets/dinedash.png" alt="Order via DineDash" style="width: 100px; height: 100px;"></a>
+	</td>
+	<td style="text-align: center;">
+	  <a href="https://xkcd.com/356/"><img src="/assets/mealzoom.png" alt="Order via MealZoom" style="width: 100px; height: 100px;"></a>
+	</td>
+	<td style="text-align: center;">
+	  <a href="https://xkcd.com/915/"><img src="/assets/rapidfeast.png" alt="Order via RapidFeast" style="width: 100px; height: 100px;"></a>
+	</td>
+	<td style="text-align: center;">
+	  <a href="https://xkcd.com/1803/"><img src="/assets/crintaspot.png" alt="Review us on CrintaSpot" style="width: 100px; height: 100px;"></a>
+	</td>
+      </tr>
+    </table>
+  </center>
+  <div class="pi-container">
+    <a href="https://www.youtube.com/watch?v=As4gzzCQJ84" class="pi-link"><span class="pi-symbol">&pi;</span></a>
+  </div>
+  <footer>
+    <center>
+      <p style="color:white">Contact <a href="mailto:bobby@bobbystable.ai">Bobby</a>, or for reservations call <a href="tel:+17544326229">+1 (754) 43-BOBBY</a>.</p>
+      <p style="color:white"><small>Powered by <a href="https://signalwire.com/?utm_source=bobbystable.ai">SignalWire</a></small></p>
+    </center>
+  </footer>
+</body>
+</html>
