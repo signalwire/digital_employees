@@ -4,7 +4,7 @@
 
 * [Flos_Flowers](https://github.com/signalwire/digital_employees/tree/main/serverless/Flos_Flowers)
 * [Weather_Bot](https://github.com/signalwire/digital_employees/tree/main/serverless/Weather_Bot)
-
+* [Thermal Thrillers](https://github.com/signalwire/digital_employees/tree/main/serverless/Thermal_Thrillers)
 ------------------------
 
 Copy, Paste, Edit.  Copy the SWML example, paste into a new SWML bin and edit.
