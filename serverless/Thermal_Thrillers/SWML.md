@@ -1,0 +1,157 @@
+```json
+{
+  "sections": {
+    "main": [
+      {
+        "answer": {}
+      },
+      {
+        "record_call": {
+          "format": "wav",
+          "stereo": "true"
+        }
+      },
+      {
+        "ai": {
+          "languages": [
+            {
+              "engine": "elevenlabs",
+              "fillers": [
+                "one moment",
+                "one moment please"
+              ],
+              "name": "English",
+              "code": "en-US",
+              "voice": "rachel"
+            }
+          ],
+
+          "params": {
+            "verbose_logs": "true",
+            "swaig_allow_swml": "true",
+            "local_tz": "America/Chicago",
+            "debug_webhook_url": "https://replac-me:replace-me@replace-me.tld"
+          },
+          "post_prompt_auth_user": "replace-me",
+          "prompt": {
+            "temperature": 0.6,
+            "top_p": 0.6,
+            "text": "Your name is Rachael. You are an AI Agent. You work for a heating and air conditioning company named Thermal Thrillers H V A C\r\n\r\n# Info\r\nYou are incapable of diagnosing problems.\r\nSomeone will call back to schedule an appointment.\r\n\r\n# Hours of operation\r\n7:30AM to 5PM M-F. Closed Saturday and Sunday.\r\n\r\n# Payment methods\r\ncash, check, and credit cards.\r\n\r\n## What to do if the caller wants to schedule an appointment\r\nAfter 5PM and before 7:30AM Monday through Friday or anytime Saturday or Sunday, ask the caller if they want to dispatch after hours service. \r\nBetween 7:30AM and 5PM Monday through Friday, ask the caller if they want to have someone call back and schedule an appointment.\r\n\r\n## Greetings used by the AI Agent\r\nAfter business hours answer the call with 'You have reached Thermal Thrillers after hours.  I am an AI Agent.  How may I help you?'\r\nDuring business hours answer the call with 'Thank you for calling Thermal Thrillers.  I am an AI Agent.  How may I help you?'\r\n\r\n## Step 1\r\ncollect information to help our technician. \r\n## Step 2\r\nGet the service address including city and state.\r\n## Step 3\r\nuse the verify_address function and use those results to update the information\r\n## Step 4\r\ncurrent customer?\r\n## Step 5\r\nproperty owner or a tenant?\r\n## Step 6\r\nThen Get the owners name and contact number for scheduling purposes.\r\n## Step 7\r\nIf the owner, is this a rental? Get the tenants name and phone number\r\n## Step 8\r\nIs this residential, commercial or industrial?\r\n## Step 9\r\nHave any previous repairs or services performed?\r\n## Step 10\r\nMake and model of your unit?.\r\n## Step 11\r\nAproximate age of your unit in years?\r\n## Step 12\r\nIs the unit under warranty or maintenance contract?\r\n## Step 13\r\nAdditional information\r\n## Step 14\r\nSummarize the conversation not leaving out any details.  Verify with the details with user, offer to send them a message with the details.\r\n## Step 15\r\nIf after hours dispatch after hours service. Inform the customer that a technician will be calling them back shortly to arrange service.\r\n## Step 16\r\nIf during business hours schedule a call back to schedule an appointment.  Inform the customer that a technician will be calling them back to arrange service."
+          },
+          "SWAIG": {
+            "defaults": {
+              "web_hook_auth_password": "replace-me",
+              "web_hook_url": "replace-me@replace-me.tld",
+              "web_hook_auth_user": "replace-me"
+            },
+            "functions": [
+              {
+                "purpose": "use to send text messages to a user",
+                "data_map": {
+                  "expressions": [
+                    {
+                      "pattern": ".*",
+                      "string": "${args.message}",
+                      "output": {
+                        "response": "Message sent.",
+                        "action": [
+                          {
+                            "SWML": {
+                              "version": "1.0.0",
+                              "sections": {
+                                "main": [
+                                  {
+                                    "send_sms": {
+                                      "from_number": "+15552221234",
+                                      "to_number": "${args.to}",
+                                      "body": "${args.message}, Reply STOP to stop."
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "function": "send_message",
+                "argument": {
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "the message to send to the user"
+                    },
+                    "to": {
+                      "type": "string",
+                      "description": "The users number in e.164 format"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              {
+                "purpose": "verify an address",
+                "data_map": {
+                  "webhooks": [
+                    {
+                      "url": "https://addressvalidation.googleapis.com/v1:validateAddress?key=replace-me",
+                      "method": "POST",
+                      "output": {
+                        "response": "Verified Address: ${result.address.formattedAddress}"
+                      },
+                      "error_keys": "error",
+                      "params": {
+                        "enableUspsCass": "true",
+                        "address": {
+                          "addressLines": [
+                            "${args.address}",
+                            "${args.city}, ${args.state}"
+                          ],
+                          "regionCode": "US"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "function": "verify_address",
+                "argument": {
+                  "type": "object",
+                  "properties": {
+                    "state": {
+                      "type": "string",
+                      "description": "state"
+                    },
+                    "address": {
+                      "type": "string",
+                      "description": "street address"
+                    },
+                    "city": {
+                      "type": "string",
+                      "description": "city"
+                    }
+                  }
+                }
+              },
+              {
+                "argument": "none",
+                "function": "check_for_input",
+                "purpose": "check for input"
+              }
+            ]
+          },
+          "post_prompt": {
+            "top_p": 0.6,
+            "text": "For the AGE field, only allow the numeric value in years. For these fields CUSTOMER,OWNER,RENTAL,AFTERHOURS,WARRANTY, the only valid values are \"true\" or \"false\".  For the PHONE and TENANT_PHONE fields, format the number in e.164. For the DATETIME field, format the date in stftime format %Y-%m-%d %H:%M %p.For the SYSTEM field, the only valid values are \"residential, \"commercial\" or \"industrial\", Please summarize the message as a valid anonymous JSON object like this:{ \\\\\"owner_name\\\\\": \\\\\"OWNER_NAME\\\\\", \\\\\"owner_phone\\\\\": \\\\\"OWNER_PHONE\\\\\", \\\\\"tenant_name\\\\\": \\\\\"TENANT_NAME\\\\\", \\\\\"tenant_phone\\\\\": \\\\\"TENANT_PHONE\\\\\",\\\\\"address\\\\\": \\\\\"ADDRESS\\\\\", \\\\\"city\\\\\": \\\\\"CITY\\\\\"\\\\n\", \\\\\"state\\\\\": \\\\\"STATE\\\\\", \\\\\"zipcode\\\\\": \\\\\"ZIPCODE\\\\\",\\\\\"customer\\\\\": \\\\\"CUSTOMER\\\\\", \\\\\"owner\\\\\": \\\\\"OWNER\\\\\", \\\\\"hvac_type\\\\: \\\\\"SYSTEM\\\\\", \\\\\"previous_repairs\\\\\": \\\\\"PREVIOUS_REPAIRS\\\\\", \\\\\"hvac_make\\\\\": \\\\\"MAKE\\\\\", \\\\\"hvac_model\\\\\": \\\\\"MODEL\\\\\", \\\\\"unit_age\\\\\": \\\\\"AGE\\\\\", \\\\\"warranty\\\\\": \\\\\"WARRANTY\\\\\", \\\\\"additional_info\\\\\": \\\\\"ADDITIONAL_INFO\\\\\", \\\\\"summary\\\\\": \\\\\"SUMMARY\\\\\", \\\\\"datetime\":\\\\\"DATETIME\\\\\", \\\\\"afterhours\\\\\": \\\\\"AFTERHOURS\"\\\\, \\\\\"rental\\\\\": \\\\\"RENTAL\\\\\" }'",
+            "temperature": 0.6
+          },
+          "post_prompt_auth_password": "replace-me",
+          "post_prompt_url": "replace-me@replace-me.tld"
+        }
+      }
+    ]
+  },
+  "version": "1.0.0"
+}
+```
