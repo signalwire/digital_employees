@@ -4,6 +4,8 @@ Quick links to Serverless and Server examples.
 
 ## Serverless
 
+ Serverless examples can be used in the SignalWire dashboard located in the Relay/SWML -> SWML Scripts section.
+
 * [Flo's_Flowers](https://github.com/signalwire/digital_employees/tree/main/serverless/Flos_Flowers)
   * Send an SMS e-card with an image url to a user's phone number. Flo will give four flower options to choose from to send. The user can include a message with the flower image.
 * [Weather Bot](https://github.com/signalwire/digital_employees/tree/main/serverless/Weather_Bot)
