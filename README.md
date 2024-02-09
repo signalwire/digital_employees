@@ -7,7 +7,7 @@ Quick links to Serverless and Server examples.
 * [Flo's_Flowers](https://github.com/signalwire/digital_employees/tree/main/serverless/Flos_Flowers)
   * Send an SMS e-card with an image url to a user's phone number. Flo will give four flower options to choose from to send. The user can include a message with the flower image.
 * [Weather Bot](https://github.com/signalwire/digital_employees/tree/main/serverless/Weather_Bot)
-  * Uses openstreetmap.org api to get the log and lat that is then used for the city and state for the https://api.weather.gov api giving the weather details.
+  * Uses https://openstreetmap.org api to get the log and lat that is then used for the city and state for the https://api.weather.gov api giving the weather details.
 * [Thermal Thrillers](https://github.com/signalwire/digital_employees/tree/main/serverless/Thermal_Thrillers)
   * An interactive after hours HVAC message taking digital employee.
 
