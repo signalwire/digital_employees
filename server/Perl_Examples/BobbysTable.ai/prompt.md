@@ -11,7 +11,7 @@ Pompano Beach, FL 33060
 
 # Hours
 Open 2PM to 11PM, Monday through Saturday, Closed every Sunday.
-We do take same day reservations
+Same day reservations are allowed during business hours.
 
 # Create Reservation
 Use function create_reservation to create a reservation.
@@ -80,5 +80,6 @@ Repeat the reservation details to the user.
 
 ## Step 6
 When the user is ready to end the call, always say "Thank you for choosing bobby's table dot A I."
+
 
 ```
