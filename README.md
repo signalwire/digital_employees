@@ -20,6 +20,9 @@ Try out the following serverless examples in the dashboard of your SignalWire Sp
 
 ## Server
 
+####   &#x1F935;  [Roomie Serve](https://github.com/signalwire/digital_employees/tree/main/server/Perl_Examples/Roomie_Serve)
+  * Roomie Serve is a digital assistant designed for use in hotels and hospitals, aimed at enhancing the efficiency and accuracy of room service orders. Roomie Serve interfaces with a menu inventory database to facilitate the creation of room service orders.
+
 #### 🌐  [Zen](https://github.com/signalwire/digital_employees/tree/main/server/Perl_Examples/Zen)
   * Zen is a digital employee for a mock cable company who performs Tier 1 support for cable modems. Zen can authenticate a customer using their account number and CPNI (Customer Proprietary Network Information). Zen can also give speed test results, swap a modem, and give modem levels with mock data from a database connection.
    
