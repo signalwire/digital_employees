@@ -1,0 +1,94 @@
+#!/usr/bin/env perl
+# swaig - a simple command line client for the SWAIG server
+use strict;
+use warnings;
+use Getopt::Long;
+use Data::Dumper;
+use JSON::PP;
+use LWP::UserAgent;
+use HTTP::Request;
+use HTTP::Request::Common;
+
+my $usage = "Usage: $0 --url <url> [--functions <function,function>] [--get-signature] [--arguments '{\"json\":\"string\"}']\n";
+my ($url, $functions, $get_signature, $arguments);
+
+GetOptions(
+    'url=s'         => \$url,
+    'functions=s'   => \$functions,
+    'get-signature' => \$get_signature,
+    'arguments=s'   => \$arguments
+    ) or die $usage;
+
+if ( (!defined($url) ) && (!defined($get_signature) || !defined($arguments) ) ) {
+    die $usage;
+}
+
+my $ua = LWP::UserAgent->new;
+
+if ( $get_signature && $url ) {
+    my @func  = split(/,/, $functions) if $functions;
+    my $req = HTTP::Request->new(POST => $url);
+    
+    $req->header('content-type' => 'application/json');
+
+    my $json = JSON::PP->new->utf8->pretty->encode({
+	version             => "2.0",
+	content_type        => "text/swaig",
+	content_disposition => "function signature request",
+	functions           => \@func,
+	action              => "get_signature" });
+
+    print "Requesting signature for function: $functions\n" if $functions;
+    print "Requesting signature for url: $url\n";
+    print "SWAIG Request:\n$json\n";
+    
+    $req->content($json);
+    
+    my $res = $ua->request($req);
+    print "Response:\n";
+    if ($res->is_success) {
+	#pretty print json
+	my $json = JSON::PP->new->utf8->pretty->encode(decode_json($res->content));
+	print $json;
+    } else {
+	print $res->status_line, "\n";
+    }
+}
+    
+if ( $functions && $url && $arguments ) {
+    my @func  = split(/,/, $functions);
+
+    my $req = HTTP::Request->new(POST => $url);
+	
+    $req->header('content-type' => 'application/json');
+
+    my $json = JSON::PP->new->utf8->pretty->encode({
+	version             => "2.0",
+	content_type        => "Conversation/SWAIG-function",
+	argument            => {
+	    substituted => "",
+	    parsed      => [ decode_json($arguments) ],
+	    raw         => $arguments
+	},
+	app_name            => "swml app",
+	function            => $func[0],
+	version             => "2.0",
+	argument_desc       => "dummy description",
+	purpose             => "dummy purpose" });
+    
+    print "Calling function: $functions\n";
+    print "Calling url: $url\n";
+    print "SWAIG Request:\n$json\n";
+	
+    $req->content($json);
+
+    my $res = $ua->request($req);
+    print "Response:\n";
+    if ($res->is_success) {
+	#pretty print json
+	my $json = JSON::PP->new->utf8->pretty->encode(decode_json($res->content));
+	print $json;
+    } else {
+	print $res->status_line, "\n";
+    }
+}
