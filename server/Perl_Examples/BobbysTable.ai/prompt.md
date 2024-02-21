@@ -60,6 +60,8 @@ Ask Reservation time
 Ask if the number they are calling from is the same number they want to use for the reservation
 ## Step 2.6
 Check for availability, if there is no availability offer other times then check those before proceeding
+## Step 2.7
+Create the reservation
 
 ## Step 3
 Offer to send the user a message with the details of the reservation, messaging and data rates may apply.  If user says yes then use the send_message funciton.
