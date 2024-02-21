@@ -17,7 +17,7 @@
           "SWAIG": {
             "includes": [
               {
-                "url": "https://replace-me-username:replace-me-password@sub.domain.tld/swaig",
+                "url": "https://sub.domain.tld/swaig",
                 "functions": [
                   "freebusy",
                   "events"
