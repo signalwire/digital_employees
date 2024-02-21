@@ -1,0 +1,127 @@
+{
+  "version": "1.0.0",
+  "sections": {
+    "main": [
+      {
+        "answer": {}
+      },
+      {
+        "record_call": {
+          "stereo": "true",
+          "format": "wav"
+        }
+      },
+      {
+        "ai": {
+          "post_prompt_url": "https://sub.domain.tld/",
+          "SWAIG": {
+            "includes": [
+              {
+                "url": "https://replace-me-username:replace-me-password@sub.domain.tld/swaig",
+                "functions": [
+                  "freebusy",
+                  "events"
+                ]
+              }
+            ],
+            "functions": [
+              {
+                "data_map": {
+                  "expressions": [
+                    {
+                      "pattern": ".*",
+                      "output": {
+                        "response": "Message sent.",
+                        "action": [
+                          {
+                            "SWML": {
+                              "sections": {
+                                "main": [
+                                  {
+                                    "send_sms": {
+                                      "from_number": "+13072253637",
+                                      "to_number": "${args.to}",
+                                      "body": "${args.message}, Reply STOP to stop."
+                                    }
+                                  }
+                                ]
+                              },
+                              "version": "1.0.0"
+                            }
+                          }
+                        ]
+                      },
+                      "string": "${args.message}"
+                    }
+                  ]
+                },
+                "purpose": "use to send text messages to a user",
+                "argument": {
+                  "properties": {
+                    "to": {
+                      "type": "string",
+                      "description": "The users number in e.164 format"
+                    },
+                    "message": {
+                      "description": "the message to send to the user",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "to"
+                  ],
+                  "type": "object"
+                },
+                "function": "send_message"
+              },
+              {
+                "purpose": "check for input",
+                "argument": "none",
+                "function": "check_for_input"
+              }
+            ],
+            "defaults": {
+              "web_hook_url": "https://sub.domain.tld/swaig?agent_id=28",
+              "web_hook_auth_user": "replace-with-a-username",
+              "web_hook_auth_password": "replace-with-a-password"
+            }
+          },
+          "post_prompt_auth_user": "replace-with-a-username",
+          "prompt": {
+            "text": "You're name is Josh, You can schedule appointments on a calendar.\r\n\r\n# How to schedule an event\r\nYou first have to get all the details including email, then check if the time is available\r\nIf the time is, then schedule the event.\r\nYou can't schedule events until you have all the details and verify the time is available.\r\nThe default length is 30 minutes.\r\nYou can only schedule between 9am and 4pm, Monday thru Friday\r\n\r\n# Step 1\r\nGreet the caller then what date they would like to schedule a meeting on\r\n\r\n# Step 2\r\nAsk what time of day they would like to have the meeting and for how long\r\n\r\n# Step 3\r\nSend the user a message using function send_message asking them to reply with their email address,\r\nand wait till you get it before proceeding.\r\n\r\n# Step 4 \r\nCheck if the meeting time is avaliable.\r\nIf not, offer to move it an hour forward and check again.\r\n\r\n# Step 5\r\nGet a decription of what the meeting will be about\r\n\r\n# Step 6\r\nCreate the event on the calendar with all the details\r\n\r\n# Step 7 \r\nOffer to text message the user with the details of the event, messaging and data rates may apply.\r\n\r\n# Step 8\r\nAsk if there is anything else the user needs help with.\r\n\r\n\r\n\r\n\r\n\r\n",
+            "top_p": 0.3,
+            "temperature": 0.3
+          },
+          "post_prompt_auth_password": "replace-with-a-password",
+          "post_prompt": {
+            "top_p": 0.3,
+            "temperature": 0.3,
+            "text": "Summarize the conversation, including all the details."
+          },
+          "languages": [
+            {
+              "engine": "elevenlabs",
+              "name": "English",
+              "fillers": [
+                "lets see",
+                "uh",
+                "hrm",
+                "umm"
+              ],
+              "code": "en-US",
+              "voice": "josh"
+            }
+          ],
+          "params": {
+            "swaig_allow_swml": "true",
+            "conversation_id": "",
+            "debug_webhook_url": "https://replace-with-a-username:replace-with-a-password@sub.domain.tld/debughook",
+            "swaig_allow_settings": "true",
+            "local_tz": "America/Chicago"
+          }
+        }
+      }
+    ]
+  }
+}
