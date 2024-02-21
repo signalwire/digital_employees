@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>AI Agent Calendar Settings</title>
+    <link rel="icon" type="image/png" href="/assets/calendar.png">
+  </head>
+  <body>
+    <div style="text-align: center; margin-top: 25px;">
+      <h3>Your AI Agent Calendar Settings</h3>
+      <div style="text-align: center; margin-top: 5px;">
+	<form action="/settings" method="POST" accept-charset="utf-8">
+	  <table align="center">
+	    <tr>
+	      <th style="text-align: center" colspan="2">
+		<img src="<TMPL_VAR name="picture">" style="border-radius: 50%;">
+	      </th>
+	    </tr>
+	    <tr>
+	      <td style="text-align: right">
+		<label for="space">Calendar:</label>
+	      </td>
+	      <td style="text-align: left" class="nowrap">
+		<select name="calendar_id" id="calendar_id">
+		  <TMPL_LOOP name="calendars">
+		    <option value="<TMPL_VAR name="calendar_id">" <TMPL_VAR name="selected">><TMPL_VAR name="calendar_id"></option>
+		  </TMPL_LOOP>
+		</select>
+	      </td>
+	    </tr>
+	    <tr>
+	      <td style="text-align: right">
+    		<label for="project_id">Time Zone:</label>
+	      </td>
+	      <td style="text-align: left">
+		<select name="timezone" id="timezone">
+		  <TMPL_LOOP name="timezones">
+		    <option value="<TMPL_VAR name="name">" <TMPL_VAR name="selected">><TMPL_VAR name="name"></option>
+		  </TMPL_LOOP>
+		</select>
+	      </td>
+	    </tr>
+	    <tr>
+	      <td style="text-align: right">
+    		<label for="auth_token">Location:</label>
+	      </td>
+	      <td style="text-align: left">
+		<input size="30" id="default_location" name="default_location" value="<TMPL_VAR name="default_location">">
+	      </td>
+	    </tr>
+	    <tr>
+	      <td style="text-align: right" class="nowrap">
+		<label for="notes">Notes:</label>
+	      </td>
+	      <td style="text-align: left">
+		<textarea rows="4" cols="30" id="notes" name="notes"><TMPL_VAR name="notes"></textarea>
+	      </td>
+	    </tr>
+	    <tr>
+	      <td class="button" colspan="2">
+		<br/><br/>
+		<input type="submit" value="Update"  class="submit-button">
+		<br/><br/>
+	      </td>
+	    </tr>
+	  </table>
+	</form>
+      </div>
+    </div>
+  </body>
+</html>
+
