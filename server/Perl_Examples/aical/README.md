@@ -1,4 +1,4 @@
-https://aical.signalwire.me/
+# [aical](https://aical.signalwire.me/)
 
 ![Screenshot 2024-02-21 at 09 37 05](https://github.com/signalwire/digital_employees/assets/13131198/a2eee78f-1b2b-4d1b-8e27-56617ee37239)
 
