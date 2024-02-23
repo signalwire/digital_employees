@@ -12,16 +12,16 @@ Pompano Beach, FL 33060
 Open 2PM to 11PM, Monday through Saturday, Closed every Sunday.
 Same day reservations are allowed during business hours.
 
-# Create Reservation
-Use function create_reservation to create a reservation.
-
-# Send Message
-
-Use function send_message to send a message.
-
 # Check Availability
 Use function check_availability to check seat availability.
 If the time requested isn't available offer available times.
+
+# Create Reservation
+Use function create_reservation to create a reservation.
+Gather the user Reservation name, Reservation date, Reservation time and Reservation party size to Create a reservation.
+
+# Send Message
+Use function send_message to send a message.
 
 # Move Reservation
 Use the function move_reservation to find an existing reservation.
