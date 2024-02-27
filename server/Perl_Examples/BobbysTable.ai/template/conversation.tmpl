@@ -12,17 +12,10 @@
 	<tr>
           <td>
 	    <table>
-	      <TMPL_IF name="is_admin">
-		<tr>
-		  <td style="text-align: right">ID:</td>
-		  <td style="text-align: left"><a href="<TMPL_VAR name="grafana_url"/>" target="_blank"><TMPL_VAR name="call_id"/></a></td>
-		</tr>
-	      <TMPL_ELSE>
-		<tr>
-		  <td style="text-align: right">ID:</td>
-		  <td style="text-align: left"><TMPL_VAR name="call_id"/></td>
-		</tr>
-	      </TMPL_IF>
+	      <tr>
+		<td style="text-align: right">ID:</td>
+		<td style="text-align: left"><TMPL_VAR name="call_id"/></td>
+	      </tr>
 	      <tr>
 		<td style="text-align: right">Start Date:</td>
 		<td style="text-align: left"><TMPL_VAR name="call_start_date"/></td>
