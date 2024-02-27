@@ -375,6 +375,172 @@ my $swml_app = sub {
     return $res->finalize;
 };
 
+my $convo_app = sub {
+    my $env     = shift;
+    my $req     = Plack::Request->new( $env );
+    my $params  = $req->parameters;
+    my $id      = $params->{id};
+    my $json    = JSON::PP->new->ascii->pretty->allow_nonref;
+    my $session = $env->{'psgix.session'};
+
+    my $dbh = DBI->connect(
+	"dbi:Pg:dbname=$database;host=$host;port=$port",
+	$dbusername,
+	$dbpassword,
+	{ AutoCommit => 1, RaiseError => 1 }) or die $DBI::errstr;
+
+    if ( $id ) {
+	my $sql = "SELECT * FROM ai_post_prompt WHERE id = ?";
+
+	my $sth = $dbh->prepare( $sql );
+
+	$sth->execute( $id ) or die $DBI::errstr;
+
+	my $row = $sth->fetchrow_hashref;
+
+	my $sql_next = "SELECT id FROM ai_post_prompt WHERE id > ? ORDER BY id ASC LIMIT 1";
+
+	my $sql_prev = "SELECT id FROM ai_post_prompt WHERE id < ? ORDER BY id DESC LIMIT 1";
+
+	my $sth_next = $dbh->prepare( $sql_next );
+
+	$sth_next->execute( $id );
+
+	my ( $next_id ) = $sth_next->fetchrow_array;
+
+	$sth_next->finish;
+
+	my $sth_prev = $dbh->prepare( $sql_prev );
+
+	$sth_prev->execute( $id );
+
+	my ( $prev_id ) = $sth_prev->fetchrow_array;
+
+	$sth_prev->finish;
+
+	if ( $row ) {
+	    my $p = $json->decode( $row->{data} );
+
+	    $sth->finish;
+
+	    $dbh->disconnect;
+
+	    foreach my $log ( @{ $p->{'call_log'} } ) {
+		$log->{content} =~ s/\r\n/<br>/g;
+		$log->{content} =~ s/\n/<br>/g;
+	    }
+
+	    my $template = HTML::Template::Expr->new( filename => "/app/template/conversation.tmpl", die_on_bad_params => 0 );
+	    my $start =  ($p->{'ai_end_date'}   / 1000) - 5000;
+	    my $end   =  ($p->{'ai_start_date'} / 1000) + 5000;
+
+	    my $grafana_url = "https://grafana.proxy.signalwire.cloud/grafana/d/18d8e226-2f9e-4485-a1cf-31bd98ff6ff1/support-logs?orgId=1&from=$start&to=$end&var-tenant=us-west&var-search_string=$p->{'call_id'}";
+
+	    $template->param(
+		nonce               => $env->{'plack.nonce'},
+		next_id		    => $next_id ? "/convo?id=$next_id" : "/convo",
+		prev_id		    => $prev_id ? "/convo?id=$prev_id" : "/convo",
+		next_text	    => $next_id ? "Next >"     : "",
+		prev_text	    => $prev_id ? "< Previous" : "",
+		call_id             => $p->{'call_id'},
+		call_start_date     => $p->{'call_start_date'},
+		call_log            => $p->{'call_log'},
+		swaig_log	    => $p->{'swaig_log'},
+		caller_id_name      => $p->{'caller_id_name'},
+		caller_id_number    => $p->{'caller_id_number'},
+		total_output_tokens => $p->{'total_output_tokens'},
+		total_input_tokens  => $p->{'total_input_tokens'},
+		grafana_url         => $grafana_url,
+		raw_json            => $json->encode( $p ),
+		record_call_url     => $p->{SWMLVars}->{record_call_url} );
+
+	    my $res = Plack::Response->new( 200 );
+
+	    $res->content_type( 'text/html' );
+
+	    $res->body( $template->output );
+
+	    return $res->finalize;
+	} else {
+	    my $res = Plack::Response->new( 200 );
+
+	    $res->redirect( "/convo" );
+	    return $res->finalize;
+	}
+    } else {
+	my $page_size    = 20;
+	my $current_page = $params->{page} || 1;
+	my $offset       = ( $current_page - 1 ) * $page_size;
+
+	my $sql = "SELECT * FROM ai_post_prompt ORDER BY created DESC LIMIT ? OFFSET ?";
+
+	my $sth = $dbh->prepare( $sql );
+
+	$sth->execute( $page_size, $offset ) or die $DBI::errstr;
+
+	my @table_contents;
+
+	while ( my $row = $sth->fetchrow_hashref ) {
+	    my $p = $json->decode( $row->{data} );
+
+	    $row->{caller_id_name}       = $p->{caller_id_name};
+	    $row->{caller_id_number}     = $p->{caller_id_number};
+	    $row->{call_id}              = $p->{call_id};
+	    $row->{summary}              = $p->{post_prompt_data}->{substituted};
+	    push @table_contents, $row;
+	}
+
+	$sth->finish;
+
+	my $total_rows_sql = "SELECT COUNT(*) FROM ai_post_prompt";
+
+	$sth = $dbh->prepare( $total_rows_sql );
+
+	$sth->execute();
+
+	my ( $total_rows ) = $sth->fetchrow_array();
+
+	my $total_pages = int( ( $total_rows + $page_size - 1 ) / $page_size );
+
+	$current_page = 1 if $current_page < 1;
+	$current_page = $total_pages if $current_page > $total_pages;
+
+	my $next_url = "";
+	my $prev_url = "";
+
+	if ( $current_page > 1 ) {
+	    my $prev_page = $current_page - 1;
+	    $prev_url = "/convo?&page=$prev_page";
+	}
+
+	if ( $current_page < $total_pages ) {
+	    my $next_page = $current_page + 1;
+	    $next_url = "/convo?page=$next_page";
+	}
+
+	$sth->finish;
+
+	$dbh->disconnect;
+
+	my $template = HTML::Template::Expr->new( filename => "/app/template/conversations.tmpl", die_on_bad_params => 0 );
+
+	$template->param(
+	    nonce                => $env->{'plack.nonce'},
+	    table_contents       => \@table_contents,
+	    next_url             => $next_url,
+	    prev_url             => $prev_url
+	    );
+
+	my $res = Plack::Response->new( 200 );
+
+	$res->content_type( 'text/html' );
+
+	$res->body( $template->output );
+
+	return $res->finalize;
+    }
+};
+
 my $post_app = sub {
     my $env       = shift;
     my $req       = Plack::Request->new( $env );
@@ -515,44 +681,41 @@ my $swaig_app = sub {
 	return $res->finalize;
     }
 };
+my $order_list = sub {
+    	my $env = shift;
+	my $template = HTML::Template->new(
+	    filename => '/app/template/index.tmpl',
+	    die_on_bad_params => 0,
+	    );
+	
+	    my $dbh = DBI->connect(
+		"dbi:Pg:dbname=$database;host=$host;port=$port",
+		$dbusername,
+		$dbpassword,
+		{ AutoCommit => 1, RaiseError => 1 }) or die "Couldn't execute statement: $DBI::errstr\n";
+    
+	my $sql = "SELECT * FROM roomie_orders WHERE created >= ? ORDER BY created ASC";
+	
+	my $sth = $dbh->prepare( $sql );
+	
+	my $today = DateTime->now->truncate( to => 'day' )->subtract( days => 1 );
+	
+	$sth->execute( $today->ymd ) or die "Couldn't execute statement: $DBI::errstr\n";
 
-my $assets_app = Plack::App::Directory->new( root => "/app/assets" )->to_app;
-
-my $app = builder {
-
-    enable sub {
-	my $app = shift;
-
-	return sub {
-	    my $env = shift;
-	    my $res = $app->( $env );
-
-	    Plack::Util::header_set( $res->[1], 'Expires', 0 );
-
-	    return $res;
-	};
-    };
-
-
-    mount "/assets"    => $assets_app;
-
-    mount "/swaig" => builder {
-	enable "Auth::Basic", authenticator => \&authenticator;
-	$swaig_app;
-    };
-
-    mount "/swml" => builder {
-	enable "Auth::Basic", authenticator => \&authenticator;
-	$swml_app;
-    };
-
-    mount "/post" => builder {
-	enable "Auth::Basic", authenticator => \&authenticator;
-	$post_app;
-    };
-
-    mount "/order" => sub {
-	my $env = shift;
+	my @table_contents;
+	
+	while ( my $row = $sth->fetchrow_hashref ) {
+	    $row->{phone} = scramble_last_seven( $row->{phone} );
+	    push @table_contents, $row;
+	}
+	$template->param( table_contents => \@table_contents, index => 1 );
+	my $res = Plack::Response->new(200);
+	$res->content_type( 'text/html' );
+	$res->body($template->output);
+	return $res->finalize;
+};
+my $order_app = sub {
+    	my $env = shift;
 
 	my $request = Plack::Request->new($env);
 
@@ -595,42 +758,51 @@ my $app = builder {
 	$res->body( $template->output );
 
 	return $res->finalize;
-	
-    };
-    
-    mount '/' => sub {
-	my $env = shift;
-	my $template = HTML::Template->new(
-	    filename => '/app/template/index.tmpl',
-	    die_on_bad_params => 0,
-	    );
-	
-	    my $dbh = DBI->connect(
-		"dbi:Pg:dbname=$database;host=$host;port=$port",
-		$dbusername,
-		$dbpassword,
-		{ AutoCommit => 1, RaiseError => 1 }) or die "Couldn't execute statement: $DBI::errstr\n";
-    
-	my $sql = "SELECT * FROM roomie_orders WHERE created >= ? ORDER BY created ASC";
-	
-	my $sth = $dbh->prepare( $sql );
-	
-	my $today = DateTime->now->truncate( to => 'day' )->subtract( days => 1 );
-	
-	$sth->execute( $today->ymd ) or die "Couldn't execute statement: $DBI::errstr\n";
+};
 
-	my @table_contents;
-	
-	while ( my $row = $sth->fetchrow_hashref ) {
-	    $row->{phone} = scramble_last_seven( $row->{phone} );
-	    push @table_contents, $row;
-	}
-	$template->param( table_contents => \@table_contents, index => 1 );
-	my $res = Plack::Response->new(200);
-	$res->content_type( 'text/html' );
-	$res->body($template->output);
-	return $res->finalize;
+my $assets_app = Plack::App::Directory->new( root => "/app/assets" )->to_app;
+
+my $app = builder {
+
+    enable sub {
+	my $app = shift;
+
+	return sub {
+	    my $env = shift;
+	    my $res = $app->( $env );
+
+	    Plack::Util::header_set( $res->[1], 'Expires', 0 );
+
+	    return $res;
+	};
     };
+
+
+    mount '/assets'    => $assets_app;
+
+    mount '/swaig' => builder {
+	enable "Auth::Basic", authenticator => \&authenticator;
+	$swaig_app;
+    };
+
+    mount '/convo' => builder {
+	enable "Auth::Basic", authenticator => \&authenticator;
+	$convo_app;
+    };
+
+    mount '/swml' => builder {
+	enable "Auth::Basic", authenticator => \&authenticator;
+	$swml_app;
+    };
+
+    mount '/post' => builder {
+	enable "Auth::Basic", authenticator => \&authenticator;
+	$post_app;
+    };
+
+    mount '/order' => $order_app;
+    
+    mount '/' => $order_list;
 };
 
 # Create a Plack builder and wrap the app
