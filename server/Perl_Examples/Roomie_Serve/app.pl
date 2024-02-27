@@ -434,8 +434,6 @@ my $convo_app = sub {
 	    my $start =  ($p->{'ai_end_date'}   / 1000) - 5000;
 	    my $end   =  ($p->{'ai_start_date'} / 1000) + 5000;
 
-	    my $grafana_url = "https://grafana.proxy.signalwire.cloud/grafana/d/18d8e226-2f9e-4485-a1cf-31bd98ff6ff1/support-logs?orgId=1&from=$start&to=$end&var-tenant=us-west&var-search_string=$p->{'call_id'}";
-
 	    $template->param(
 		nonce               => $env->{'plack.nonce'},
 		next_id		    => $next_id ? "/convo?id=$next_id" : "/convo",
@@ -450,7 +448,6 @@ my $convo_app = sub {
 		caller_id_number    => $p->{'caller_id_number'},
 		total_output_tokens => $p->{'total_output_tokens'},
 		total_input_tokens  => $p->{'total_input_tokens'},
-		grafana_url         => $grafana_url,
 		raw_json            => $json->encode( $p ),
 		record_call_url     => $p->{SWMLVars}->{record_call_url} );
 
