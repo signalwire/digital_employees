@@ -175,9 +175,6 @@ my $data_sql = {
     reservations => {
 	create => qq( CREATE TABLE IF NOT EXISTS reservations (reservation_id SERIAL PRIMARY KEY, restaurant_id INT REFERENCES restaurants(restaurant_id), reservation_date DATE NOT NULL, reservation_time TIME NOT NULL, reservation_key VARCHAR(8), party_size INT NOT NULL, customer_name VARCHAR(255) NOT NULL, customer_phone VARCHAR(20) NOT NULL, customer_email VARCHAR(255) ) ),
     },
-    reminders => {
-	create => qq( CREATE TABLE IF NOT EXISTS reminders (reminder_id SERIAL PRIMARY KEY, reservation_id INT REFERENCES reservations(reservation_id), reminder_status VARCHAR(20) NOT NULL, reminder_datetime TIMESTAMP NOT NULL) ),
-    },
     summary => {
 	create => qq( CREATE TABLE IF NOT EXISTS ai_summary (id SERIAL PRIMARY KEY, created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, convo_id TEXT, summary TEXT) )
     },
