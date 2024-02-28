@@ -6,7 +6,7 @@ use warnings;
 
 # SignalWire modules
 use SignalWire::RestAPI;
-use SIgnalWire::ML;
+use SignalWire::ML;
 
 # PSGI/Plack
 use Plack::Builder;
