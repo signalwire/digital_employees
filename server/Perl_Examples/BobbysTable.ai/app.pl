@@ -915,6 +915,23 @@ my $reservation_app = sub {
     return $res->finalize;
 };
 
+my $debug_app = sub {
+    my $env       = shift;
+    my $req       = Plack::Request->new( $env );
+    my $swml      = SignalWire::ML->new;
+    my $post_data = decode_json( $req->raw_body );
+    my $agent     = $req->param( 'agent_id' );
+    my $res       = Plack::Response->new( 200 );
+
+    $res->content_type( 'application/json' );
+
+    $res->body( $swml->swaig_response_json( { response => "data received" } ) );
+
+    print STDERR "Data received: " . Dumper( $post_data ) if $ENV{DEBUG};
+
+    return $res->finalize;
+};
+
 my $assets_app = Plack::App::Directory->new( root => "/app/assets" )->to_app;
 
 my $swml_app = sub {
