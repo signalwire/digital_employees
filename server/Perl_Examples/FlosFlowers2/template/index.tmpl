@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Welcome to Flo's Flowers</title>
+  <link rel="stylesheet" href="/assets/style.css" type="text/css">
+  <link rel="icon" type="image/png" href="/assets/flosflowers.png">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-06R0KEN1DG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    
+    gtag('config', 'G-06R0KEN1DG');
+  </script>
+</head>
+<!--
+ __      ___         _                                    _          _   _              __        ___ 
+ \ \    / / |_  __ _| |_   __ _ _ _ ___   _  _ ___ _  _  | |___  ___| |_(_)_ _  __ _   / _|___ _ |__ \
+  \ \/\/ /| ' \/ _` |  _| / _` | '_/ -_) | || / _ \ || | | / _ \/ _ \ / / | ' \/ _` | |  _/ _ \ '_|/_/
+   \_/\_/ |_||_\__,_|\__| \__,_|_| \___|  \_, \___/\_,_| |_\___/\___/_\_\_|_||_\__, | |_| \___/_| (_) 
+                                          |__/                                 |___/                 
+-->
+<body>
+  <header>
+    <center>
+      <h2 style="color:black"><TMPL_VAR name="slogan"/></h2>
+      <table border="1" style="border-collapse: collapse; width: 100%; margin: auto;">
+	<tr>
+	  <td style="text-align: right;">
+	    <a href="https://signalwire.com/?utm_source=flosflowers"><img src="/assets/flosflowers.png" alt="Flo's Flowers" style="width: 250px; height: 250px;"></a>
+	  </td>
+	  <td style="text-align: left;">
+	    <p style="color:black">To send virtual flowers call <a href="tel:+16608356937">+1 (660) 8FLOWER</a><br/>
+	    </p>
+	  </td>
+	</tr>
+      </table>
+    </center>
+  </header>
+  <center><h2>Flowers Delivered</h2></center>
+  <div style="text-align: center;">
+    <table border="1" style="border-collapse: collapse; width: 90%; margin: auto;">
+      <tr>
+	<th>From</th>
+	<th>To</th>
+	<th>Message</th>
+	<th>Image</th>
+      </tr>
+      <TMPL_LOOP name="table_contents">
+	<tr>
+	  <td><TMPL_VAR name="from_number"/></td>
+	  <td><TMPL_VAR name="to_number"/></td>
+	  <td><TMPL_VAR name="message"/></td>
+	  <td><a href="<TMPL_VAR name="flower_url"/>" target="_blank"><TMPL_VAR name="prompt"/></a></td>
+	</tr>
+      </TMPL_LOOP>
+    </table>
+  </div>
+  <br/>
+  <br/>
+  <br/>
+  <div class="pi-container">
+    <a href="https://www.youtube.com/watch?v=As4gzzCQJ84" class="pi-link"><span class="pi-symbol">&pi;</span></a>
+  </div>
+  <footer>
+    <center>
+      <p style="color:white">Contact <a href="mailto:sales@signalwire.com?subject=Flo%27s%20Flowers%202.0%20AI%20Information">Flo's Flowers 2.0</a>, to place an order call <a href="tel:+16608385627">+1 (660) 8FLOWER</a></p>
+      <p style="color:white"><small>Powered by <a href="https://signalwire.com/?utm_source=JobSearchAI">SignalWire</a></small></p>
+    </center>
+  </footer>
+</body>
+</html>
