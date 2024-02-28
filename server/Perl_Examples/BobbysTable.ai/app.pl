@@ -183,8 +183,6 @@ my $data_sql = {
     }
 };
 
-
-
 # Load environment variables
 my $ENV = Env::C::getallenv();
 
@@ -225,10 +223,10 @@ sub generate_random_string {
 
 # PSGI application code
 sub lookup_reservation {
+    my $data      = shift;
+    my $post_data = shift;
     my $env       = shift;
     my $req       = Plack::Request->new( $env );
-    my $post_data = decode_json( $req->raw_body );
-    my $data      = $post_data->{argument}->{parsed}->[0];
     my $swml      = SignalWire::ML->new;
     my $json      = JSON::PP->new->ascii->pretty->allow_nonref;
     my $res       = Plack::Response->new( 200 );
@@ -282,10 +280,10 @@ sub lookup_reservation {
 }
 
 sub cancel_reservation {
+    my $data 	  = shift;
+    my $post_data = shift;
     my $env       = shift;
     my $req       = Plack::Request->new( $env );
-    my $post_data = decode_json( $req->raw_body );
-    my $data      = $post_data->{argument}->{parsed}->[0];
     my $swml      = SignalWire::ML->new;
     my $json      = JSON::PP->new->ascii->pretty->allow_nonref;
     my $res       = Plack::Response->new( 200 );
@@ -333,10 +331,10 @@ sub cancel_reservation {
 }
 
 sub move_reservation {
+    my $data      = shift;
+    my $post_data = shift;
     my $env       = shift;
     my $req       = Plack::Request->new( $env );
-    my $post_data = decode_json( $req->raw_body );
-    my $data      = $post_data->{argument}->{parsed}->[0];
     my $swml      = SignalWire::ML->new;
     my $json      = JSON::PP->new->ascii->pretty->allow_nonref;
     my $res       = Plack::Response->new( 200 );
@@ -461,10 +459,10 @@ sub move_reservation {
 }
 
 sub check_availability {
+    my $data 		= shift;
+    my $post_data       = shift;
     my $env             = shift;
     my $req             = Plack::Request->new($env);
-    my $post_data       = decode_json($req->raw_body);
-    my $data            = $post_data->{argument}->{parsed}->[0];
     my $swml            = SignalWire::ML->new;
     my $json            = JSON::PP->new->ascii->pretty->allow_nonref;
     my $res             = Plack::Response->new(200);
@@ -527,10 +525,10 @@ sub check_availability {
 }
 
 sub create_reservation {
+    my $data      = shift;
+    my $post_data = shift;
     my $env       = shift;
     my $req       = Plack::Request->new( $env );
-    my $post_data = decode_json( $req->raw_body );
-    my $data      = $post_data->{argument}->{parsed}->[0];
     my $swml      = SignalWire::ML->new;
     my $json      = JSON::PP->new->ascii->pretty->allow_nonref;
     my $res       = Plack::Response->new( 200 );
@@ -1272,9 +1270,8 @@ my $swaig_app = sub {
     my $post_data = decode_json( $body eq '' ? '{}' : $body );
     my $swml      = SignalWire::ML->new();
     my $data      = $post_data->{argument}->{parsed}->[0];
-
-    print STDERR Dumper($post_data) if $ENV{DEBUG} > 2;
-
+    print STDERR Dumper($post_data);
+    
     if (defined $post_data->{action} && $post_data->{action} eq 'get_signature') {
 	my @functions;
 	my @funcs;
@@ -1303,6 +1300,7 @@ my $swaig_app = sub {
     } elsif (defined $post_data->{function} && exists $function->{$post_data->{function}}->{function}) {
 	print STDERR "Calling function $post_data->{function}\n" if $ENV{DEBUG};
 	print STDERR "Data: " . Dumper($data) if $ENV{DEBUG};
+	print STDERR "Post Data: " . Dumper($post_data) if $ENV{DEBUG};
 	$function->{$post_data->{function}}->{function}->($data, $post_data, $env);
     } else {
 	my $res = Plack::Response->new( 500 );
