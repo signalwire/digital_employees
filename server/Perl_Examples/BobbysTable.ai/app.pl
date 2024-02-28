@@ -600,7 +600,6 @@ sub create_reservation {
 	}
 
 	# Closing the database connection # https://xkcd.com/327/
-	$sth_availability->finish;
 	$dbh->disconnect;
     } else {
 	$dbh->rollback;  # Rollback the transaction
