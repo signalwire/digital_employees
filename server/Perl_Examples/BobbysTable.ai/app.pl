@@ -21,6 +21,7 @@ use HTTP::Request::Common;
 use HTML::Template::Expr;
 use LWP::UserAgent;
 use Time::Piece;
+use File::Slurp;
 use JSON::PP;
 use Data::Dumper;
 use DateTime;
