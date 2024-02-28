@@ -1,0 +1,190 @@
+.inline-form {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.pi-container {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    text-align: right;
+}
+
+.pi-symbol, .pi-link {
+    font-size: small;
+    color: #808080; 
+    text-decoration: none;
+}
+
+.pi-link:hover {
+    text-decoration: underline;
+}
+
+.center-table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body {
+    font-family: Tahoma, Arial, sans-serif;
+    color: #ffffff;
+    background-color: #222222;
+}
+
+left-col {
+    width: 20%;
+}
+
+.right-col {
+    width: 80%;
+}
+ 
+table {
+    width: 90%;
+    margin: 0 auto;
+    border: none;
+    border-spacing: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    border: none;
+    text-align: left;
+}
+
+table td {
+    padding: 10px;
+    min-width: 100px;
+}
+
+h1, a {
+    color: #000000;
+}
+
+h2 {
+    text-align: center;
+    color: #ffffff;
+}
+
+a {
+    text-decoration: none;
+    color: #50D2E9; /* If there's a conflict, choose one color */
+}
+
+a:hover {
+    color: #33CCFF;
+}
+
+button, .submit-button {
+    font-size: 16px;
+    color: #FFFFFF;
+    background-color: #4CAF50;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button, .edit-button {
+    font-size: 16px;
+    color: #FFFFFF;
+    background-color: #4CAF50;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button, .delete-button {
+    font-size: 16px;
+    color: #FFFFFF;
+    background-color: #FF0000;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button, .add-button {
+    font-size: 16px;
+    color: #FFFFFF;
+    background-color: #4CAF50;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button:hover, .submit-button:hover {
+    background-color: #45a049;
+}
+
+header {
+    background-color: #f2f2f2;
+    padding: 10px;
+    text-align: center;
+}
+
+header nav a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #333;
+}
+
+.collapsible {
+    cursor: pointer;
+    text-align: center;
+    width: auto;
+    display: inline-block;
+}
+
+.content {
+    display: none;
+    overflow: hidden;
+    background-color: #222222;
+    margin: 0 auto;
+}
+
+.copy-button {
+    text-align: center;
+    width: auto;
+    cursor: pointer;
+}
+
+.system {
+    background-color: #872126;
+}
+
+.assistant {
+    background-color: #364285;
+}
+
+.user {
+    background-color: #236A1C;
+}
+
+.function {
+    background-color: #CD00C4;
+}
+
+.center-table {
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+}
+
+/* Optional: additional styling for the table */
+.center-table, .center-table th, .center-table td {
+    border: 0px;
+}
+
+.center-table th, .center-table td {
+    padding: 8px;
+    text-align: left;
+}
