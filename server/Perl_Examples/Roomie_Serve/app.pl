@@ -314,8 +314,8 @@ my $swml_app = sub {
     $swml->add_ailanguage({
 	code    => 'en-US',
 	name    => 'English',
-	voice   => 'Charlotte',
-	engine  => 'elevenlabs',
+	voice   => 'nova',
+	engine  => 'openai',
 	fillers => [ "hrm", "uh" ] });
 
     my $sql = "SELECT * FROM roomie_menu WHERE roomie_company_id = ? ORDER BY category, sku";
