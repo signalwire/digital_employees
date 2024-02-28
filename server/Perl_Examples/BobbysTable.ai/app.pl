@@ -571,7 +571,7 @@ sub create_reservation {
     my $row_party_size = $sth_party_size->fetchrow_hashref;
     my $total_party_size = $row_party_size->{total_party_size} || 0;
 
-    $sth_parthy_size->finish;
+    $sth_party_size->finish;
 
     # Calculate available capacity
     my $available_capacity = $max_capacity - $total_party_size;
