@@ -241,8 +241,6 @@ my $laml_app = sub {
     my $sid     = $req->param( 'MessageSid' );
     my $resp    = SignalWire::CompatXML->new;
 
-    print STDERR "FUCKER";
-
     $resp->name( 'Response' );
 
     print STDERR "$to, $from, $message, $sid\n" if $ENV{DEBUG};
