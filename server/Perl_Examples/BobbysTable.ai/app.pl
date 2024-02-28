@@ -1,4 +1,4 @@
-#!/bin/env perl
+#!/usr/bin/env perl
 # app.pl - SignalWire AI Agent Bobby's Table Demo Application
 use lib '.', '/app';
 use strict;
