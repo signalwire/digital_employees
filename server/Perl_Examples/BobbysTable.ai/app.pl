@@ -110,7 +110,7 @@ my $function = {
 				    required => ["party_size", "reservation_time", "reservation_date"],
 				    properties => {
 					reservation_time => {
-					    description => "proposed time of reservation",
+					    description => "proposed time of reservation in military time",
 					    type => "string",
 					},
 					reservation_date => {
