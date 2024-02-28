@@ -122,7 +122,7 @@ sub send_flowers {
 	    $msg->add_application( "main", "send_sms" => { to_number   => "$data->{to}",
 							   from_number => $ENV{ASSISTANT},
 							   media       => [ $flower_url ],
-							   body        => "You have been sent virtual flowers, from $data->{from_number} via Flo's Flowers, with the message: $data->{message}" } );
+							   body        => "You have been sent virtual flowers, from $data->{from} via Flo's Flowers, with the message: $data->{message}" } );
 	    push @actions, { SWML => $msg->render };
 
 	    $dbh->disconnect;
@@ -209,8 +209,8 @@ my $swml_app = sub {
     $swml->add_ailanguage({
 	code    => 'en-US',
 	name    => 'English',
-	voice   => 'Josh',
-	engine  => 'elevenlabs',
+	voice   => 'nova',
+	engine  => 'openai',
 	fillers => [ "hrm", "ok" ] });
 
 
