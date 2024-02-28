@@ -1,4 +1,7 @@
+requires 'File::Slurp', '9999.32';
+requires 'SignalWire::CompatXML', '1.0';
 requires 'SignalWire::RestAPI', '1.5';
+requires 'SignalWire::ML', '1.18';
 requires 'Time::Piece', '1.3401';
 requires 'List::Util', '1.63';
 requires 'LWP::Protocol::https', '6.10';
