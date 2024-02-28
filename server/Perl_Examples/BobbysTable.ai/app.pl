@@ -26,6 +26,7 @@ use Data::Dumper;
 use DateTime;
 use Env::C;
 use DBI;
+use File::Slurp qw(read_file);
 
 # Array of slogans
 my @slogans = (
