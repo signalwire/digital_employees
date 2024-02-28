@@ -567,13 +567,14 @@ sub create_reservation {
 
     my $sth_party_size = $dbh->prepare($total_party_size_sql);
     $sth_party_size->execute($restaurant_id, $reservation_date, $reservation_time, $reservation_time);
-
+    
     my $row_party_size = $sth_party_size->fetchrow_hashref;
     my $total_party_size = $row_party_size->{total_party_size} || 0;
 
+    $sth_party_size->finish;
+
     # Calculate available capacity
     my $available_capacity = $max_capacity - $total_party_size;
-
 
     # Check if the available capacity is sufficient for the party size
     if ($party_size <= $available_capacity) {
