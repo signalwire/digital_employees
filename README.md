@@ -20,6 +20,12 @@ Try out the following serverless examples in the dashboard of your SignalWire Sp
 
 ## Server
 
+#### 💐 [FlosFlowers2](https://github.com/signalwire/digital_employees/tree/main/server/Perl_Examples/FlosFlowers2)
+  * Flo's Flowers 2.0 can send an SMS e-card with an image of any type of flower now. Just tell Flo what kind of flowers to send.
+
+#### &#x1F50E; [JobSearch](https://github.com/signalwire/digital_employees/tree/main/server/Perl_Examples/JobSearch)
+  *  JobSearch is a conversational AI assistant for job-seekers that automates the application process. It acts as a fully capable recruiter, collecting important information from the user over the phone and taking action to offer next steps.
+
 #### &#x1F935; [Roomie Serve](https://github.com/signalwire/digital_employees/tree/main/server/Perl_Examples/Roomie_Serve)
   * Roomie Serve is a digital assistant designed for use in hotels and hospitals, aimed at enhancing the efficiency and accuracy of room service orders. Roomie Serve interfaces with a menu inventory database to facilitate the creation of room service orders.
 
