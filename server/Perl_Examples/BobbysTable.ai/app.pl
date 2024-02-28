@@ -593,7 +593,7 @@ sub create_reservation {
 	    $sth_insert->execute($restaurant_id, $reservation_date, $reservation_time, $reservation_key, $party_size, $customer_name, $customer_phone);
 	    $dbh->commit;  # Commit the transaction
 	    $sth_insert->finish;
-	    $response->{response} = "Reservation successfully created. Here is the URL to update or cancel it, include it with the text message https://bobbystable.ai/view?rk=$reservation_key";
+	    $response->{response} = "Reservation successfully created. Here is the URL to update or cancel it, include it with the text message https://$ENV{NGROK_URL}/view?rk=$reservation_key";
 	} else {
 	    $dbh->rollback;  # Rollback the transaction
 	    $response->{response} = "Reservation failed. Time not available. Offer to check an hour before and after the requested time.";
