@@ -10,15 +10,17 @@
   <meta property="og:site_name" content="Flo's Flowers" />
   <link rel="stylesheet" href="/assets/style.css" type="text/css">
   <link rel="icon" type="image/png" href="/assets/flosflowers.png">
+  <TMPL_IF name="google_tag">
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-06R0KEN1DG"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=<TMPL_VAR name="google_tag"/>"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     
-    gtag('config', 'G-06R0KEN1DG');
+    gtag('config', '<TMPL_VAR name="google_tag"/>');
   </script>
+  </TMPL_IF>
 </head>
 <!--
  __      ___         _                                    _          _   _              __        ___ 
@@ -37,7 +39,7 @@
 	    <a href="https://signalwire.com/?utm_source=flosflowers"><img src="/assets/flosflowers.png" alt="Flo's Flowers" style="width: 250px; height: 250px;"></a>
 	  </td>
 	  <td style="text-align: left;">
-	    <p style="color:black">To send virtual flowers call <a href="tel:+16608356937">+1 (660) 8FLOWER</a><br/>
+	    <p style="color:black">To send virtual flowers call <a href="<TMPL_VAR name="phone_link"/>"><TMPL_VAR name="phone_display"/></a><br/>
 	    </p>
 	  </td>
 	</tr>
@@ -71,8 +73,8 @@
   </div>
   <footer>
     <center>
-      <p style="color:white">Contact <a href="mailto:sales@signalwire.com?subject=Flo%27s%20Flowers%202.0%20AI%20Information">Flo's Flowers 2.0</a>, to place an order call <a href="tel:+16608385627">+1 (660) 8FLOWER</a></p>
-      <p style="color:white"><small>Powered by <a href="https://signalwire.com/?utm_source=JobSearchAI">SignalWire</a></small></p>
+      <p style="color:white">Contact <a href="mailto:sales@signalwire.com?subject=Flo%27s%20Flowers%202.0%20AI%20Information">Flo's Flowers 2.0</a>, to place an order call <a href="<TMPL_VAR name="phone_link"/>"><TMPL_VAR name="phone_display"/></a></p>
+      <p style="color:white"><small>Powered by <a href="https://signalwire.com/?utm_source=FlosFlowers2">SignalWire</a></small></p>
     </center>
   </footer>
 </body>

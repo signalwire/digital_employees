@@ -8,9 +8,19 @@
   <meta property="og:url" content="<TMPL_VAR name="site_url"/>" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="JobSearchAI" />
-  <meta http-equiv="refresh" content="300">
   <link rel="stylesheet" href="/assets/style.css" type="text/css">
   <link rel="icon" type="image/png" href="/assets/">
+  <TML_IF name="google_tag">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=<TMPL_VAR name="google_tag"/>"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', '<TMPL_VAR name="google_tag"/>');
+  </script>
+  </TML_IF>
 </head>
 <!--
  __      ___         _                                    _          _   _              __        ___ 
@@ -30,7 +40,7 @@
 	  <td style="text-align: left;">
 	    <p style="color:black"><b>Job Search</b><br/>
 	      To Apply Today Call:<br/>
-	      <a href="tel:+19714385627">+1 (971) GETJOBS</a><br/>
+	      <a href="<TMPL_VAR name="phone_link">"><TMPL_VAR name="phone_display"></a><br/>
 	    </p>
 	  </td>
 	</tr>
@@ -70,7 +80,7 @@
   </div>
   <footer>
     <center>
-      <p style="color:white">Contact <a href="mailto:sales@signalwire.com?subject=JobSearch%20AI%20Information">JobSearchAI</a>, to place an order call <a href="tel:+19714385627">+1 (971) GETJOBS</a></p>
+      <p style="color:white">Contact <a href="mailto:sales@signalwire.com?subject=JobSearch%20AI%20Information">JobSearchAI</a>, to place an order call <a href="<TMPL_VAR name="phone_link">"><TMPL_VAR name="phone_display"></a></p>
       <p style="color:white"><small>Powered by <a href="https://signalwire.com/?utm_source=JobSearchAI">SignalWire</a></small></p>
     </center>
   </footer>

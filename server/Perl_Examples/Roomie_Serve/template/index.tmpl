@@ -8,18 +8,19 @@
   <meta property="og:url" content="<TMPL_VAR name="site_url"/>">
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Ch&#226teau AI-Lux" />
-  <meta http-equiv="refresh" content="300">
   <link rel="stylesheet" href="/assets/style.css" type="text/css">
   <link rel="icon" type="image/png" href="/assets/cai.png">
+  <TMPL_IF name="google_tag">
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JS5JS8J5KM"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=<TMPL_VAR name="google_tag"/>"></script>
   <script type="text/javascript" nonce="<TMPL_VAR name="nonce"/>">
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     
-    gtag('config', 'G-JS5JS8J5KM');
+    gtag('config', '<TMPL_VAR name="google_tag"/>');
   </script>
+  </TMPL_IF>
 </head>
 <!--
  __      ___         _                                    _          _   _              __        ___ 
@@ -42,7 +43,7 @@
 	      Sternen 789, 5150<br/>
 	      Hasliberg Reuti, Bern<br/>
 	      For Room Service Call:<br/>
-	      <a href="tel:+12403766643">+1 (240) 3ROOMIE</a><br/>
+	      <a href="<TMPL_VAR name="phone_link">"><TMPL_VAR name="phone_display"></a>
 	    </p>
 	  </td>
 	</tr>
@@ -50,22 +51,6 @@
     </center>
   </header>
   <center><h2>Current Orders</h2></center>
-  <!--
-  <table>
-    <tr>
-      <td style="text-align: right;">
-	<TMPL_IF name="yesterday_url">
-	  <a href="<TMPL_VAR name="yesterday_url"/>">< Yesterday</a>
-	</TMPL_IF>
-      </td>
-      <td style="text-align: left;">
-	<TMPL_IF name="tomorrow_url">
-	  <a href="<TMPL_VAR name="tomorrow_url"/>">Tomorrow ></a>
-	</TMPL_IF>
-      </td>
-    </tr>
-  </table>
-  -->
   <TMPL_IF name="order">
   <div style="text-align: center;">
     <table border="1" style="border-collapse: collapse; width: 90%; margin: auto;">
@@ -111,22 +96,6 @@
     </table>
   </div>
   </TMPL_IF>
-  <!--
-  <table>
-    <tr>
-      <td style="text-align: right;">
-	<TMPL_IF name="yesterday_url">
-	  <a href="<TMPL_VAR name="yesterday_url"/>">< Yesterday</a>
-	</TMPL_IF>
-      </td>
-      <td style="text-align: left;">
-	<TMPL_IF name="tomorrow_url">
-	  <a href="<TMPL_VAR name="tomorrow_url"/>">Tomorrow ></a>
-	</TMPL_IF>
-      </td>
-    </tr>
-  </table>
-  -->
   <br/>
   <br/>
   <br/>
@@ -135,7 +104,7 @@
   </div>
   <footer>
     <center>
-      <p style="color:white">Contact <a href="mailto:sales@signalwire.com?subject=RoomieServe%20AI%20Information">RoomieServe</a>, to place an order call <a href="tel:+12403766643">+1 (240) 3ROOMIE</a></p>
+      <p style="color:white">Contact <a href="mailto:sales@signalwire.com?subject=RoomieServe%20AI%20Information">RoomieServe</a>, to place an order call <a href="<TMPL_VAR name="phone_link">"><TMPL_VAR name="phone_display"></a></p>
       <p style="color:white"><small>Powered by <a href="https://signalwire.com/?utm_source=RoomieServeAI">SignalWire</a></small></p>
     </center>
   </footer>

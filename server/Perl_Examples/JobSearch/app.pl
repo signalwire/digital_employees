@@ -726,7 +726,11 @@ my $applicant_list = sub {
 	$row->{phone} = scramble_last_seven( $row->{phone} );
 	push @table_contents, $row;
     }
-    $template->param( site_url => "$env->{HTTP_HOST}" );
+    $template->param( phone_link    => $ENV{PHONE_LINK},
+		      phone_display => $ENV{PHONE_DISPLAY},
+		      google_tag    => $ENV{GOOGLE_TAG},
+		      site_url      => "$env->{HTTP_HOST}" );
+    
     $template->param( table_contents => \@table_contents, index => 1 );
     my $res = Plack::Response->new(200);
     $res->content_type( 'text/html' );
@@ -796,9 +800,13 @@ my $applicant_edit = sub {
 	    filename => '/app/template/edit.tmpl',
 	    die_on_bad_params => 0,
 	    );
+	$template->param( phone_link    => $ENV{PHONE_LINK},
+			  phone_display => $ENV{PHONE_DISPLAY},
+			  google_tag    => $ENV{GOOGLE_TAG},
+			  site_url      => "$env->{HTTP_HOST}" );
 
 	my $user = $sth->fetchrow_hashref;
-	print Dumper $user;
+
 	$template->param( %$user );
 
 	my $res = Plack::Response->new( 200 );

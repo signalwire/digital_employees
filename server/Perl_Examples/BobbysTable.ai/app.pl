@@ -281,7 +281,7 @@ sub lookup_reservation {
 }
 
 sub cancel_reservation {
-    my $data 	  = shift;
+    my $data	  = shift;
     my $post_data = shift;
     my $env       = shift;
     my $req       = Plack::Request->new( $env );
@@ -460,7 +460,7 @@ sub move_reservation {
 }
 
 sub check_availability {
-    my $data 		= shift;
+    my $data		= shift;
     my $post_data       = shift;
     my $env             = shift;
     my $req             = Plack::Request->new($env);
@@ -567,7 +567,7 @@ sub create_reservation {
 
     my $sth_party_size = $dbh->prepare($total_party_size_sql);
     $sth_party_size->execute($restaurant_id, $reservation_date, $reservation_time, $reservation_time);
-    
+
     my $row_party_size = $sth_party_size->fetchrow_hashref;
     my $total_party_size = $row_party_size->{total_party_size} || 0;
 
@@ -594,7 +594,7 @@ sub create_reservation {
 	    $sth_insert->execute($restaurant_id, $reservation_date, $reservation_time, $reservation_key, $party_size, $customer_name, $customer_phone);
 	    $dbh->commit;  # Commit the transaction
 	    $sth_insert->finish;
-	    $response->{response} = "Reservation successfully created. Here is the URL to update or cancel it, include it with the text message https://$ENV{NGROK_URL}/view?rk=$reservation_key";
+	    $response->{response} = "Reservation successfully created. Here is the URL to update or cancel it, include it with the text message https://$env->{HTTP_HOST}/view?rk=$reservation_key";
 	} else {
 	    $dbh->rollback;  # Rollback the transaction
 	    $response->{response} = "Reservation failed. Time not available. Offer to check an hour before and after the requested time.";
@@ -632,6 +632,12 @@ my $view_app = sub {
     $res->content_type('text/html');
 
     my $template = HTML::Template::Expr->new( filename => "/app/template/update.tmpl", die_on_bad_params => 0 );
+
+    $template->param( phone_link      => $ENV{PHONE_LINK},
+		      phone_display   => $ENV{PHONE_DISPLAY},
+		      google_tag      => $ENV{GOOGLE_TAG},
+		      site_url	      => "https://$ENV{SITE_URL}",
+	);
 
     if ($params->{rk}) {
 	my $sql = "SELECT * FROM reservations WHERE reservation_key = ?";
@@ -903,7 +909,10 @@ my $reservation_app = sub {
 	date            => $today->ymd,
 	table_contents  => \@table_contents,
 	slogan          => random_slogan(),
-	site_url        => "https://$env->{HTTP_HOST}"
+	site_url        => "https://$env->{HTTP_HOST}",
+	phone_link      => $ENV{PHONE_LINK},
+	phone_display   => $ENV{PHONE_DISPLAY},
+	google_tag	=> $ENV{GOOGLE_TAG},
 	);
 
     my $res = Plack::Response->new( 200 );
@@ -1289,7 +1298,7 @@ my $swaig_app = sub {
     my $swml      = SignalWire::ML->new();
     my $data      = $post_data->{argument}->{parsed}->[0];
     print STDERR Dumper($post_data);
-    
+
     if (defined $post_data->{action} && $post_data->{action} eq 'get_signature') {
 	my @functions;
 	my @funcs;
