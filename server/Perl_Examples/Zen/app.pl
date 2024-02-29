@@ -1141,22 +1141,24 @@ my $dbh = DBI->connect(
     { AutoCommit => 1, RaiseError => 1 } ) or die "Couldn't execute statement: $DBI::errstr\n";
 
 my $sql = <<'SQL';
-CREATE TABLE IF NOT EXISTS job_applicants (
-    id SERIAL PRIMARY KEY,
-    firstname VARCHAR(255) NOT NULL,
-    lastname VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    phone VARCHAR(20) NOT NULL,
-    jobinterest VARCHAR(50),
-    searchlocation VARCHAR(255),
-    searchradius VARCHAR(20),
-    jobtitle VARCHAR(255),
-    certifications VARCHAR(255),
-    starttime VARCHAR(50),
-    wage VARCHAR(50),
-    transfer_to_agent BOOLEAN,
-    application_key VARCHAR(16),
-    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE customers (
+    id INT PRIMARY KEY,
+    first_name TEXT,
+    last_name TEXT,
+    Active BOOLEAN,
+    Phone_number TEXT,
+    mac_address TEXT,
+    CPNI INT,
+    Account_Number INT,
+    service_address TEXT,
+    billing_address TEXT,
+    email_address TEXT,
+    modem_speed_upload REAL,
+    modem_speed_download REAL,
+    modem_upstream_level REAL,
+    modem_downstream_level REAL,
+    modem_snr INT,
+    modem_downstream_uncorrectables INT
 );
 
 CREATE TABLE IF NOT EXISTS ai_messages (
