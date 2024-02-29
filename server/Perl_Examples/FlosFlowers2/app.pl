@@ -108,13 +108,6 @@ sub send_flowers {
 
 	my $image_data = $binary->content;
 
-	my $image        = GD::Image->newFromPngData($image_data, 1);
-	my $newWidth     = 256;
-	my $newHeight    = 256;
-	my $resizedImage = GD::Image->newTrueColor($newWidth, $newHeight);
-	$resizedImage->copyResampled($image, 0, 0, 0, 0, $newWidth, $newHeight, $image->width, $image->height);
-	my $resized_image = $resizedImage->png;
-	
 	if ( $flower_url ) {
 	    my @actions;
 	    my $dbh = DBI->connect("dbi:Pg:dbname=$database;host=$host;port=$port",
@@ -129,7 +122,7 @@ sub send_flowers {
 	    $sth->bind_param(3, $data->{message});
 	    $sth->bind_param(4, $prompt);
 	    $sth->bind_param(5, $flower_url);
-	    $sth->bind_param(6, $resized_image, { pg_type => DBD::Pg::PG_BYTEA });
+	    $sth->bind_param(6, $image_data, { pg_type => DBD::Pg::PG_BYTEA });
 	    $sth->execute();
 
 	    my $last_insert_id = $dbh->last_insert_id( undef, undef, 'flower_deliveries', 'id' );
@@ -592,9 +585,18 @@ my $view_flowers = sub {
 
     my $res = Plack::Response->new( 200 );
 
+    my $image        = GD::Image->newFromPngData($image_data, 1);
+    my $newWidth     = 256;
+    my $newHeight    = 256;
+    my $resizedImage = GD::Image->newTrueColor($newWidth, $newHeight);
+    $resizedImage->copyResampled($image, 0, 0, 0, 0, $newWidth, $newHeight, $image->width, $image->height);
+    my $resized_image = $resizedImage->png;
+    
+
+    
     $res->content_type( 'image/png' );
     $res->header( 'Content-Disposition' => 'inline; filename="flower$id.png"' );
-    $res->body( $image_data );
+    $res->body( $resized_image );
     
     $dbh->disconnect;
     
