@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Conversation Details</title>
+    <link rel="stylesheet" href="/assets/style.css" type="text/css">
+    <link rel="icon" type="image/png" href="/assets/favicon.png">
+  </head>
+  <body>
+    <h2>Conversation Details</h2>
+    <div class="container">
+      <table class="info-table">
+	<tr>
+          <td>
+	    <table>
+	      <tr>
+		<td style="text-align: right">ID:</td>
+		<td style="text-align: left"><TMPL_VAR name="call_id"/></td>
+	      </tr>
+	      <tr>
+		<td style="text-align: right">Start Date:</td>
+		<td style="text-align: left"><TMPL_VAR name="call_start_date"/></td>
+	      </tr>
+	      <tr>
+		<td style="text-align: right">Name:</td>
+		<td style="text-align: left"><TMPL_VAR name="caller_id_name"/></td>
+	      </tr>
+	      <tr>
+		<td style="text-align: right">Number:</td>
+		<td style="text-align: left"><TMPL_VAR name="caller_id_number"/></td>
+	      </tr>
+	      <tr>
+		<td style="text-align: right">Input Tokens:</td>
+		<td style="text-align: left"><TMPL_VAR name="total_input_tokens"/></td>
+	      </tr>
+	      <tr>
+		<td style="text-align: right">Output Tokens:</td>
+		<td style="text-align: left"><TMPL_VAR name="total_output_tokens"/></td>
+	      </tr>
+	    </table>
+	  </td>
+	  <td style="text-align: right">Recording:</td>
+          <td style="text-align: left">
+	    <TMPL_IF EXPR="record_call_url">
+	      <audio src="<TMPL_VAR name='record_call_url'/>" crossorigin="anonymous" controls></audio>
+	    </TMPL_IF>
+          </td>
+	</tr>
+      </table>
+    </div>
+    <div class="container">
+      <table>
+	<tr>
+	  <td class="prevurl">
+	    <TMPL_IF name="prev_text">
+	      <a href="<TMPL_VAR name="prev_id"/>" class="button-style"><TMPL_VAR name="prev_text"/></a>
+	    </TMPL_IF>
+	  </td>
+	  <td class="nexturl">
+	    <TMPL_IF name="next_text">
+	      <a href="<TMPL_VAR name="next_id"/>" class="button-style"><TMPL_VAR name="next_text"/>
+	    </TMPL_IF>
+	  </td>
+	</tr>
+	<tr>
+	  <th class="role">Role</th>
+	  <th>Content</th>
+	</tr>
+	<TMPL_LOOP name="call_log">
+	  <TMPL_IF expr="role eq 'system'">
+            <tr class="system">
+	  </TMPL_IF>
+	  <TMPL_IF expr="role eq 'assistant'">
+	  <tr class="assistant">
+	  </TMPL_IF>
+	  <TMPL_IF expr="role eq 'user'">
+	    <tr class="user">
+	  </TMPL_IF>
+	  <TMPL_IF expr="role eq 'function'">
+	    <tr class="function">
+	  </TMPL_IF>
+	  <td><TMPL_VAR name="role"/></td>
+	  <td><TMPL_VAR name="content"/></td>
+          </tr>
+          </TMPL_LOOP>
+          <tr>
+            <th>Function</th>
+            <th>Arguments</th>
+          </tr>
+	  <TMPL_LOOP name="swaig_log">
+	    <tr class="system">
+	      <td><TMPL_VAR name="command_name"/></td>
+	      <td><TMPL_VAR name="command_arg"/></td>
+	    </tr>
+	  </TMPL_LOOP>
+	  <tr>
+	    <td class="prevurl">
+	      <TMPL_IF name="prev_text">
+		<a href="<TMPL_VAR name="prev_id"/>" class="button-style"><TMPL_VAR name="prev_text"/></a>
+	      </TMPL_IF>
+	    </td>
+	    <td class="nexturl">
+	      <TMPL_IF name="next_text">
+		<a href="<TMPL_VAR name="next_id"/>" class="button-style"><TMPL_VAR name="next_text"/>
+	      </TMPL_IF>
+	    </td>
+	  </tr>
+	</table>
+      </div>
+  </body>
+</html>
+<!-- <TMPL_VAR name="raw_json"/> -->

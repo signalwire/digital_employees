@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Welcome to ZenAI</title>
+  <meta property="og:title" content="Welcome to ZenAI">
+  <meta property="og:description" content="ZenAI is a simple AI that does cable modem tech support.">
+  <meta property="og:image" content="/assets/zen.png">
+  <meta property="og:url" content="https://zen.signalwire.me">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ZenAI">
+  <link rel="stylesheet" href="/assets/style.css" type="text/css">
+  <link rel="icon" type="image/png" href="/assets/zen.png">
+</head>
+<!--
+ __      ___         _                                    _          _   _              __        ___ 
+ \ \    / / |_  __ _| |_   __ _ _ _ ___   _  _ ___ _  _  | |___  ___| |_(_)_ _  __ _   / _|___ _ |__ \
+  \ \/\/ /| ' \/ _` |  _| / _` | '_/ -_) | || / _ \ || | | / _ \/ _ \ / / | ' \/ _` | |  _/ _ \ '_|/_/
+   \_/\_/ |_||_\__,_|\__| \__,_|_| \___|  \_, \___/\_,_| |_\___/\___/_\_\_|_||_\__, | |_| \___/_| (_) 
+                                          |__/                                 |___/                 
+-->
+<body>
+  <header>
+    <center>
+      <table border="1" style="border-collapse: collapse; width: 100%; margin: auto;">
+	<tr>
+	  <td style="text-align: right;">
+	    <img src="/assets/zen.png" alt="ZenAI" style="width: 150px; height: 150px;">
+	  </td>
+	  <td style="text-align: left;">
+	    <p style="color:black"><b>Tech Support</b><br/>
+	      To Get Tech Support:<br/>
+	      <a href="tel:+12137522253">+1 (213) 75CABLE</a><br/>
+	    </p>
+	  </td>
+	</tr>
+      </table>
+    </center>
+  </header>
+  <center><h2>Customers Serviced</h2></center>
+  <div style="text-align: center;">
+    <table border="1" style="border-collapse: collapse; width: 90%; margin: auto;">
+      <tr>
+	<th>First</th>
+	<th>Last</th>
+      </tr>
+      <TMPL_LOOP name="table_contents">
+	<tr>
+	  <td><TMPL_VAR name="firstname"/></td>
+	  <td><TMPL_VAR name="lastname"/></td>
+	</tr>
+      </TMPL_LOOP>
+    </table>
+  </div>
+  <br/>
+  <br/>
+  <br/>
+  <div class="pi-container">
+    <a href="https://www.youtube.com/watch?v=As4gzzCQJ84" class="pi-link"><span class="pi-symbol">&pi;</span></a>
+  </div>
+  <footer>
+    <center>
+      <p style="color:white">Contact <a href="mailto:sales@signalwire.com?subject=ZenAI%20Information">ZenAI</a>, for tech support call <a href="tel:+12137522253">+1 (213) 75CABLE</a></p>
+      <p style="color:white"><small>Powered by <a href="https://signalwire.com/?utm_source=ZenAI">SignalWire</a></small></p>
+    </center>
+  </footer>
+</body>
+</html>
