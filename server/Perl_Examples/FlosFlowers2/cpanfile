@@ -1,4 +1,4 @@
-requires 'GD', '2.89';
+requires 'GD', '2.78';
 requires 'File::Slurp', '9999.32';
 requires 'SignalWire::CompatXML', '1.0';
 requires 'SignalWire::RestAPI', '1.5';
