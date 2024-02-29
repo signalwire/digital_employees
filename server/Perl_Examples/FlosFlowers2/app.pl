@@ -27,6 +27,7 @@ use Data::Dumper;
 use DateTime;
 use Env::C;
 use DBI;
+use DBD::Pg;
 use UUID 'uuid';
 use URI::Escape qw(uri_escape);
 
@@ -40,6 +41,8 @@ my $function = {
 		      signature => {
 			  function => 'send_flowers',
 			  purpose  => "Send flowers",
+			  wait_file => "https://briankwest.ngrok.io/assets/sending.wav",
+			  wait_file_loop => "2",
 			  argument => {
 			      type => "object",
 			      properties => {
@@ -98,9 +101,11 @@ sub send_flowers {
 
 	my $flower_url = $image_res->{data}[0]->{url};
 
-	print STDERR Dumper($image_res);
+	my $get = LWP::UserAgent->new;
 
-	print STDERR Dumper($post_data);
+	my $binary = $get->get( $flower_url );
+
+	my $image_data = $binary->content;
 
 	if ( $flower_url ) {
 	    my @actions;
@@ -109,12 +114,22 @@ sub send_flowers {
 				   $dbpassword,
 				   {AutoCommit => 1, RaiseError => 1, PrintError => 0});
 
-	    my $sth = $dbh->prepare("INSERT INTO flower_deliveries (from_number, to_number, message, prompt, flower_url) VALUES (?, ?, ?, ?, ?)");
+	    my $sth = $dbh->prepare("INSERT INTO flower_deliveries (from_number, to_number, message, prompt, flower_url,flower_image) VALUES (?, ?, ?, ?, ?, ?)");
 
-	    $sth->execute($data->{from}, $data->{to}, $data->{message}, $prompt, $flower_url);
+	    $sth->bind_param(1, $data->{from});
+	    $sth->bind_param(2, $data->{to});
+	    $sth->bind_param(3, $data->{message});
+	    $sth->bind_param(4, $prompt);
+	    $sth->bind_param(5, $flower_url);
+	    $sth->bind_param(6, $image_data, { pg_type => DBD::Pg::PG_BYTEA });
+	    $sth->execute();
 
+	    my $last_insert_id = $dbh->last_insert_id( undef, undef, 'flower_deliveries', 'id' );
+
+	    $flower_url = "https://$env->{HTTP_HOST}/view/$last_insert_id";
+	    
 	    $sth->finish;
-
+	    
 	    $dbh->disconnect;
 
 	    my $msg = SignalWire::ML->new;
@@ -127,9 +142,10 @@ sub send_flowers {
 
 	    $dbh->disconnect;
 
-	    my $message = "Flowers sent to $data->{phone} with message: $data->{message}!  Enjoy your day!";
+	    my $message = "Flowers sent to $data->{from} with message: $data->{message}!  Enjoy your day!";
 
-	    print STDERR "Flowers sent to $data->{phone} with message: $data->{message}!  Enjoy your day!";
+	    print STDERR $message if $ENV{DEBUG};
+
 	    print STDERR $swml->swaig_response_json( { post_process => 'true', response => $message, action => \@actions } );
 
 	    $res->body($swml->swaig_response_json( { post_process => 'true', response => $message, action => \@actions } ));
@@ -542,6 +558,38 @@ my $swaig_app = sub {
     }
 };
 
+my $view_flowers = sub {
+    my $env = shift;
+    my $dbh = DBI->connect(
+	"dbi:Pg:dbname=$database;host=$host;port=$port",
+	$dbusername,
+	$dbpassword,
+	{ AutoCommit => 1, RaiseError => 1 }) or die "Couldn't execute statement: $DBI::errstr\n";
+
+    my $id = ($env->{PATH_INFO} =~ s/^\///r);
+    
+    my $sql = "SELECT flower_image FROM flower_deliveries WHERE id = ?";
+    
+    my $sth = $dbh->prepare( $sql );
+
+    my $image_data;
+    $sth->execute( $id ) or die $DBI::errstr;
+
+    $sth->bind_columns( undef, \$image_data );
+
+    $sth->fetch;
+
+    $sth->finish;
+    
+    my $res = Plack::Response->new( 200 );
+
+    $res->body( $image_data );
+    
+    $dbh->disconnect;
+    
+    return $res->finalize;
+};
+
 my $delivery_list = sub {
     my $env = shift;
     my $template = HTML::Template->new(
@@ -554,7 +602,8 @@ my $delivery_list = sub {
 	$dbusername,
 	$dbpassword,
 	{ AutoCommit => 1, RaiseError => 1 }) or die "Couldn't execute statement: $DBI::errstr\n";
-    my $sql = "SELECT * FROM  flower_deliveries ORDER BY created DESC LIMIT 25";
+
+    my $sql = "SELECT id, from_number, to_number, message, prompt FROM flower_deliveries ORDER BY created DESC";
 
     my $sth = $dbh->prepare( $sql );
 
@@ -565,10 +614,11 @@ my $delivery_list = sub {
     while ( my $row = $sth->fetchrow_hashref ) {
 	$row->{to_number}   = scramble_last_seven( $row->{to_number} );
 	$row->{from_number} = scramble_last_seven( $row->{from_number} );
+	$row->{flower_url} = "/view/$row->{id}";
 	push @table_contents, $row;
     }
 
-    $template->param( table_contents => \@table_contents, index => 1 );
+    $template->param( table_contents => \@table_contents );
     my $res = Plack::Response->new(200);
     $res->content_type( 'text/html' );
     $res->body($template->output);
@@ -614,6 +664,7 @@ my $app = builder {
 	$post_app;
     };
 
+    mount '/view' => $view_flowers;
     mount '/' => $delivery_list;
 };
 
