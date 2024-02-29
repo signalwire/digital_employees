@@ -115,7 +115,7 @@ my $function = {
 					},
 					reservation_date => {
 					    type => "string",
-					    description => "proposed date of reservation",
+					    description => "proposed date of reservation in PGSQL DATE format",
 					},
 					party_size => {
 					    type => "string",
@@ -147,7 +147,7 @@ my $function = {
 						description => "create reservation in military time",
 					    },
 					    reservation_date => {
-						description => "create a reservation for a date",
+						description => "create a reservation for a date in PGSQL DATE format",
 						type => "string",
 					    },
 					    customer_name => {
