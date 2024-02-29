@@ -586,8 +586,8 @@ my $view_flowers = sub {
     my $res = Plack::Response->new( 200 );
 
     my $image        = GD::Image->newFromPngData($image_data, 1);
-    my $newWidth     = 256;
-    my $newHeight    = 256;
+    my $newWidth     = 600;
+    my $newHeight    = 600;
     my $resizedImage = GD::Image->newTrueColor($newWidth, $newHeight);
     $resizedImage->copyResampled($image, 0, 0, 0, 0, $newWidth, $newHeight, $image->width, $image->height);
     my $resized_image = $resizedImage->png;

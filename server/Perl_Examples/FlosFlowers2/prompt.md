@@ -20,7 +20,7 @@ Read back the phone number the user gave you. Give the opportunity to make corre
 Let the user know it will take a few moments to send the flowers
 
 # Step 6
-Send Flowers using send_flowers function 
+Now Send Flowers using send_flowers function, and wait for the response
 
 # Step 7
 Ask if there is anything else you can help the user with
