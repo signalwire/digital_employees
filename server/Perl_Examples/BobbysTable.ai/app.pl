@@ -902,7 +902,7 @@ my $reservation_app = sub {
     $template->param(
 	date            => $today->ymd,
 	table_contents  => \@table_contents,
-	slogan          => random_slogan()
+	slogan          => random_slogan(),
 	site_url        => "https://$env->{HTTP_HOST}"
 	);
 
