@@ -726,6 +726,7 @@ my $applicant_list = sub {
 	$row->{phone} = scramble_last_seven( $row->{phone} );
 	push @table_contents, $row;
     }
+    $template->param( site_url => "$env->{HTTP_HOST}" );
     $template->param( table_contents => \@table_contents, index => 1 );
     my $res = Plack::Response->new(200);
     $res->content_type( 'text/html' );

@@ -617,7 +617,7 @@ my $delivery_list = sub {
 	$row->{flower_url} = "/view/$row->{id}";
 	push @table_contents, $row;
     }
-
+    $template->param( site_url => "https://$env->{HTTP_HOST}" );
     $template->param( table_contents => \@table_contents );
     my $res = Plack::Response->new(200);
     $res->content_type( 'text/html' );

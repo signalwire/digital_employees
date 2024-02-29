@@ -897,13 +897,13 @@ my $reservation_app = sub {
 
     $dbh->disconnect;
 
-    my $template = HTML::Template::Expr->new( filename => "/app/template/reservations.tmpl", die_on_bad_params => 0 );
+    my $template = HTML::Template::Expr->new( filename => "/app/template/index.tmpl", die_on_bad_params => 0 );
 
     $template->param(
 	date            => $today->ymd,
 	table_contents  => \@table_contents,
 	slogan          => random_slogan()
-
+	site_url        => "https://$env->{HTTP_HOST}"
 	);
 
     my $res = Plack::Response->new( 200 );
