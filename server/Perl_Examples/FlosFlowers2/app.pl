@@ -107,17 +107,6 @@ sub send_flowers {
 
 	my $image_data = $binary->content;
 
-	open my $fh, '>', "/app/flower.jpg" or die "Could not open file: $!";
-	binmode $fh;
-	print $fh $image_data;
-	close $fh;
-	
-
-	
-	print STDERR Dumper($image_res);
-
-	print STDERR Dumper($post_data);
-
 	if ( $flower_url ) {
 	    my @actions;
 	    my $dbh = DBI->connect("dbi:Pg:dbname=$database;host=$host;port=$port",
