@@ -583,6 +583,8 @@ my $view_flowers = sub {
     
     my $res = Plack::Response->new( 200 );
 
+    $res->content_type( 'image/png' );
+    $res->header( 'Content-Disposition' => 'inline; filename="flower$id.png"' );
     $res->body( $image_data );
     
     $dbh->disconnect;
