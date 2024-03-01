@@ -119,7 +119,7 @@ my $function = {
 					},
 					party_size => {
 					    type => "string",
-					    description => "number of guests",
+					    description => "Indicate the size of your group or party attending",
 					},
 				    },
 				    type => "object",
@@ -144,10 +144,10 @@ my $function = {
 					    },
 					    reservation_time => {
 						type => "string",
-						description => "create reservation in military time",
+						description => "Suggest a booking time, formatted in the 24-hour military time convention, for approval",
 					    },
 					    reservation_date => {
-						description => "create a reservation for a date in PGSQL DATE format",
+						description => "Insert a reservation record with a specific date, formatted as 'MM-DD-YYYY', into a PostgreSQL database",
 						type => "string",
 					    },
 					    customer_name => {
@@ -367,7 +367,7 @@ sub move_reservation {
     my $current_time_in_seconds = ($current_hours * 3600) + ($current_minutes * 60);
     my $new_time_in_seconds = $current_time_in_seconds + ($minutes_to_move * 60);
 
-    my $max_capacity = 50;  # Replace with the actual maximum capacity
+    my $max_capacity = 500;  # Replace with the actual maximum capacity
 
     if ($new_time_in_seconds >= 0) {
 	# Calculate new time hours and minutes, taking into account rollover to the next day
@@ -509,9 +509,9 @@ sub check_availability {
 	$sth_availability->finish;
 
 	if (!$availability_check_passed) {
-	    $response->{response} = "Requested time and date are available.";
+	    $response->{response} = "Great news! The time and date you've selected are open for your reservation. Let's secure your spot without delay.";
 	} else {
-	    $response->{response} = "Requested time and date are not available. Offer to check an hour before and after the requested time.";
+	    $response->{response} = "Unfortunately, the time and date you requested are not available. Would you like us to check for availability one hour earlier or later than your initial request? We're here to help you secure a reservation at a time that works best for you.";
 	}
     }
 
