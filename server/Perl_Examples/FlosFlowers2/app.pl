@@ -41,7 +41,7 @@ my $function = {
     send_flowers => { function  => \&send_flowers,
 		      signature => {
 			  function => 'send_flowers',
-			  purpose  => "Send flowers",
+			  purpose  => "To Send flowers to a recipient",
 			  wait_file => "https://flosflowers2.signalwire.me/assets/sending.wav",
 			  wait_file_loop => "2",
 			  argument => {
