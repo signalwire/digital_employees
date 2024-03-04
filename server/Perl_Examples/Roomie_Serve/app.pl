@@ -343,7 +343,7 @@ my $swml_app = sub {
     my ($txt_menu, $category) = ('', '');
     foreach my $menu ( @{ $sth_menu->fetchall_arrayref( {} ) } ) {
 	$txt_menu .= $menu->{category} . ":\n" if $category ne $menu->{category};
-	$txt_menu .= "SKU is " . $menu->{sku} . " => " .  $menu->{name} . " " . $menu->{description} . "Price:" . $menu->{price} . "\n";
+	$txt_menu .= "SKU is " . $menu->{sku} . " => " .  $menu->{name} . " " . $menu->{description} . " Price:" . $menu->{price} . "\n";
 	$category = $menu->{category};
     }
     $sth_menu->finish;
