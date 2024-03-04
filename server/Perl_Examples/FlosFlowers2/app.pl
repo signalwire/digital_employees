@@ -147,11 +147,11 @@ sub send_flowers {
 
 	    print STDERR $message if $ENV{DEBUG};
 
-	    print STDERR $swml->swaig_response_json( { post_process => 'true', response => $message, action => \@actions } );
+	    print STDERR $swml->swaig_response_json( { response => $message, action => \@actions } );
 
-	    $res->body($swml->swaig_response_json( { post_process => 'true', response => $message, action => \@actions } ));
+	    $res->body($swml->swaig_response_json( { response => $message, action => \@actions } ));
 	} else {
-	    $res->body($swml->swaig_response_json( { post_process => 'true', response => "I'm sorry, I was unable to generate an image of the flowers.  Please try again later." } ));
+	    $res->body($swml->swaig_response_json( { response => "I'm sorry, I was unable to generate an image of the flowers.  Please try again later." } ));
 	}
 
 	return $res->finalize;
