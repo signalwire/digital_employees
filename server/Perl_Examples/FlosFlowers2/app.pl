@@ -231,7 +231,7 @@ my $swml_app = sub {
 	fillers => [ "hrm", "ok" ] });
 
 
-    $swml->add_aiparams( { debug_webhook_url => "https://$ENV{USERNAME}:$ENV{PASSWORD}\@$env->{HTTP_HOST}/debughook" } );
+    $swml->add_aiparams( { debug_webhook_url => "https://$ENV{USERNAME}:$ENV{PASSWORD}\@$env->{HTTP_HOST}/debughook", swaig_allow_swml => 'true' } );
 
     $swml->add_aiinclude( {
 	functions => [ 'send_flowers' ],
