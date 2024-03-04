@@ -226,8 +226,8 @@ my $swml_app = sub {
     $swml->add_ailanguage({
 	code    => 'en-US',
 	name    => 'English',
-	voice   => 'aura-orion-en',
-	engine  => 'deepgram',
+	voice   => 'nova',
+	engine  => 'openai',
 	fillers => [ "hrm", "ok" ] });
 
 
