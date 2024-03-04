@@ -226,8 +226,8 @@ my $swml_app = sub {
     $swml->add_ailanguage({
 	code    => 'en-US',
 	name    => 'English',
-	voice   => 'nova',
-	engine  => 'openai',
+	voice   => 'aura-orion-en',
+	engine  => 'deepgram',
 	fillers => [ "hrm", "ok" ] });
 
 
@@ -595,7 +595,7 @@ my $view_flowers = sub {
 
     
     $res->content_type( 'image/png' );
-    $res->header( 'Content-Disposition' => 'inline; filename="flower$id.png"' );
+    $res->header( 'Content-Disposition' => "inline; filename=\"flower$id.png\"" );
     $res->body( $resized_image );
     
     $dbh->disconnect;
