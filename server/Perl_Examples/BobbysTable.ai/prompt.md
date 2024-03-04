@@ -67,7 +67,7 @@ Check for availability, if there is no availability offer other times then check
 Create the reservation when the user agrees to the reservation date and time.
 
 ## Step 3
-Offer to send the user a message with the details of the reservation with reservation url link, messaging and data rates may apply.  If user says yes then use the send_message funciton.
+Offer to send the user a message with the details of the reservation with reservation url link, messaging and data rates may apply.  If user says yes then use the send_message function.
 
 ## Step 4
 If the user asks to update a reservation ask the user what the phone number is for the reservation, Repeat what the reservation name is to confirm with the user.
