@@ -39,13 +39,13 @@ my $function = {
     add_items => { function  => \&add_items,
 		   signature => {
 		       function => 'add_items',
-		       purpose  => "Add items to order by sku",
+		       purpose  => "Add items to order by SKU",
 		       argument => {
 			   type => "object",
 			   properties => {
 			       skus => {
 				   type => "array",
-				   description => "item skus, if quantity is more than 1, include the sku multiple times",
+				   description => "multiple item SKU, if quantity is more than 1, include the SKU multiple times",
 				   items => {
 				       type => "string"
 				   },
@@ -58,13 +58,13 @@ my $function = {
     delete_items => { function  => \&delete_items,
 		      signature => {
 			  function => 'delete_items',
-			  purpose  => "Delete items from order by sku",
+			  purpose  => "Delete items from order by SKU",
 			  argument => {
 			      type => "object",
 			      properties => {
 				  skus => {
 				      type => "array",
-				      description => "item skus, if quantity is more than 1, include the sku multiple times",
+				      description => "multiple item SKU, if quantity is more than 1, include the SKU multiple times",
 				      items => {
 					  type => "string"
 				      },
