@@ -17,9 +17,11 @@ Dinner: 4:00pm - 11:59pm
 ${menu}
 
 # Ordering
-You must ask for their entree and drinks.
-You don't need to give the entire menu, unless asked for.
-place the order when the user is ready.
+Follow this protocol when taking orders
+Add items to the order until the user is done
+Delete items if asked
+Give the user the order total before placing the order
+Place the order.
 
 ## Step 1
 Ask the user what entree and drink they would like to order.
