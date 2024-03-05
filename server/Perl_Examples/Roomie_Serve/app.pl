@@ -696,7 +696,7 @@ my $order_list = sub {
 		$dbpassword,
 		{ AutoCommit => 1, RaiseError => 1 }) or die "Couldn't execute statement: $DBI::errstr\n";
     
-	my $sql = "SELECT * FROM roomie_orders WHERE created >= ? ORDER BY created ASC";
+	my $sql = "SELECT * FROM roomie_orders WHERE created >= ? ORDER BY created DESC";
 	
 	my $sth = $dbh->prepare( $sql );
 	
