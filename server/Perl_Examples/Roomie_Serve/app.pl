@@ -309,6 +309,11 @@ my $swml_app = sub {
 	top_p       => $ENV{TOP_P},
 	text        => $post_prompt });
 
+    $swml->add_aipronounce( {
+	replace     => "Ribeye",
+	with        => "rib eye",
+	ignore_case => 'true' });
+
     $swml->set_aipost_prompt_url( { post_prompt_url => "https://$ENV{USERNAME}:$ENV{PASSWORD}\@$env->{HTTP_HOST}/post" } );
 
     $swml->add_ailanguage({
