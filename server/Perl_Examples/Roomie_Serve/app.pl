@@ -39,7 +39,7 @@ my $function = {
     add_items => { function  => \&add_items,
 		   signature => {
 		       function => 'add_items',
-		       purpose  => "Add items to order by SKU",
+		       purpose  => "Add items to an order by SKU",
 		       argument => {
 			   type => "object",
 			   properties => {
@@ -58,7 +58,7 @@ my $function = {
     delete_items => { function  => \&delete_items,
 		      signature => {
 			  function => 'delete_items',
-			  purpose  => "Delete items from order by SKU",
+			  purpose  => "Delete items from an order by SKU",
 			  argument => {
 			      type => "object",
 			      properties => {
@@ -77,7 +77,7 @@ my $function = {
     order_total => { function  => \&order_total,
 		       signature => {
 			   function => 'order_total',
-			   purpose  => "Get summary of order",
+			   purpose  => "Get summary and total of an order",
 			   argument => {
 			       type => "object",
 			       properties => {
@@ -91,7 +91,7 @@ my $function = {
     place_order => { function  => \&place_order,
 		     signature => {
 			 function => 'place_order',
-			 purpose  => "Place order",
+			 purpose  => "Place the order for the user",
 			 argument => {
 			     type => "object",
 			     properties => {
