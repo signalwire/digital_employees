@@ -321,7 +321,7 @@ my $swml_app = sub {
 	name    => 'English',
 	voice   => 'nova',
 	engine  => 'openai',
-	fillers => [ "one moment", "one momment please" ] });
+	fillers => [ "one moment", "one moment please" ] });
 
     my $sql = "SELECT * FROM roomie_menu WHERE roomie_company_id = ? ORDER BY category, sku";
 
