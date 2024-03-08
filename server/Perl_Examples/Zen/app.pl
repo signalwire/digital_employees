@@ -595,7 +595,7 @@ my $swml_app = sub {
         engine  => 'elevenlabs',
         fillers => [ "one moment", "one moment please" ] });
 
-    my $static_greeting = "Hello and thank you for calling Livewire, your local cable company! My name Zen, an AI-driven digital employee powered by SignalWire. May I ask who I'm speaking with?";
+    my $static_greeting = "Hello and thank you for calling Livewire, your local cable company! My name is Zen, an AI-driven digital employee powered by SignalWire. May I ask who I'm speaking with?";
 
     if ( $existing ) {
         $static_greeting = "Hello, $existing->{firstname}! I'm here to help you diagnose any cable modem problems.";
