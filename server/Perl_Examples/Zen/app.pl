@@ -43,119 +43,119 @@ my %function = (
 # SignalWire AI Agent function definitions
 my $function = {
     update_phone_number => { function  => \&update_phone_number,
-			     signature => {
-				 function => 'update_phone_number',
-				 purpose  => "To update the customer phone number",
-				 argument => {
-				     type => "object",
-				     properties => {
-					 phone_number => {
-					     type => "string",
-					     description => "users phone number in e.164 format" },
-				     },
-				     required => [ 'phone_number' ]
-				 }
-			     }
+                             signature => {
+                                 function => 'update_phone_number',
+                                 purpose  => "To update the customer phone number",
+                                 argument => {
+                                     type => "object",
+                                     properties => {
+                                         phone_number => {
+                                             type => "string",
+                                             description => "users phone number in e.164 format" },
+                                     },
+                                     required => [ 'phone_number' ]
+                                 }
+                             }
     },
     speed_test => { function  => \&speed_test,
-		    signature => {
-			function => 'speed_test',
-			purpose  => "To test the speed of the network",
-			argument => {
-			    type => "object",
-			    properties => {
-				account_number => {
-				    type => "string",
-				    description => "users account number" },
-				cpni => {
-				    type => "boolean",
-				    description => "users 4 digit pin" },
-			    },
-			    
-			    required => [ 'account_number', 'cpni' ]
-			}
-		    }
+                    signature => {
+                        function => 'speed_test',
+                        purpose  => "To test the speed of the network",
+                        argument => {
+                            type => "object",
+                            properties => {
+                                account_number => {
+                                    type => "string",
+                                    description => "users account number" },
+                                cpni => {
+                                    type => "boolean",
+                                    description => "users 4 digit pin" },
+                            },
+
+                            required => [ 'account_number', 'cpni' ]
+                        }
+                    }
     },
     modem_diagnostics => { function  => \&modem_diagnostics,
-			   signature => {
-			       function => 'modem_diagnostics',
-			       purpose  => "To test the modem diagnostics",
-			       argument => {
-				   type => "object",
-				   properties => {
-				       account_number => {
-					   type => "string",
-					   description => "users account number" },
-				       cpni => {
-					   type => "boolean",
-					   description => "users 4 digit pin" },
-				   },
-				   required => [ 'account_number', 'cpni' ]
-			       }
-			   }
+                           signature => {
+                               function => 'modem_diagnostics',
+                               purpose  => "To test the modem diagnostics",
+                               argument => {
+                                   type => "object",
+                                   properties => {
+                                       account_number => {
+                                           type => "string",
+                                           description => "users account number" },
+                                       cpni => {
+                                           type => "boolean",
+                                           description => "users 4 digit pin" },
+                                   },
+                                   required => [ 'account_number', 'cpni' ]
+                               }
+                           }
     },
     verify_customer => { function  => \&verify_customer,
-			 signature => {
-			     function => 'verify_customer',
-			     purpose  => "To verify the customer",
-			     argument => {
-				 type => "object",
-				 properties => {
-				     account_number => {
-					 type => "string",
-					 description => "users account number" },
-				     cpni => {
-					 type => "boolean",
-					 description => "users 4 digit pin" },
-				 },
-				 required => [ 'account_number', 'cpni' ]
-			     }
-			 }
+                         signature => {
+                             function => 'verify_customer',
+                             purpose  => "To verify the customer",
+                             argument => {
+                                 type => "object",
+                                 properties => {
+                                     account_number => {
+                                         type => "string",
+                                         description => "users account number" },
+                                     cpni => {
+                                         type => "boolean",
+                                         description => "users 4 digit pin" },
+                                 },
+                                 required => [ 'account_number', 'cpni' ]
+                             }
+                         }
     },
     modem_swap => { function  => \&modem_swap,
-		    signature => {
-			function => 'modem_swap',
-			purpose  => "To swap the modem",
-			argument => {
-			    type => "object",
-			    properties => {
-				mac_address => {
-				    type => "string",
-				    description => "modem mac address" },
-			    },
-			    required => [ 'mac_address' ]
-			}
-		    }
+                    signature => {
+                        function => 'modem_swap',
+                        purpose  => "To swap the modem",
+                        argument => {
+                            type => "object",
+                            properties => {
+                                mac_address => {
+                                    type => "string",
+                                    description => "modem mac address" },
+                            },
+                            required => [ 'mac_address' ]
+                        }
+                    }
     },
     verify_mfa => { function  => \&verify_mfa,
-		    signature => {
-			function => 'verify_mfa',
-			purpose  => "To verify the MFA",
-			argument => {
-			    type => "object",
-			    properties => {
-				token => {
-				    type => "string",
-				    description => "MFA token" },
-			    },
-			    required => [ 'token' ]
-			}
-		    }
+                    signature => {
+                        function => 'verify_mfa',
+                        purpose  => "To verify the MFA",
+                        argument => {
+                            type => "object",
+                            properties => {
+                                token => {
+                                    type => "string",
+                                    description => "MFA token" },
+                            },
+                            required => [ 'token' ]
+                        }
+                    }
     },
     send_mfa => { function  => \&send_mfa,
-		  signature => {
-		      function => 'send_mfa',
-		      purpose  => "To send the MFA",
-		      argument => {
-			  type => "object",
-			  properties => {
-			      phone_number => {
-				  type => "string",
-				  description => "users phone number in e.164 format" },
-			  },
-			  required => [ 'phone_number' ]
-		      }
-		  }
+                  signature => {
+                      function => 'send_mfa',
+                      purpose  => "To send the MFA",
+                      argument => {
+                          type => "object",
+                          properties => {
+                              phone_number => {
+                                  type => "string",
+                                  description => "users phone number in e.164 format" },
+                          },
+                          required => [ 'phone_number' ]
+                      }
+                  }
     }
 };
 
@@ -179,10 +179,10 @@ sub check_for_input {
     my @message;
 
     my $dbh = DBI->connect(
-	"dbi:Pg:dbname=$database;host=$host;port=$port",
-	$dbusername,
-	$dbpassword,
-	{ AutoCommit => 1, RaiseError => 1 }) or die $DBI::errstr;
+        "dbi:Pg:dbname=$database;host=$host;port=$port",
+        $dbusername,
+        $dbpassword,
+        { AutoCommit => 1, RaiseError => 1 }) or die $DBI::errstr;
 
     my $select_sql = "SELECT * FROM ai_messages WHERE convo_id = ? AND replied = false ORDER BY id ASC";
 
@@ -191,13 +191,13 @@ sub check_for_input {
     $sth->execute( $convo_id ) or die $DBI::errstr;
 
     while ( my $row = $sth->fetchrow_hashref ) {
-	push @message, "$row->{message}";
+        push @message, "$row->{message}";
 
-	my $update_sql = "UPDATE ai_messages SET replied = true WHERE id = ?";
+        my $update_sql = "UPDATE ai_messages SET replied = true WHERE id = ?";
 
-	my $usth = $dbh->prepare( $update_sql );
+        my $usth = $dbh->prepare( $update_sql );
 
-	$usth->execute( $row->{id} ) or die $DBI::errstr;
+        $usth->execute( $row->{id} ) or die $DBI::errstr;
     }
 
     my $res = Plack::Response->new( 200 );
@@ -205,10 +205,10 @@ sub check_for_input {
     $res->content_type( 'application/json' );
 
     if ( @message == 0 ) {
-	$res->body( $swml->swaig_response_json( [ { response => "ok" } ] ) );
+        $res->body( $swml->swaig_response_json( [ { response => "ok" } ] ) );
     } else {
-	my $email = join(" ", @message);
-	$res->body( $swml->swaig_response_json( { action => [ { user_input => "My email is $email" } ], { toggle_functions => [{ function => 'check_for_input', active => 'false' }] } }) );
+        my $email = join(" ", @message);
+        $res->body( $swml->swaig_response_json( { action => [ { user_input => "My email is $email" } ], { toggle_functions => [{ function => 'check_for_input', active => 'false' }] } }) );
     }
 
     $dbh->disconnect;
@@ -217,107 +217,107 @@ sub check_for_input {
 }
 
 sub verify_customer {
-	my $data      = shift;
-	my $post_data = shift;
-	my $env       = shift;
-	my $swml      = SignalWire::ML->new;
-	my $res       = Plack::Response->new( 200 );
-	
-	my $dbh = DBI->connect(
-	    "dbi:Pg:dbname=$database;host=$host;port=$port",
-	    $dbusername,
-	    $dbpassword,
-	    { AutoCommit => 1, RaiseError => 1 } ) or die "Couldn't execute statement: $DBI::errstr\n";
-	my $sql = "SELECT * FROM customers WHERE account_number = ? AND cpni = ? OR phone_number = ? LIMIT 1";
-	
-	my $sth = $dbh->prepare( $sql );
-	$sth->bind_param(1,$data->{account_number});
-	$sth->bind_param(2,$data->{cpni});
-	$sth->bind_param(3,$data->{phone_number});
-	$sth->execute() or die "Couldn't execute statement: $DBI::errstr";
-	
-	my $agents = $sth->fetchrow_hashref;
-	
-	if ($data->{account_number} eq $agents->{account_number} && $data->{cpni} eq $agents->{cpni}) {
-	    $res->body( $swml->swaig_response_json( { response => "Account verified, proceed", action => [  { set_meta_data => { customer => $agents } } ] } ) );
-	} else {
-	    # This is the failure
-	    $res->body( $swml->swaig_response_json( { response => "Account invalid try again" } ) ) ;
-	}
-	
-	return $res->finalize;
+        my $data      = shift;
+        my $post_data = shift;
+        my $env       = shift;
+        my $swml      = SignalWire::ML->new;
+        my $res       = Plack::Response->new( 200 );
+
+        my $dbh = DBI->connect(
+            "dbi:Pg:dbname=$database;host=$host;port=$port",
+            $dbusername,
+            $dbpassword,
+            { AutoCommit => 1, RaiseError => 1 } ) or die "Couldn't execute statement: $DBI::errstr\n";
+        my $sql = "SELECT * FROM customers WHERE account_number = ? AND cpni = ? OR phone_number = ? LIMIT 1";
+
+        my $sth = $dbh->prepare( $sql );
+        $sth->bind_param(1,$data->{account_number});
+        $sth->bind_param(2,$data->{cpni});
+        $sth->bind_param(3,$data->{phone_number});
+        $sth->execute() or die "Couldn't execute statement: $DBI::errstr";
+
+        my $agents = $sth->fetchrow_hashref;
+
+        if ($data->{account_number} eq $agents->{account_number} && $data->{cpni} eq $agents->{cpni}) {
+            $res->body( $swml->swaig_response_json( { response => "Account verified, proceed", action => [  { set_meta_data => { customer => $agents } } ] } ) );
+        } else {
+            # This is the failure
+            $res->body( $swml->swaig_response_json( { response => "Account invalid try again" } ) ) ;
+        }
+
+        return $res->finalize;
 }
 
 sub verify_mfa {
-	my $data      = shift;
-	my $post_data = shift;
-	my $env       = shift;
-	my $swml      = SignalWire::ML->new;
-	my $res       = Plack::Response->new( 200 );
-	my $mfa       = $post_data->{meta_data}->{mfa};
+        my $data      = shift;
+        my $post_data = shift;
+        my $env       = shift;
+        my $swml      = SignalWire::ML->new;
+        my $res       = Plack::Response->new( 200 );
+        my $mfa       = $post_data->{meta_data}->{mfa};
 
-	my $sw = SignalWire::RestAPI->new(
-	    AccountSid  => $ENV{ACCOUNT_SID},
-	    AuthToken   => $ENV{AUTH_TOKEN},
-	    Space       => $ENV{SPACE_NAME},
-	    API_VERSION => 'api/relay/rest'
-	    );
-	
-	my $verify = $sw->POST("mfa/$mfa->{id}/verify",
-			       token => $data->{token});                        
+        my $sw = SignalWire::RestAPI->new(
+            AccountSid  => $ENV{ACCOUNT_SID},
+            AuthToken   => $ENV{AUTH_TOKEN},
+            Space       => $ENV{SPACE_NAME},
+            API_VERSION => 'api/relay/rest'
+            );
 
-	$res->content_type('application/json');
+        my $verify = $sw->POST("mfa/$mfa->{id}/verify",
+                               token => $data->{token});
 
-	my $resp = decode_json($verify->{content});
+        $res->content_type('application/json');
 
-	if ($resp->{success} eq 'true') { # Assuming success field in $data indicates verification success
-	    $res->body( $swml->swaig_response_json( { response => "Verification successful", action => [  { set_meta_data => { verified => JSON::true } } ] } ) );
-	} else {
-	    $res->body( $swml->swaig_response_json( { response => "Verification failed, try again" } ) );
-	}
+        my $resp = decode_json($verify->{content});
 
-	return $res->finalize;
+        if ($resp->{success} eq 'true') { # Assuming success field in $data indicates verification success
+            $res->body( $swml->swaig_response_json( { response => "Verification successful", action => [  { set_meta_data => { verified => JSON::true } } ] } ) );
+        } else {
+            $res->body( $swml->swaig_response_json( { response => "Verification failed, try again" } ) );
+        }
+
+        return $res->finalize;
 }
 
 sub send_mfa {
-	my $data      = shift;
-	my $post_data = shift;
-	my $env       = shift;
-	my $swml      = SignalWire::ML->new;
-	my $res       = Plack::Response->new( 200 );
-	my $customer  = $post_data->{meta_data}->{customer};
-	
-	my $cid = $customer->{'phone_number'};
+        my $data      = shift;
+        my $post_data = shift;
+        my $env       = shift;
+        my $swml      = SignalWire::ML->new;
+        my $res       = Plack::Response->new( 200 );
+        my $customer  = $post_data->{meta_data}->{customer};
 
-	my $sw = SignalWire::RestAPI->new(
-	    AccountSid  => $ENV{ACCOUNT_SID},
-	    AuthToken   => $ENV{AUTH_TOKEN},
-	    Space       => $ENV{SPACE_NAME},
-	    API_VERSION => 'api/relay/rest'
-	    );
-	# Send SMS
-	my $response = $sw->POST( "mfa/sms",
-				  to => '+1' . $cid,
-				  from => '+14123324857',
-				  message => 'Your number to verify is: ',
-				  allow_alpha => 'true',
-				  token_length => 6,
-				  valid_for => 7200,
-				  max_attempts => 4
-	    );
-	
+        my $cid = $customer->{'phone_number'};
 
-	my $decoded_sms_response = decode_json($response->{content});
+        my $sw = SignalWire::RestAPI->new(
+            AccountSid  => $ENV{ACCOUNT_SID},
+            AuthToken   => $ENV{AUTH_TOKEN},
+            Space       => $ENV{SPACE_NAME},
+            API_VERSION => 'api/relay/rest'
+            );
+        # Send SMS
+        my $response = $sw->POST( "mfa/sms",
+                                  to => '+1' . $cid,
+				  from => '$ENV{ASSISTANT}',
+                                  message => 'Your number to verify is: ',
+                                  allow_alpha => 'true',
+                                  token_length => 6,
+                                  valid_for => 7200,
+                                  max_attempts => 4
+            );
 
-	if ($decoded_sms_response->{success}) {
-	    $res->body( $swml->swaig_response_json( { response => "6 digit number sent", action => [  { set_meta_data => { mfa => $decoded_sms_response } } ] } ) );
-	} else {
-	    # This is the failure
-	    $res->body( $swml->swaig_response_json( { response => "6 digit number invalid try again" } ) ) ;
-	}
-	
-	$res->content_type( 'application/json' );
-	return $res->finalize;
+
+        my $decoded_sms_response = decode_json($response->{content});
+
+        if ($decoded_sms_response->{success}) {
+            $res->body( $swml->swaig_response_json( { response => "6 digit number sent", action => [  { set_meta_data => { mfa => $decoded_sms_response } } ] } ) );
+        } else {
+            # This is the failure
+            $res->body( $swml->swaig_response_json( { response => "6 digit number invalid try again" } ) ) ;
+        }
+
+        $res->content_type( 'application/json' );
+        return $res->finalize;
 }
 
 sub speed_test {
@@ -329,124 +329,124 @@ sub speed_test {
     my $customer  = $post_data->{meta_data}->{customer};
 
     if ($customer->{modem_speed_upload} && $customer->{modem_speed_download}) {
-	$res->body( $swml->swaig_response_json( { response => "Tell the user here are the test results. Download speed: $customer->{modem_speed_download}, Upload speed: $customer->{modem_speed_upload}" } ) );
+        $res->body( $swml->swaig_response_json( { response => "Tell the user here are the test results. Download speed: $customer->{modem_speed_download}, Upload speed: $customer->{modem_speed_upload}" } ) );
     } else {
-	$res->body( $swml->swaig_response_json( { response => "Invalid try again speed_test" } ) );
-	
+        $res->body( $swml->swaig_response_json( { response => "Invalid try again speed_test" } ) );
+
     }
 
     return $res->finalize;
 }
 
 sub update_phone_number {
-	my $data      = shift;
-	my $post_data = shift;
-	my $env       = shift;
-	my $swml      = SignalWire::ML->new;
-	my $res       = Plack::Response->new( 200 );
-	my $customer  = $post_data->{meta_data}->{customer};
+        my $data      = shift;
+        my $post_data = shift;
+        my $env       = shift;
+        my $swml      = SignalWire::ML->new;
+        my $res       = Plack::Response->new( 200 );
+        my $customer  = $post_data->{meta_data}->{customer};
 
-	my $dbh = DBI->connect(
-	    "dbi:Pg:dbname=$database;host=$host;port=$port",
-	    $dbusername,
-	    $dbpassword,
-	    { AutoCommit => 1, RaiseError => 1 } ) or die "Couldn't execute statement: $DBI::errstr\n";
+        my $dbh = DBI->connect(
+            "dbi:Pg:dbname=$database;host=$host;port=$port",
+            $dbusername,
+            $dbpassword,
+            { AutoCommit => 1, RaiseError => 1 } ) or die "Couldn't execute statement: $DBI::errstr\n";
 
-	if ( is_valid_phone_number($data->{phone_number}) ) {
-	    # Add a SQL update statement (modify this to match your actual table and field names)
-	    my $update_sql = "UPDATE customers SET phone_number = ? WHERE account_number = ?";
-	    my $update_sth = $dbh->prepare( $update_sql );
-	    $update_sth->bind_param(1, $data->{phone_number});
-	    $update_sth->bind_param(2, $customer->{account_number});
-	    $update_sth->execute() or die "Couldn't execute statement: $DBI::errstr";
-	    
-	    $update_sth->finish;
-	    
-	    # Your existing SELECT query
-	    my $select_sql = "SELECT * FROM customers WHERE account_number = ? LIMIT 1";
-	    my $select_sth = $dbh->prepare( $select_sql );
-	    $select_sth->bind_param(1, $customer->{account_number} );
-	    $select_sth->execute() or die "Couldn't execute statement: $DBI::errstr";
-	    
-	    my $agents = $select_sth->fetchrow_hashref;
-	    
-	    $select_sth->finish;
-	    
-	    if (lc $agents->{phone_number} eq lc $data->{phone_number} ) {
-		$res->body( $swml->swaig_response_json( { response => "Customers phone number updated, Anything else I can help you with today?", action => [  { set_meta_data => { customer => $agents } } ] } ) );
-	    } else {
-		$res->body( $swml->swaig_response_json( { response => "Error updating phone number, phone number may be invalid, try again.  #1" } ) );
-	    }
-	} else {
-	    $res->body( $swml->swaig_response_json( { response => "Error supdating phone number, phone number may be invalid, Please provide  a 10 digit number.  #2" } ) );  
-	}
-	
-	return $res->finalize;
+        if ( is_valid_phone_number($data->{phone_number}) ) {
+            # Add a SQL update statement (modify this to match your actual table and field names)
+            my $update_sql = "UPDATE customers SET phone_number = ? WHERE account_number = ?";
+            my $update_sth = $dbh->prepare( $update_sql );
+            $update_sth->bind_param(1, $data->{phone_number});
+            $update_sth->bind_param(2, $customer->{account_number});
+            $update_sth->execute() or die "Couldn't execute statement: $DBI::errstr";
+
+            $update_sth->finish;
+
+            # Your existing SELECT query
+            my $select_sql = "SELECT * FROM customers WHERE account_number = ? LIMIT 1";
+            my $select_sth = $dbh->prepare( $select_sql );
+            $select_sth->bind_param(1, $customer->{account_number} );
+            $select_sth->execute() or die "Couldn't execute statement: $DBI::errstr";
+
+            my $agents = $select_sth->fetchrow_hashref;
+
+            $select_sth->finish;
+
+            if (lc $agents->{phone_number} eq lc $data->{phone_number} ) {
+                $res->body( $swml->swaig_response_json( { response => "Customers phone number updated, Anything else I can help you with today?", action => [  { set_meta_data => { customer => $agents } } ] } ) );
+            } else {
+                $res->body( $swml->swaig_response_json( { response => "Error updating phone number, phone number may be invalid, try again.  #1" } ) );
+            }
+        } else {
+            $res->body( $swml->swaig_response_json( { response => "Error supdating phone number, phone number may be invalid, Please provide  a 10 digit number.  #2" } ) );
+        }
+
+        return $res->finalize;
 }
 
 sub modem_swap {
-	my $data      = shift;
-	my $post_data = shift;
-	my $env       = shift;
-	my $swml      = SignalWire::ML->new;
-	my $res       = Plack::Response->new( 200 );
-	my $customer  = $post_data->{meta_data}->{customer};
+        my $data      = shift;
+        my $post_data = shift;
+        my $env       = shift;
+        my $swml      = SignalWire::ML->new;
+        my $res       = Plack::Response->new( 200 );
+        my $customer  = $post_data->{meta_data}->{customer};
 
-	my $dbh = DBI->connect(
-	    "dbi:Pg:dbname=$database;host=$host;port=$port",
-	    $dbusername,
-	    $dbpassword,
-	    { AutoCommit => 1, RaiseError => 1 } ) or die "Couldn't execute statement: $DBI::errstr\n";
-	
-	if ( is_valid_mac_address($data->{mac_address}) ) {
-	    # Add a SQL update statement (modify this to match your actual table and field names)
-	    my $update_sql = "UPDATE customers SET mac_address = ? WHERE account_number = ?";
-	    my $update_sth = $dbh->prepare( $update_sql );
-	    $update_sth->bind_param(1, $data->{mac_address});
-	    $update_sth->bind_param(2, $customer->{account_number});
-	    $update_sth->execute() or die "Couldn't execute statement: $DBI::errstr";
-	    
-	    $update_sth->finish;
-	    
-	    # Your existing SELECT query
-	    my $select_sql = "SELECT * FROM customers WHERE account_number = ? LIMIT 1";
-	    my $select_sth = $dbh->prepare( $select_sql );
-	    $select_sth->bind_param(1, $customer->{account_number} );
-	    $select_sth->execute() or die "Couldn't execute statement: $DBI::errstr";
-	    
-	    my $agents = $select_sth->fetchrow_hashref;
-	    
-	    $select_sth->finish;
-	    
-	    if (lc $agents->{mac_address} eq lc $data->{mac_address} ) {
-		$res->body( $swml->swaig_response_json( { response => "Customers modem mac address updated, please plug in your modem and allow 1 minute for all systems to update your new modem.", action => [  { set_meta_data => { customer => $agents } } ] } ) );
-		
-	    } else {
-		$res->body( $swml->swaig_response_json( { response => "Error swapping modem, mac address may be invalid, try again.  #1" } ) );
-	    }
-	} else {
-	    $res->body( $swml->swaig_response_json( { response => "Error swapping modem, mac address may be invalid, Please provide 12 characters with a combination of numbers 0 through 9 and letters ranging from a-f.  #2" } ) );  
-	}
-	
-	return $res->finalize;
+        my $dbh = DBI->connect(
+            "dbi:Pg:dbname=$database;host=$host;port=$port",
+            $dbusername,
+            $dbpassword,
+            { AutoCommit => 1, RaiseError => 1 } ) or die "Couldn't execute statement: $DBI::errstr\n";
+
+        if ( is_valid_mac_address($data->{mac_address}) ) {
+            # Add a SQL update statement (modify this to match your actual table and field names)
+            my $update_sql = "UPDATE customers SET mac_address = ? WHERE account_number = ?";
+            my $update_sth = $dbh->prepare( $update_sql );
+            $update_sth->bind_param(1, $data->{mac_address});
+            $update_sth->bind_param(2, $customer->{account_number});
+            $update_sth->execute() or die "Couldn't execute statement: $DBI::errstr";
+
+            $update_sth->finish;
+
+            # Your existing SELECT query
+            my $select_sql = "SELECT * FROM customers WHERE account_number = ? LIMIT 1";
+            my $select_sth = $dbh->prepare( $select_sql );
+            $select_sth->bind_param(1, $customer->{account_number} );
+            $select_sth->execute() or die "Couldn't execute statement: $DBI::errstr";
+
+            my $agents = $select_sth->fetchrow_hashref;
+
+            $select_sth->finish;
+
+            if (lc $agents->{mac_address} eq lc $data->{mac_address} ) {
+                $res->body( $swml->swaig_response_json( { response => "Customers modem mac address updated, please plug in your modem and allow 1 minute for all systems to update your new modem.", action => [  { set_meta_data => { customer => $agents } } ] } ) );
+
+            } else {
+                $res->body( $swml->swaig_response_json( { response => "Error swapping modem, mac address may be invalid, try again.  #1" } ) );
+            }
+        } else {
+            $res->body( $swml->swaig_response_json( { response => "Error swapping modem, mac address may be invalid, Please provide 12 characters with a combination of numbers 0 through 9 and letters ranging from a-f.  #2" } ) );
+        }
+
+        return $res->finalize;
 }
 
 sub modem_diagnostics {
-	my $data      = shift;
-	my $post_data = shift;
-	my $env       = shift;
-	my $swml      = SignalWire::ML->new;
-	my $res       = Plack::Response->new( 200 );
-	my $customer  = $post_data->{meta_data}->{customer};
+        my $data      = shift;
+        my $post_data = shift;
+        my $env       = shift;
+        my $swml      = SignalWire::ML->new;
+        my $res       = Plack::Response->new( 200 );
+        my $customer  = $post_data->{meta_data}->{customer};
 
-	
-	if ($customer) {
-	    $res->body( $swml->swaig_response_json( { response => "Tell the user here are the test results. Downstream level: $customer->{modem_downstream_level}, Upstream level: $customer->{modem_upstream_level}, Modem SNR: $customer->{modem_snr}" } ) );
-	} else {
-	    $res->body( $swml->swaig_response_json( { response => "Invalid try again. Use modem-diagnostics-function" } ) );
-	}
 
-	return $res->finalize;
+        if ($customer) {
+            $res->body( $swml->swaig_response_json( { response => "Tell the user here are the test results. Downstream level: $customer->{modem_downstream_level}, Upstream level: $customer->{modem_upstream_level}, Modem SNR: $customer->{modem_snr}" } ) );
+        } else {
+            $res->body( $swml->swaig_response_json( { response => "Invalid try again. Use modem-diagnostics-function" } ) );
+        }
+
+        return $res->finalize;
 }
 
 sub is_valid_mac_address {
@@ -471,7 +471,7 @@ sub generate_random_string {
     my @chars = ('0'..'9', 'A'..'Z', 'a'..'z');
     my $random_string;
     foreach (1..$length) {
-	$random_string .= $chars[rand @chars];
+        $random_string .= $chars[rand @chars];
     }
     return $random_string;
 }
@@ -480,7 +480,7 @@ sub authenticator {
     my $req    = Plack::Request->new( $env );
 
     if ( $ENV{USERNAME} eq $user && $ENV{PASSWORD} eq $pass ) {
-	return 1;
+        return 1;
     }
 
     return 0;
@@ -516,10 +516,10 @@ my $laml_app = sub {
     print STDERR "$to, $from, $message, $sid\n" if $ENV{DEBUG};
 
     my $dbh = DBI->connect(
-	"dbi:Pg:dbname=$database;host=$host;port=$port",
-	$dbusername,
-	$dbpassword,
-	{ AutoCommit => 1, RaiseError => 1 }) or die $DBI::errstr;
+        "dbi:Pg:dbname=$database;host=$host;port=$port",
+        $dbusername,
+        $dbpassword,
+        { AutoCommit => 1, RaiseError => 1 }) or die $DBI::errstr;
 
     my $insert_sql = "INSERT INTO ai_messages (convo_id, message, call_id) VALUES (?, ?, ?)";
 
@@ -547,13 +547,13 @@ my $swml_app = sub {
     my $from        = $post_data->{call}->{from};
 
     my $dbh = DBI->connect(
-	"dbi:Pg:dbname=$database;host=$host;port=$port",
-	$dbusername,
-	$dbpassword,
-	{ AutoCommit => 1, RaiseError => 1 } ) or die $DBI::errstr;
+        "dbi:Pg:dbname=$database;host=$host;port=$port",
+        $dbusername,
+        $dbpassword,
+        { AutoCommit => 1, RaiseError => 1 } ) or die $DBI::errstr;
     #select user by phone number and get name
 
-    my $select_sql = "SELECT * FROM job_applicants WHERE phone = ? LIMIT 1";
+    my $select_sql = "SELECT * FROM customers WHERE Phone_number = ? LIMIT 1";
 
     my $sth = $dbh->prepare( $select_sql );
 
@@ -564,91 +564,91 @@ my $swml_app = sub {
     $sth->finish;
 
     $dbh->disconnect;
-    
+
     $swml->add_application( "main", "answer" );
     $swml->add_application( "main", "record_call", { format => 'wav', stereo => 'true' });
 
     if ( $existing ) {
-	$swml->add_application( "main", "set", { extra_prompt => "##Step 0\nThis user already had a profile, offer to transfer them to an 'agent' and skip all the other steps." } );
+        $swml->add_application( "main", "set", { extra_prompt => "##Step 0\nThis user already had a profile, offer to transfer them to an 'agent' and skip all the other steps." } );
     }
-    
+
     $swml->set_aiprompt({
-	temperature => $ENV{TEMPERATURE},
-	top_p       => $ENV{TOP_P},
-	text        => $prompt });
+        temperature => $ENV{TEMPERATURE},
+        top_p       => $ENV{TOP_P},
+        text        => $prompt });
 
     $swml->add_aiparams( { conversation_id => "$from" } );
 
     $swml->add_aiswaigdefaults({ web_hook_url => "https://$ENV{USERNAME}:$ENV{PASSWORD}\@$env->{HTTP_HOST}/swaig" });
 
     $swml->set_aipost_prompt( {
-	temperature => $ENV{TEMPERATURE},
-	top_p       => $ENV{TOP_P},
-	text        => $post_prompt });
+        temperature => $ENV{TEMPERATURE},
+        top_p       => $ENV{TOP_P},
+        text        => $post_prompt });
 
     $swml->set_aipost_prompt_url( { post_prompt_url => "https://$ENV{USERNAME}:$ENV{PASSWORD}\@$env->{HTTP_HOST}/post" } );
 
     $swml->add_ailanguage({
-	code    => 'en-US',
-	name    => 'English',
-	voice   => 'Josh',
-	engine  => 'elevenlabs',
-	fillers => [ "hrm", "ok" ] });
+        code    => 'en-US',
+        name    => 'English',
+        voice   => 'Josh',
+        engine  => 'elevenlabs',
+        fillers => [ "one moment", "one moment please" ] });
 
-    my $static_greeting = "Hello and thank you for calling JobSearch! My name Justin, an AI-driven digital job search assistant and I'm here to help you build your job search profile. May I ask who I'm speaking to?";
+    my $static_greeting = "Hello and thank you for calling Livewire, your local cable company! My name Zen, an AI-driven digital employee powered by SignalWire. May I ask who I'm speaking with?";
 
     if ( $existing ) {
-	$static_greeting = "Hello, $existing->{firstname}! I'm here to help with your job search profile. Would you like to speak to an agent instead?";
+        $static_greeting = "Hello, $existing->{firstname}! I'm here to help you diagnose any cable modem problems.";
     }
-    
+
     $swml->add_aiparams( { debug_webhook_url => "https://$ENV{USERNAME}:$ENV{PASSWORD}\@$env->{HTTP_HOST}/debughook",
-			   static_greeting => $static_greeting } );
+                           static_greeting => $static_greeting } );
 
     $swml->add_aiinclude( {
-	functions => [ 'save_applicant' ],
-	user => $ENV{USERNAME},
-	pass => $ENV{PASSWORD},
-	url  => "https://$ENV{USERNAME}:$ENV{PASSWORD}\@$env->{HTTP_HOST}/swaig" } );
+        functions => [ 'save_applicant' ],
+        user => $ENV{USERNAME},
+        pass => $ENV{PASSWORD},
+        url  => "https://$ENV{USERNAME}:$ENV{PASSWORD}\@$env->{HTTP_HOST}/swaig" } );
 
     $swml->add_aiswaigdefaults( { web_hook_url           => "https://$env->{HTTP_HOST}/swaig",
-				  web_hook_auth_user     => $ENV{USERNAME},
-				  web_hook_auth_password => $ENV{PASSWORD}
-				} );
+                                  web_hook_auth_user     => $ENV{USERNAME},
+                                  web_hook_auth_password => $ENV{PASSWORD}
+                                } );
 
 
     $swml->add_aiswaigfunction( {
-	function => 'check_for_input',
-	purpose  => "check for input",
-	argument => "none" } );
+        function => 'check_for_input',
+        purpose  => "check for input",
+        argument => "none" } );
 
     my $msg = SignalWire::ML->new;
 
     $msg->add_application( "main", "send_sms" => { to_number   => '${args.to}',
-						   from_number => $ENV{ASSISTANT},
-						   body        => 'Hello, This is Justin from JobSearch, Please reply with your email address, Reply STOP to stop.' } );
+                                                   from_number => $ENV{ASSISTANT},
+                                                   body        => 'Hello, This is Zen from Livewire. Reply STOP to stop.' } );
 
     my $output = $msg->swaig_response( {
-	response => "Message sent, please wait for the user to reply.",
-	action   => [ { SWML => $msg->render }, { toggle_functions => [{ function => 'send_message', active => 'false' }] } ] } );
+        response => "Message sent, please wait for the user to reply.",
+        action   => [ { SWML => $msg->render }, { toggle_functions => [{ function => 'send_message', active => 'false' }] } ] } );
 
     $swml->add_aiswaigfunction( {
-	function => 'send_message',
-	purpose  => "use to send text messages to a user when you need their email address",
-	argument => {
-	    type => "object",
-	    properties => {
-		to => {
-		    type        => "string",
-		    description => "The users number in e.164 format" }
-	    },
-	    required => [ "to" ]
-	},
-	data_map => {
-	    expressions => [{
-		string  => '${args.message}',
-		pattern => '.*',
-		output  => $output
-			    }]}} );
+        function => 'send_message',
+        purpose  => "use to send text messages to a user when you need their email address",
+        argument => {
+            type => "object",
+            properties => {
+                to => {
+                    type        => "string",
+                    description => "The users number in e.164 format" }
+            },
+            required => [ "to" ]
+        },
+        data_map => {
+            expressions => [{
+                string  => '${args.message}',
+                pattern => '.*',
+                output  => $output
+                            }]}} );
 
     $swml->add_aiapplication( "main" );
 
@@ -672,157 +672,157 @@ my $convo_app = sub {
     my $session = $env->{'psgix.session'};
 
     my $dbh = DBI->connect(
-	"dbi:Pg:dbname=$database;host=$host;port=$port",
-	$dbusername,
-	$dbpassword,
-	{ AutoCommit => 1, RaiseError => 1 }) or die $DBI::errstr;
+        "dbi:Pg:dbname=$database;host=$host;port=$port",
+        $dbusername,
+        $dbpassword,
+        { AutoCommit => 1, RaiseError => 1 }) or die $DBI::errstr;
 
     if ( $id ) {
-	my $sql = "SELECT * FROM ai_post_prompt WHERE id = ?";
+        my $sql = "SELECT * FROM ai_post_prompt WHERE id = ?";
 
-	my $sth = $dbh->prepare( $sql );
+        my $sth = $dbh->prepare( $sql );
 
-	$sth->execute( $id ) or die $DBI::errstr;
+        $sth->execute( $id ) or die $DBI::errstr;
 
-	my $row = $sth->fetchrow_hashref;
+        my $row = $sth->fetchrow_hashref;
 
-	my $sql_next = "SELECT id FROM ai_post_prompt WHERE id > ? ORDER BY id ASC LIMIT 1";
+        my $sql_next = "SELECT id FROM ai_post_prompt WHERE id > ? ORDER BY id ASC LIMIT 1";
 
-	my $sql_prev = "SELECT id FROM ai_post_prompt WHERE id < ? ORDER BY id DESC LIMIT 1";
+        my $sql_prev = "SELECT id FROM ai_post_prompt WHERE id < ? ORDER BY id DESC LIMIT 1";
 
-	my $sth_next = $dbh->prepare( $sql_next );
+        my $sth_next = $dbh->prepare( $sql_next );
 
-	$sth_next->execute( $id );
+        $sth_next->execute( $id );
 
-	my ( $next_id ) = $sth_next->fetchrow_array;
+        my ( $next_id ) = $sth_next->fetchrow_array;
 
-	$sth_next->finish;
+        $sth_next->finish;
 
-	my $sth_prev = $dbh->prepare( $sql_prev );
+        my $sth_prev = $dbh->prepare( $sql_prev );
 
-	$sth_prev->execute( $id );
+        $sth_prev->execute( $id );
 
-	my ( $prev_id ) = $sth_prev->fetchrow_array;
+        my ( $prev_id ) = $sth_prev->fetchrow_array;
 
-	$sth_prev->finish;
+        $sth_prev->finish;
 
-	if ( $row ) {
-	    my $p = $json->decode( $row->{data} );
+        if ( $row ) {
+            my $p = $json->decode( $row->{data} );
 
-	    $sth->finish;
+            $sth->finish;
 
-	    $dbh->disconnect;
+            $dbh->disconnect;
 
-	    foreach my $log ( @{ $p->{'call_log'} } ) {
-		$log->{content} =~ s/\r\n/<br>/g;
-		$log->{content} =~ s/\n/<br>/g;
-	    }
+            foreach my $log ( @{ $p->{'call_log'} } ) {
+                $log->{content} =~ s/\r\n/<br>/g;
+                $log->{content} =~ s/\n/<br>/g;
+            }
 
-	    my $template = HTML::Template::Expr->new( filename => "/app/template/conversation.tmpl", die_on_bad_params => 0 );
-	    my $start =  ($p->{'ai_end_date'}   / 1000) - 5000;
-	    my $end   =  ($p->{'ai_start_date'} / 1000) + 5000;
+            my $template = HTML::Template::Expr->new( filename => "/app/template/conversation.tmpl", die_on_bad_params => 0 );
+            my $start =  ($p->{'ai_end_date'}   / 1000) - 5000;
+            my $end   =  ($p->{'ai_start_date'} / 1000) + 5000;
 
-	    $template->param(
-		nonce               => $env->{'plack.nonce'},
-		next_id		    => $next_id ? "/convo?id=$next_id" : "/convo",
-		prev_id		    => $prev_id ? "/convo?id=$prev_id" : "/convo",
-		next_text	    => $next_id ? "Next >"     : "",
-		prev_text	    => $prev_id ? "< Previous" : "",
-		call_id             => $p->{'call_id'},
-		call_start_date     => $p->{'call_start_date'},
-		call_log            => $p->{'call_log'},
-		swaig_log	    => $p->{'swaig_log'},
-		caller_id_name      => $p->{'caller_id_name'},
-		caller_id_number    => $p->{'caller_id_number'},
-		total_output_tokens => $p->{'total_output_tokens'},
-		total_input_tokens  => $p->{'total_input_tokens'},
-		raw_json            => $json->encode( $p ),
-		record_call_url     => $p->{SWMLVars}->{record_call_url} );
+            $template->param(
+                nonce               => $env->{'plack.nonce'},
+                next_id             => $next_id ? "/convo?id=$next_id" : "/convo",
+                prev_id             => $prev_id ? "/convo?id=$prev_id" : "/convo",
+                next_text           => $next_id ? "Next >"     : "",
+                prev_text           => $prev_id ? "< Previous" : "",
+                call_id             => $p->{'call_id'},
+                call_start_date     => $p->{'call_start_date'},
+                call_log            => $p->{'call_log'},
+                swaig_log           => $p->{'swaig_log'},
+                caller_id_name      => $p->{'caller_id_name'},
+                caller_id_number    => $p->{'caller_id_number'},
+                total_output_tokens => $p->{'total_output_tokens'},
+                total_input_tokens  => $p->{'total_input_tokens'},
+                raw_json            => $json->encode( $p ),
+                record_call_url     => $p->{SWMLVars}->{record_call_url} );
 
-	    my $res = Plack::Response->new( 200 );
+            my $res = Plack::Response->new( 200 );
 
-	    $res->content_type( 'text/html' );
+            $res->content_type( 'text/html' );
 
-	    $res->body( $template->output );
+            $res->body( $template->output );
 
-	    return $res->finalize;
-	} else {
-	    my $res = Plack::Response->new( 200 );
+            return $res->finalize;
+        } else {
+            my $res = Plack::Response->new( 200 );
 
-	    $res->redirect( "/convo" );
-	    return $res->finalize;
-	}
+            $res->redirect( "/convo" );
+            return $res->finalize;
+        }
     } else {
-	my $page_size    = 20;
-	my $current_page = $params->{page} || 1;
-	my $offset       = ( $current_page - 1 ) * $page_size;
+        my $page_size    = 20;
+        my $current_page = $params->{page} || 1;
+        my $offset       = ( $current_page - 1 ) * $page_size;
 
-	my $sql = "SELECT * FROM ai_post_prompt ORDER BY created DESC LIMIT ? OFFSET ?";
+        my $sql = "SELECT * FROM ai_post_prompt ORDER BY created DESC LIMIT ? OFFSET ?";
 
-	my $sth = $dbh->prepare( $sql );
+        my $sth = $dbh->prepare( $sql );
 
-	$sth->execute( $page_size, $offset ) or die $DBI::errstr;
+        $sth->execute( $page_size, $offset ) or die $DBI::errstr;
 
-	my @table_contents;
+        my @table_contents;
 
-	while ( my $row = $sth->fetchrow_hashref ) {
-	    my $p = $json->decode( $row->{data} );
+        while ( my $row = $sth->fetchrow_hashref ) {
+            my $p = $json->decode( $row->{data} );
 
-	    $row->{caller_id_name}       = $p->{caller_id_name};
-	    $row->{caller_id_number}     = $p->{caller_id_number};
-	    $row->{call_id}              = $p->{call_id};
-	    $row->{summary}              = $p->{post_prompt_data}->{substituted};
-	    push @table_contents, $row;
-	}
+            $row->{caller_id_name}       = $p->{caller_id_name};
+            $row->{caller_id_number}     = $p->{caller_id_number};
+            $row->{call_id}              = $p->{call_id};
+            $row->{summary}              = $p->{post_prompt_data}->{substituted};
+            push @table_contents, $row;
+        }
 
-	$sth->finish;
+        $sth->finish;
 
-	my $total_rows_sql = "SELECT COUNT(*) FROM ai_post_prompt";
+        my $total_rows_sql = "SELECT COUNT(*) FROM ai_post_prompt";
 
-	$sth = $dbh->prepare( $total_rows_sql );
+        $sth = $dbh->prepare( $total_rows_sql );
 
-	$sth->execute();
+        $sth->execute();
 
-	my ( $total_rows ) = $sth->fetchrow_array();
+        my ( $total_rows ) = $sth->fetchrow_array();
 
-	my $total_pages = int( ( $total_rows + $page_size - 1 ) / $page_size );
+        my $total_pages = int( ( $total_rows + $page_size - 1 ) / $page_size );
 
-	$current_page = 1 if $current_page < 1;
-	$current_page = $total_pages if $current_page > $total_pages;
+        $current_page = 1 if $current_page < 1;
+        $current_page = $total_pages if $current_page > $total_pages;
 
-	my $next_url = "";
-	my $prev_url = "";
+        my $next_url = "";
+        my $prev_url = "";
 
-	if ( $current_page > 1 ) {
-	    my $prev_page = $current_page - 1;
-	    $prev_url = "/convo?&page=$prev_page";
-	}
+        if ( $current_page > 1 ) {
+            my $prev_page = $current_page - 1;
+            $prev_url = "/convo?&page=$prev_page";
+        }
 
-	if ( $current_page < $total_pages ) {
-	    my $next_page = $current_page + 1;
-	    $next_url = "/convo?page=$next_page";
-	}
+        if ( $current_page < $total_pages ) {
+            my $next_page = $current_page + 1;
+            $next_url = "/convo?page=$next_page";
+        }
 
-	$sth->finish;
+        $sth->finish;
 
-	$dbh->disconnect;
+        $dbh->disconnect;
 
-	my $template = HTML::Template::Expr->new( filename => "/app/template/conversations.tmpl", die_on_bad_params => 0 );
+        my $template = HTML::Template::Expr->new( filename => "/app/template/conversations.tmpl", die_on_bad_params => 0 );
 
-	$template->param(
-	    nonce                => $env->{'plack.nonce'},
-	    table_contents       => \@table_contents,
-	    next_url             => $next_url,
-	    prev_url             => $prev_url
-	    );
+        $template->param(
+            nonce                => $env->{'plack.nonce'},
+            table_contents       => \@table_contents,
+            next_url             => $next_url,
+            prev_url             => $prev_url
+            );
 
-	my $res = Plack::Response->new( 200 );
+        my $res = Plack::Response->new( 200 );
 
-	$res->content_type( 'text/html' );
+        $res->content_type( 'text/html' );
 
-	$res->body( $template->output );
+        $res->body( $template->output );
 
-	return $res->finalize;
+        return $res->finalize;
     }
 };
 
@@ -841,78 +841,78 @@ my $post_app = sub {
     my $convo_sum = $post_data->{conversation_summary};
 
     my $dbh = DBI->connect(
-	"dbi:Pg:dbname=$database;host=$host;port=$port",
-	$dbusername,
-	$dbpassword,
-	{ AutoCommit => 1, RaiseError => 1 } ) or die $DBI::errstr;
+        "dbi:Pg:dbname=$database;host=$host;port=$port",
+        $dbusername,
+        $dbpassword,
+        { AutoCommit => 1, RaiseError => 1 } ) or die $DBI::errstr;
 
     if ( $action eq "fetch_conversation" && defined $convo_id ) {
-	my @summary;
+        my @summary;
 
-	my $fetch_sql = "SELECT created,summary FROM ai_summary WHERE convo_id = ? AND created >= CURRENT_TIMESTAMP - INTERVAL '4 hours'";
+        my $fetch_sql = "SELECT created,summary FROM ai_summary WHERE convo_id = ? AND created >= CURRENT_TIMESTAMP - INTERVAL '4 hours'";
 
-	my $fsth = $dbh->prepare( $fetch_sql );
+        my $fsth = $dbh->prepare( $fetch_sql );
 
-	$fsth->execute( $convo_id ) or die $DBI::errstr;
+        $fsth->execute( $convo_id ) or die $DBI::errstr;
 
-	while ( my $row = $fsth->fetchrow_hashref ) {
-	    push @summary, "$row->{created} - $row->{summary}";
-	}
+        while ( my $row = $fsth->fetchrow_hashref ) {
+            push @summary, "$row->{created} - $row->{summary}";
+        }
 
-	my $res = Plack::Response->new( 200 );
+        my $res = Plack::Response->new( 200 );
 
-	$res->content_type( 'application/json' );
+        $res->content_type( 'application/json' );
 
-	if ( @summary == 0 ) {
-	    $res->body( $swml->swaig_response_json( { response => "co conversation found" } ) );
-	} else {
-	    $res->body( $swml->swaig_response_json( { response => "conversation found" , conversation_summary => join("\n", @summary) } ) );
-	}
+        if ( @summary == 0 ) {
+            $res->body( $swml->swaig_response_json( { response => "co conversation found" } ) );
+        } else {
+            $res->body( $swml->swaig_response_json( { response => "conversation found" , conversation_summary => join("\n", @summary) } ) );
+        }
 
-	$dbh->disconnect;
+        $dbh->disconnect;
 
-	return $res->finalize;
+        return $res->finalize;
     } else {
-	if ( !$ENV{SAVE_BLANK_CONVERSATIONS} && $post_data->{post_prompt_data}->{raw} =~ m/no\sconversation\stook\splace/g ) {
-	    my $res = Plack::Response->new( 200 );
+        if ( !$ENV{SAVE_BLANK_CONVERSATIONS} && $post_data->{post_prompt_data}->{raw} =~ m/no\sconversation\stook\splace/g ) {
+            my $res = Plack::Response->new( 200 );
 
-	    $res->content_type( 'application/json' );
+            $res->content_type( 'application/json' );
 
-	    $res->body( $swml->swaig_response_json( { response => "data ignored" } ) );
+            $res->body( $swml->swaig_response_json( { response => "data ignored" } ) );
 
-	    $dbh->disconnect;
+            $dbh->disconnect;
 
-	    return $res->finalize;
-	}
+            return $res->finalize;
+        }
 
-	if ( defined $convo_id && defined $convo_sum ) {
-	    my $convo_sql = "INSERT INTO ai_summary (created, convo_id, summary) VALUES (CURRENT_TIMESTAMP, ?, ?)";
+        if ( defined $convo_id && defined $convo_sum ) {
+            my $convo_sql = "INSERT INTO ai_summary (created, convo_id, summary) VALUES (CURRENT_TIMESTAMP, ?, ?)";
 
-	    my $csth = $dbh->prepare( $convo_sql );
+            my $csth = $dbh->prepare( $convo_sql );
 
-	    $csth->execute( $convo_id, $convo_sum ) or die $DBI::errstr;
+            $csth->execute( $convo_id, $convo_sum ) or die $DBI::errstr;
 
-	}
+        }
 
-	my $insert_sql = "INSERT INTO ai_post_prompt (created, data ) VALUES (CURRENT_TIMESTAMP, ?)";
+        my $insert_sql = "INSERT INTO ai_post_prompt (created, data ) VALUES (CURRENT_TIMESTAMP, ?)";
 
-	my $json_data = $req->raw_body;
+        my $json_data = $req->raw_body;
 
-	my $sth = $dbh->prepare( $insert_sql );
+        my $sth = $dbh->prepare( $insert_sql );
 
-	$sth->execute( $json_data ) or die $DBI::errstr;
+        $sth->execute( $json_data ) or die $DBI::errstr;
 
-	my $last_insert_id = $dbh->last_insert_id( undef, undef, 'ai_post_prompt', 'id' );
+        my $last_insert_id = $dbh->last_insert_id( undef, undef, 'ai_post_prompt', 'id' );
 
-	$dbh->disconnect;
+        $dbh->disconnect;
 
-	my $res = Plack::Response->new( 200 );
+        my $res = Plack::Response->new( 200 );
 
-	$res->content_type( 'application/json' );
+        $res->content_type( 'application/json' );
 
-	$res->body( $swml->swaig_response_json( { response => 'data received' } ) );
+        $res->body( $swml->swaig_response_json( { response => 'data received' } ) );
 
-	return $res->finalize;
+        return $res->finalize;
     }
 };
 
@@ -928,61 +928,61 @@ my $swaig_app = sub {
     print STDERR Dumper($post_data) if $ENV{DEBUG} > 2;
 
     if ( defined $post_data->{function} && exists $function{$post_data->{function}} ) {
-	$function{$post_data->{function}}->( $env );
+        $function{$post_data->{function}}->( $env );
     } elsif (defined $post_data->{action} && $post_data->{action} eq 'get_signature') {
-	my @functions;
-	my @funcs;
-	my $res = Plack::Response->new(200);
+        my @functions;
+        my @funcs;
+        my $res = Plack::Response->new(200);
 
-	$res->content_type('application/json');
+        $res->content_type('application/json');
 
-	if ( scalar (@{ $post_data->{functions}}) ) {
-	    @funcs =  @{ $post_data->{functions}};
-	} else {
-	    @funcs = keys %{$function};
-	}
+        if ( scalar (@{ $post_data->{functions}}) ) {
+            @funcs =  @{ $post_data->{functions}};
+        } else {
+            @funcs = keys %{$function};
+        }
 
-	print STDERR Dumper(\@funcs) if $ENV{DEBUG};
+        print STDERR Dumper(\@funcs) if $ENV{DEBUG};
 
-	foreach my $func ( @funcs ) {
-	    $function->{$func}->{signature}->{web_hook_auth_user}     = $ENV{USERNAME};
-	    $function->{$func}->{signature}->{web_hook_auth_password} = $ENV{PASSWORD};
-	    $function->{$func}->{signature}->{web_hook_url} = "https://$ENV{USERNAME}:$ENV{PASSWORD}\@$env->{HTTP_HOST}$env->{REQUEST_URI}";
-	    push @functions, $function->{$func}->{signature};
-	}
+        foreach my $func ( @funcs ) {
+            $function->{$func}->{signature}->{web_hook_auth_user}     = $ENV{USERNAME};
+            $function->{$func}->{signature}->{web_hook_auth_password} = $ENV{PASSWORD};
+            $function->{$func}->{signature}->{web_hook_url} = "https://$ENV{USERNAME}:$ENV{PASSWORD}\@$env->{HTTP_HOST}$env->{REQUEST_URI}";
+            push @functions, $function->{$func}->{signature};
+        }
 
-	$res->body( encode_json( \@functions ) );
+        $res->body( encode_json( \@functions ) );
 
-	return $res->finalize;
+        return $res->finalize;
     } elsif (defined $post_data->{function} && exists $function->{$post_data->{function}}->{function}) {
-	print STDERR "Calling function $post_data->{function}\n" if $ENV{DEBUG};
-	print STDERR "Data: " . Dumper($data) if $ENV{DEBUG};
-	$function->{$post_data->{function}}->{function}->($data, $post_data, $env);
+        print STDERR "Calling function $post_data->{function}\n" if $ENV{DEBUG};
+        print STDERR "Data: " . Dumper($data) if $ENV{DEBUG};
+        $function->{$post_data->{function}}->{function}->($data, $post_data, $env);
     } else {
-	my $res = Plack::Response->new( 500 );
+        my $res = Plack::Response->new( 500 );
 
-	$res->content_type('application/json');
+        $res->content_type('application/json');
 
-	$res->body($swml->swaig_response_json( { response => "I'm sorry, I don't know how to do that." } ));
+        $res->body($swml->swaig_response_json( { response => "I'm sorry, I don't know how to do that." } ));
 
-	return $res->finalize;
+        return $res->finalize;
     }
 };
 
 my $applicant_list = sub {
     my $env = shift;
     my $template = HTML::Template->new(
-	filename => '/app/template/index.tmpl',
-	die_on_bad_params => 0,
-	);
+        filename => '/app/template/index.tmpl',
+        die_on_bad_params => 0,
+        );
 
     my $dbh = DBI->connect(
-	"dbi:Pg:dbname=$database;host=$host;port=$port",
-	$dbusername,
-	$dbpassword,
-	{ AutoCommit => 1, RaiseError => 1 }) or die "Couldn't execute statement: $DBI::errstr\n";
+        "dbi:Pg:dbname=$database;host=$host;port=$port",
+        $dbusername,
+        $dbpassword,
+        { AutoCommit => 1, RaiseError => 1 }) or die "Couldn't execute statement: $DBI::errstr\n";
 
-    my $sql = "SELECT * FROM job_applicants WHERE created > ? ORDER BY created DESC";
+    my $sql = "SELECT * FROM customers WHERE created > ? ORDER BY created DESC";
 
     my $sth = $dbh->prepare( $sql );
 
@@ -993,8 +993,8 @@ my $applicant_list = sub {
     my @table_contents;
 
     while ( my $row = $sth->fetchrow_hashref ) {
-	$row->{phone} = scramble_last_seven( $row->{phone} );
-	push @table_contents, $row;
+        $row->{phone} = scramble_last_seven( $row->{phone} );
+        push @table_contents, $row;
     }
     $template->param( site_url => "https://$env->{HTTP_HOST}" );
     $template->param( table_contents => \@table_contents, index => 1 );
@@ -1009,75 +1009,98 @@ my $applicant_edit = sub {
     my $request = Plack::Request->new($env);
 
     my $params = $request->parameters;
-    
+
     if ( $request->method eq 'POST' ) {
-	my $sql = "UPDATE job_applicants SET firstname = ?, lastname = ?, email = ?, phone = ?, jobinterest = ?, searchlocation = ?, searchradius = ?, jobtitle = ?, certifications = ?, starttime = ?, wage = ? WHERE application_key = ?";
-	print STDERR "SQL: $sql\n" if $ENV{DEBUG};
+    my $sql = "UPDATE customers SET
+    first_name = ?,
+    last_name = ?,
+    Active = ?,
+    Phone_number = ?,
+    mac_address = ?,
+    CPNI = ?,
+    Account_Number = ?,
+    service_address = ?,
+    billing_address = ?,
+    email_address = ?,
+    modem_speed_upload = ?,
+    modem_speed_download = ?,
+    modem_upstream_level = ?,
+    modem_downstream_level = ?,
+    modem_snr = ?,
+    modem_downstream_uncorrectables = ?
+    WHERE id = ?";
 
-	my $dbh = DBI->connect(
-	    "dbi:Pg:dbname=$database;host=$host;port=$port",
-	    $dbusername,
-	    $dbpassword,
-	    { AutoCommit => 1, RaiseError => 1 }) or die "Couldn't execute statement: $DBI::errstr\n";
+        print STDERR "SQL: $sql\n" if $ENV{DEBUG};
 
-	my $sth = $dbh->prepare( $sql ) or die $DBI::errstr;
-	print Dumper $params;
-	$sth->execute(
-	    $params->{firstname},
-	    $params->{lastname},
-	    $params->{email},
-	    $params->{phone},
-	    $params->{jobinterest},
-	    $params->{searchlocation},
-	    $params->{searchradius},
-	    $params->{jobtitle},
-	    $params->{certifications},
-	    $params->{starttime},
-	    $params->{wage},
-	    $params->{application_key}
-	    ) or die $DBI::errstr;
+        my $dbh = DBI->connect(
+            "dbi:Pg:dbname=$database;host=$host;port=$port",
+            $dbusername,
+            $dbpassword,
+            { AutoCommit => 1, RaiseError => 1 }) or die "Couldn't execute statement: $DBI::errstr\n";
 
-	print Dumper $sth->rows;
-	$sth->finish;
+        my $sth = $dbh->prepare( $sql ) or die $DBI::errstr;
+        print Dumper $params;
+        $sth->execute(
+                $params->{first_name},
+                $params->{last_name},
+                $params->{Active},
+                $params->{Phone_number},
+                $params->{mac_address},
+                $params->{CPNI},
+                $params->{Account_Number},
+                $params->{service_address},
+                $params->{billing_address},
+                $params->{email_address},
+                $params->{modem_speed_upload},
+                $params->{modem_speed_download},
+                $params->{modem_upstream_level},
+                $params->{modem_downstream_level},
+                $params->{modem_snr},
+                $params->{modem_downstream_uncorrectables},
+                $params->{id}
+            ) or die $DBI::errstr;
 
-	$dbh->disconnect;
-	
-	my $res = Plack::Response->new( 200 );
+        print Dumper $sth->rows;
+        $sth->finish;
 
-	$res->content_type( 'text/html' );
+        $dbh->disconnect;
 
-	$res->redirect('/');
+        my $res = Plack::Response->new( 200 );
 
-	return $res->finalize;
+        $res->content_type( 'text/html' );
+
+        $res->redirect('/');
+
+        return $res->finalize;
 
     } else {
-	my $sql = "SELECT * FROM job_applicants WHERE application_key = ?";
-	my $dbh = DBI->connect(
-	    "dbi:Pg:dbname=$database;host=$host;port=$port",
-	    $dbusername,
-	    $dbpassword,
-	    { AutoCommit => 1, RaiseError => 1 }) or die "Couldn't execute statement: $DBI::errstr\n";
+        my $sql = "SELECT * FROM customers WHERE application_key = ?";
+        my $dbh = DBI->connect(
+            "dbi:Pg:dbname=$database;host=$host;port=$port",
+            $dbusername,
+            $dbpassword,
+            { AutoCommit => 1, RaiseError => 1 }) or die "Couldn't execute statement: $DBI::errstr\n";
 
-	my $sth = $dbh->prepare( $sql );
+        my $sth = $dbh->prepare( $sql );
 
-	$sth->execute( $params->{key} ) or die $DBI::errstr;
+        $sth->execute( $params->{key} ) or die $DBI::errstr;
 
-	my $template = HTML::Template->new(
-	    filename => '/app/template/edit.tmpl',
-	    die_on_bad_params => 0,
-	    );
+        my $template = HTML::Template->new(
+            filename => '/app/template/edit.tmpl',
+            die_on_bad_params => 0,
+            );
 
-	my $user = $sth->fetchrow_hashref;
-	print Dumper $user;
-	$template->param( %$user );
+        my $user = $sth->fetchrow_hashref;
+        print Dumper $user;
+        $template->param( %$user );
 
-	my $res = Plack::Response->new( 200 );
+        my $res = Plack::Response->new( 200 );
 
-	$res->content_type( 'text/html' );
+        $res->content_type( 'text/html' );
 
-	$res->body( $template->output );
+        $res->body( $template->output );
 
-	return $res->finalize;
+        return $res->finalize;
     }
 };
 
@@ -1086,43 +1109,43 @@ my $assets_app = Plack::App::Directory->new( root => "/app/assets" )->to_app;
 my $app = builder {
 
     enable sub {
-	my $app = shift;
+        my $app = shift;
 
-	return sub {
-	    my $env = shift;
-	    my $res = $app->( $env );
+        return sub {
+            my $env = shift;
+            my $res = $app->( $env );
 
-	    Plack::Util::header_set( $res->[1], 'Expires', 0 );
+            Plack::Util::header_set( $res->[1], 'Expires', 0 );
 
-	    return $res;
-	};
+            return $res;
+        };
     };
 
     mount '/assets'    => $assets_app;
 
     mount '/swaig' => builder {
-	enable "Auth::Basic", authenticator => \&authenticator;
-	$swaig_app;
+        enable "Auth::Basic", authenticator => \&authenticator;
+        $swaig_app;
     };
 
     mount '/convo' => builder {
-	enable "Auth::Basic", authenticator => \&authenticator;
-	$convo_app;
+        enable "Auth::Basic", authenticator => \&authenticator;
+        $convo_app;
     };
 
     mount '/swml' => builder {
-	enable "Auth::Basic", authenticator => \&authenticator;
-	$swml_app;
+        enable "Auth::Basic", authenticator => \&authenticator;
+        $swml_app;
     };
 
     mount '/laml' => builder {
-	enable "Auth::Basic", authenticator => \&authenticator;
-	$laml_app;
+        enable "Auth::Basic", authenticator => \&authenticator;
+        $laml_app;
     };
 
     mount '/post' => builder {
-	enable "Auth::Basic", authenticator => \&authenticator;
-	$post_app;
+        enable "Auth::Basic", authenticator => \&authenticator;
+        $post_app;
     };
 
     mount '/edit' => $applicant_edit;
@@ -1142,7 +1165,7 @@ my $dbh = DBI->connect(
     { AutoCommit => 1, RaiseError => 1 } ) or die "Couldn't execute statement: $DBI::errstr\n";
 
 my $sql = <<'SQL';
-CREATE TABLE customers (
+CREATE TABLE IF NOT EXISTS customers (
     id INT PRIMARY KEY,
     first_name TEXT,
     last_name TEXT,
