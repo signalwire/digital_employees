@@ -16,4 +16,5 @@ CREATE TABLE customers (
     modem_downstream_level REAL,
     modem_snr INT,
     modem_downstream_uncorrectables INT
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
