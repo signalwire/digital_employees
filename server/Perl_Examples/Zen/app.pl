@@ -605,7 +605,7 @@ my $swml_app = sub {
                            static_greeting => $static_greeting } );
 
     $swml->add_aiinclude( {
-        functions => [ 'save_applicant' ],
+        functions => [ 'verify_customer', 'check_for_input', 'modem_diagnosis', 'modem_swap', 'speed_test', 'update_phone_number', 'verify_mfa', 'send_mfa' ],
         user => $ENV{USERNAME},
         pass => $ENV{PASSWORD},
         url  => "https://$ENV{USERNAME}:$ENV{PASSWORD}\@$env->{HTTP_HOST}/swaig" } );
