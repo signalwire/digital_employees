@@ -7,7 +7,7 @@
 * [Thermal Thrillers](https://github.com/signalwire/digital_employees/tree/main/serverless/Thermal_Thrillers)
 ------------------------
 
-Copy, Paste, Edit.  Copy the SWML example, paste into a new SWML bin and edit.
+Copy, Paste, Edit, Save.  Copy the SWML example, paste into a new SWML bin, edit and save.
 
 # Calling with PSTN
 
