@@ -1182,7 +1182,9 @@ CREATE TABLE IF NOT EXISTS customers (
     modem_upstream_level REAL,
     modem_downstream_level REAL,
     modem_snr INT,
-    modem_downstream_uncorrectables INT
+    modem_downstream_uncorrectables INT,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    
 );
 
 CREATE TABLE IF NOT EXISTS ai_messages (
