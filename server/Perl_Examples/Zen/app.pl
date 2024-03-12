@@ -68,7 +68,7 @@ my $function = {
                                     type => "string",
                                     description => "users account number" },
                                 cpni => {
-                                    type => "boolean",
+                                    type => "string",
                                     description => "users 4 digit pin" },
                             },
 
@@ -87,7 +87,7 @@ my $function = {
                                            type => "string",
                                            description => "users account number" },
                                        cpni => {
-                                           type => "boolean",
+                                           type => "string",
                                            description => "users 4 digit pin" },
                                    },
                                    required => [ 'account_number', 'cpni' ]
@@ -105,7 +105,7 @@ my $function = {
                                          type => "string",
                                          description => "users account number" },
                                      cpni => {
-                                         type => "boolean",
+                                         type => "string",
                                          description => "users 4 digit pin" },
                                  },
                                  required => [ 'account_number', 'cpni' ]
