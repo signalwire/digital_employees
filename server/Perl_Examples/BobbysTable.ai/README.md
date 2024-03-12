@@ -10,7 +10,7 @@ In this repository, you will find the full prompt used, along with all the funct
 In addition to what is included in this repository, you will also need a web server (NGINX), a database (PostgreSQL), Signalwire's APIs, and a registered/apporoved campaign for SMS.
 
 ### Docker Container
-#### To use Zen with a docker container please see [WireStarter](https://github.com/signalwire/WireStarter)
+#### To use Bobbystable.ai with a docker container please see [WireStarter](https://github.com/signalwire/WireStarter)
 
 -------------------
 
