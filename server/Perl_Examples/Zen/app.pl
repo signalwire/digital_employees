@@ -1179,7 +1179,7 @@ CREATE TABLE IF NOT EXISTS customers (
     phone_number TEXT,
     mac_address TEXT,
     cpni INT,
-    account_Number INT,
+    account_number INT,
     service_address TEXT,
     billing_address TEXT,
     email_address TEXT,
