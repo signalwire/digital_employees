@@ -65,10 +65,10 @@ my $function = {
                             type => "object",
                             properties => {
                                 account_number => {
-                                    type => "string",
+                                    type => "number",
                                     description => "users account number" },
                                 cpni => {
-                                    type => "string",
+                                    type => "number",
                                     description => "users 4 digit pin" },
                             },
 
@@ -84,10 +84,10 @@ my $function = {
                                    type => "object",
                                    properties => {
                                        account_number => {
-                                           type => "string",
+                                           type => "number",
                                            description => "users account number" },
                                        cpni => {
-                                           type => "string",
+                                           type => "number",
                                            description => "users 4 digit pin" },
                                    },
                                    required => [ 'account_number', 'cpni' ]
@@ -102,10 +102,10 @@ my $function = {
                                  type => "object",
                                  properties => {
                                      account_number => {
-                                         type => "string",
+                                         type => "number",
                                          description => "users account number" },
                                      cpni => {
-                                         type => "string",
+                                         type => "number",
                                          description => "users 4 digit pin" },
                                  },
                                  required => [ 'account_number', 'cpni' ]
@@ -135,7 +135,7 @@ my $function = {
                             type => "object",
                             properties => {
                                 token => {
-                                    type => "string",
+                                    type => "number",
                                     description => "MFA token" },
                             },
                             required => [ 'token' ]
