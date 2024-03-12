@@ -1,8 +1,9 @@
+# AI Zen
+
+![image](https://github.com/signalwire/digital_employees/assets/13131198/c24bca4a-1532-4e72-ba77-98e8dd101ffe)
+
+
 ### AI Zen is a demo Tier 1 Support Digital Employee powered by SignalWire at the cable company Livewire. 
-
-![image](https://github.com/signalwire/digital_employees/assets/13131198/beba8304-be29-4c6e-b16b-1591fc605c2b)
-
-
 
 
 #### Server OS/applications needed:
