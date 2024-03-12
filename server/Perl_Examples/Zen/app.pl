@@ -266,10 +266,14 @@ sub verify_mfa {
         my $verify = $sw->POST("mfa/$mfa->{id}/verify",
                                token => $data->{token});
 
+
+	print STDERR Dumper($verify);
         $res->content_type('application/json');
 
         my $resp = decode_json($verify->{content});
 
+	
+	
         if ($resp->{success} eq 'true') { # Assuming success field in $data indicates verification success
             $res->body( $swml->swaig_response_json( { response => "Verification successful", action => [  { set_meta_data => { verified => JSON::true } } ] } ) );
         } else {
@@ -306,7 +310,7 @@ sub send_mfa {
                                   max_attempts => 4
             );
 
-
+	print STDERR Dumper $response;
         my $decoded_sms_response = decode_json($response->{content});
 
         if ($decoded_sms_response->{success}) {
