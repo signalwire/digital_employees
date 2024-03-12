@@ -1,13 +1,20 @@
 # AI-Zen
-### AI Zen is a tier 1 Digital Employee at the cable company Livewire. 
 
-#### Server OS/applications used:
+![image](https://github.com/signalwire/digital_employees/assets/13131198/beba8304-be29-4c6e-b16b-1591fc605c2b)
+
+
+### AI Zen is a demo Tier 1 Support Digital Employee powered by SignalWire at the cable company Livewire. 
+
+#### Server OS/applications needed:
 
 * Debian 12
 * Perl
 * NGINX
+* NGROK
 * [SignalWire AI Agent](https://signalwire.com/products/ai-agent?utm_source=AI-Zen)
 
+### Docker Container
+#### To use Zen with a docker container please see [WireStarter](https://github.com/signalwire/WireStarter)
 
 ## Prompt Used
 
