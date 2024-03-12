@@ -302,7 +302,7 @@ sub send_mfa {
         # Send SMS
         my $response = $sw->POST( "mfa/sms",
                                   to => $customer->{'phone_number'},
-				  from => '$ENV{ASSISTANT}',
+				  from => $ENV{ASSISTANT},
                                   message => 'Your number to verify is: ',
                                   allow_alpha => 'true',
                                   token_length => 6,
