@@ -239,6 +239,8 @@ sub verify_customer {
         my $agents = $sth->fetchrow_hashref;
 
         if ($data->{account_number} eq $agents->{account_number} && $data->{cpni} eq $agents->{cpni}) {
+	    print STDERR "Account verified, proceed\n";
+	    print STDERR "Details: " . Dumper($agents);
             $res->body( $swml->swaig_response_json( { response => "Account verified, proceed", action => [  { set_meta_data => { customer => $agents } } ] } ) );
         } else {
             # This is the failure
