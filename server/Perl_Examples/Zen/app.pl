@@ -66,10 +66,10 @@ my $function = {
                             properties => {
                                 account_number => {
                                     type => "number",
-                                    description => "users account number" },
+                                    description => "6 digit account number" },
                                 cpni => {
                                     type => "number",
-                                    description => "users 4 digit pin" },
+                                    description => "4 digit number" },
                             },
 
                             required => [ 'account_number', 'cpni' ]
@@ -431,7 +431,7 @@ sub modem_swap {
                 $res->body( $swml->swaig_response_json( { response => "Error swapping modem, mac address may be invalid, try again.  #1" } ) );
             }
         } else {
-            $res->body( $swml->swaig_response_json( { response => "Error swapping modem, mac address may be invalid, Please provide 12 characters with a combination of numbers 0 through 9 and letters ranging from a-f.  #2" } ) );
+            $res->body( $swml->swaig_response_json( { response => "Error swapping modem, mac address may be invalid, Please provide 12 characters with a combination of numerical numbers 0 through 9 and alphabetical letters ranging a through f.  #2" } ) );
         }
 
         return $res->finalize;
@@ -603,9 +603,9 @@ my $swml_app = sub {
 
     my $static_greeting = "Hello and thank you for calling Livewire, your local cable company! My name is Zen, an AI-driven digital employee powered by SignalWire. May I ask who I'm speaking with?";
 
-    if ( $existing ) {
-        $static_greeting = "Hello, $existing->{firstname}! I'm here to help you diagnose any cable modem problems.";
-    }
+#    if ( $existing ) {
+#        $static_greeting = "Hello, $existing->{firstname}! I'm here to help you diagnose any cable modem problems.";
+#    }
 
     $swml->add_aiparams( { debug_webhook_url => "https://$ENV{USERNAME}:$ENV{PASSWORD}\@$env->{HTTP_HOST}/debughook",
                            static_greeting => $static_greeting } );
