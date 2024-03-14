@@ -29,7 +29,7 @@ Facilitate the creation of Google Calendar meetings seamlessly over the phone by
 2. copy the Ngrok URL from the console open your Signalwire space and click on the Phone number tab
 3. Click on the Phone number to configure the SWML script URL
 4. Click on edit settings and change the `* ACCEPT INCOMING CALLS AS` drop down to Voice calls and `* HANDLE CALLS USING` a SWML Script
-5. Place your Ngrok ULR along with a path like https://abc.ngrok-free.app/main_webhook and click on the Save button
+5. Place your Ngrok ULR along with a path like https://abc.ngrok-free.app/main_webhook in `* WHEN A CALL COMES IN:` in the textbox and click on the Save button
 6. Now make the call to your signalwire number to create a Google Calendar event
 
 
