@@ -1,4 +1,4 @@
-# Project Title
+# SignalWire AI Agent Calendar Demo Application
 
 Facilitate the creation of Google Calendar meetings seamlessly over the phone by dialing into an AI-enabled phone number supplied by SignalWire. This phone number is tailored to execute a SWML script, streamlining the process of scheduling meetings directly from your call
 
