@@ -1,0 +1,125 @@
+{
+   "version": "1.0.0",
+   "sections": {
+      "main": [
+         {
+            "answer": {}
+         },
+         {
+            "record_call": {
+               "stereo": "true",
+               "format": "wav"
+            }
+         },
+         {
+            "ai": {
+               "agent_meta_data": {
+                  "agent_id": "28"
+               },
+               "languages": [
+                  {
+                     "engine": "elevenlabs",
+                     "fillers": [
+                        "lets see",
+                        "uh",
+                        "hrm",
+                        "umm"
+                     ],
+                     "name": "English",
+                     "code": "en-US",
+                     "voice": "josh"
+                  }
+               ],
+               "post_prompt": {
+                  "temperature": 0.3,
+                  "text": "Summarize the conversation, including all the details.",
+                  "top_p": 0.3
+               },
+               "post_prompt_url": "https://NGROK_URI/post_prompt_url",
+               "params": {
+                  "swaig_allow_settings": "true",
+                  "conversation_id": "+19184249378",
+                  "local_tz": "America/Chicago",
+                  "swaig_allow_swml": "true",
+                  "debug_webhook_url": "https://NGROK_URI/debug_webhook_url"
+               },
+               "post_prompt_auth_user": "HKrUk0ZDK336G84l",
+               "prompt": {
+                  "temperature": 0.3,
+                  "text": "You're name is Josh, You can schedule appointments on a calendar.\\r\\n\\r\\n# How to schedule an event\\r\\nYou first have to get all the details including email, then check if the time is available\\r\\nIf the time is, then schedule the event.\\r\\nYou can't schedule events until you have all the details and verify the time is available.\\r\\nThe default length is 30 minutes.\\r\\n\\r\\n# Location\\r\\nhttps://hq.sw.work/rooms/Shashi\\r\\n\\r\\n# Step 1\\r\\nGreet the callerthen what date they would like to schedule a meeting on\\r\\n\\r\\n# Step 2\\r\\nAsk what time of day they would like to have the meeting and for how long\\r\\n\\r\\n# Step 3\\r\\nSend the user a message using function send_message asking them to reply with their email address,\\r\\nand wait till you get it before proceeding.\\r\\n\\r\\n# Step 4 \\r\\nCheck if the meeting time is avaliable.\\r\\nIf not, offer to move it an hour forward and check again.\\r\\n\\r\\n# Step 5\\r\\nGet a decription of what the meeting will be about\\r\\n\\r\\n# Step 6\\r\\nCreate the event on the calendar with all the details\\r\\n\\r\\n# Step 7 \\r\\nOffer to text message the user with the details of the event, messaging and data rates may apply.\\r\\n\\r\\n# Step 8\\r\\nAsk if there is anything else the user needs help with.\\r\\n\\r\\n\\r\\n\\r\\n\\r\\n\\r\\n",
+                  "top_p": 0.3
+               },
+               "SWAIG": {
+                  "functions": [
+                     {
+                        "function": "send_message",
+                        "data_map": {
+                           "expressions": [
+                              {
+                                 "output": {
+                                    "action": [
+                                       {
+                                          "SWML": {
+                                             "sections": {
+                                                "main": [
+                                                   {
+                                                      "send_sms": {
+                                                         "body": "${args.message}, Reply STOP to stop.",
+                                                         "from_number": "+13072253637",
+                                                         "to_number": "${args.to}"
+                                                      }
+                                                   }
+                                                ]
+                                             },
+                                             "version": "1.0.0"
+                                          }
+                                       }
+                                    ],
+                                    "response": "Message sent."
+                                 },
+                                 "string": "${args.message}",
+                                 "pattern": ".*"
+                              }
+                           ]
+                        },
+                        "purpose": "use to send text messages to a user",
+                        "argument": {
+                           "type": "object",
+                           "properties": {
+                              "to": {
+                                 "description": "The users number in e.164 format",
+                                 "type": "string"
+                              },
+                              "message": {
+                                 "type": "string",
+                                 "description": "the message to send to the user"
+                              }
+                           }
+                        }
+                     },
+                     {
+                        "argument": "none",
+                        "function": "check_for_input",
+                        "purpose": "check for input"
+                     }
+                  ],
+                  "includes": [
+                     {
+                        
+                        "url": "https://NGROK_URI/swaig",
+                        "functions": [
+                           "freebusy",
+                           "events"
+                        ]
+                     }
+                  ],
+                  "defaults": {
+                     
+                     "web_hook_url": "https://NGROK_URI/swaig"
+                  }
+               }
+            }
+         }
+      ]
+   }
+}
