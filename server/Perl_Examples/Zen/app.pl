@@ -594,12 +594,23 @@ my $swml_app = sub {
 
     $swml->set_aipost_prompt_url( { post_prompt_url => "https://$ENV{USERNAME}:$ENV{PASSWORD}\@$env->{HTTP_HOST}/post" } );
 
-    $swml->add_ailanguage({
-        code    => 'en-US',
-        name    => 'English',
-        voice   => 'Josh',
-        engine  => 'elevenlabs',
-        fillers => [ "one moment", "one moment please" ] });
+    # Adding English configuration
+     $swml->add_ailanguage({
+         code    => 'en-US',
+         name    => 'English',
+         voice   => 'Josh',
+         engine  => 'elevenlabs',
+         fillers => [ "one moment", "one moment please" ] });
+
+  # Adding Spanish configuration
+   $swml->add_ailanguage({
+      code    => 'es-US',
+      name    => 'Spanish',
+      voice   => 'Rachel',
+      engine  => 'elevenlabs',
+      fillers => ["un momento", "un momento por favor"]});
+
+
 
     my $static_greeting = "Hello and thank you for calling Livewire, your local cable company! My name is Zen, an AI-driven digital employee powered by SignalWire. May I ask who I'm speaking with?";
 
