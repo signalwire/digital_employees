@@ -15,7 +15,7 @@ Using a PSTN phone number to dial to your Digital Employee.
 
 ###
 
-### Assing a SWML Bin to a phone number
+### Assigning a SWML Bin to a phone number
 
 * Edit an existing phone number
 * In the `HANDLE USING` section, select `a SWML Script`
