@@ -12,6 +12,7 @@
 * Perl
 * NGINX
 * NGROK
+* Postgresql
 * [SignalWire AI Agent](https://signalwire.com/products/ai-agent?utm_source=AI-Zen)
 
 ### Docker Container
