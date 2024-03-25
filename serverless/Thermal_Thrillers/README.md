@@ -2,7 +2,7 @@
 
 At SignalWire, we are pioneering the integration of advanced AI technology to revolutionize how people interact with customers. In this example, the digital employee, Rachael, will assist customers outside regular business hours and during peak times. Here's how Rachael can make your HVAC inquiries and service requests smoother and more efficient.
 
-## Our Digital Employee, Rachael
+## AI Digital Employee
 
 Rachael is designed to be more than just a digital assistant. She is the forefront of our customer service, equipped to handle calls with the efficiency and understanding you'd expect from a human operator. Rachael is operational after hours, ensuring that Thermal Thrillers HVAC supports you 24/7.
 
@@ -18,7 +18,7 @@ Rachael is designed to be more than just a digital assistant. She is the forefro
 - **After Hours:** Service available through Rachael.
 - **Payment Options:** We accept cash, checks, and credit cards for your convenience.
 
-## How Rachael Works
+## How The Bot Works
 
 The digital employee Rachael's interaction with customers is streamlined into several steps, ensuring a thorough collection of information while providing a friendly and helpful service.
 
