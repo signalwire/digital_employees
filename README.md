@@ -39,7 +39,7 @@ Try out the following serverless examples in the dashboard of your SignalWire Sp
 #### 🔐  [MFA](https://github.com/signalwire/digital_employees/tree/main/server/Perl_Examples/MFA)
   * This digital employee is able to send a 6 digit code via SMS, and verify the 6 digit code with SignalWire's MFA API.
     
-#### 🌡️  [Arduino Temperature & Humidity Sensor Bot](https://github.com/signalwire/digital_employees/tree/main/server/Perl_Examples/Arduino_Temperature_%26_Humidity_Sensor_Bot)
+#### 🌡️  [Arduino Temperature & Humidity Sensor Bot](https://github.com/signalwire/digital_employees/tree/main/server/Perl_Examples/Arduino_Temperature_and_Humidity_Sensor_Bot)
   * Ziggy is a digital employee that can interact with a ESP32 and DHT11 temperature sensor to give the temperature and humidity values from the [ThingSpeak API](https://www.mathworks.com/help/thingspeak/channels-and-charts-api.html).
 
 --------------
