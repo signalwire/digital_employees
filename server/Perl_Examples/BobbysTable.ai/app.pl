@@ -110,7 +110,7 @@ my $function = {
 				    required => ["party_size", "reservation_time", "reservation_date"],
 				    properties => {
 					reservation_time => {
-					    description => "proposed time of reservation in military time",
+					    description => "proposed time of reservation in stftime format %H:%M",
 					    type => "string",
 					},
 					reservation_date => {
@@ -144,10 +144,10 @@ my $function = {
 					    },
 					    reservation_time => {
 						type => "string",
-						description => "Suggest a booking time, formatted in the 24-hour military time convention, for approval",
+						description => "Suggest a booking time, formatted in strftime format %H:%M",
 					    },
 					    reservation_date => {
-						description => "Insert a reservation record with a specific date, formatted as 'MM-DD-YYYY', into a PostgreSQL database",
+						description => "Insert a reservation date in PGSQL DATE format",
 						type => "string",
 					    },
 					    customer_name => {
