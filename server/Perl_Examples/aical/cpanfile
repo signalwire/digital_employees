@@ -2,7 +2,7 @@ requires 'LWP::UserAgent', '6.70';
 requires 'DateTime::Duration', '1.65';
 requires 'UUID', '0.28';
 requires 'DateTime::Format::ISO8601', '0.16';
-requires 'SignalWire::ML', '1.18';
+requires 'SignalWire::ML', '1.19';
 requires 'SignalWire::RestAPI', '1.5';
 requires 'SignalWire::CompatXML', '1.0';
 requires 'Time::Piece', '1.3401';
