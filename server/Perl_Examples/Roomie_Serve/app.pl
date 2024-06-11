@@ -355,7 +355,7 @@ my $swml_app = sub {
 
     $swml->add_application( "main", "set", { menu => $txt_menu } );
 
-    $swml->set_agent_meta_data( { menu => $meta_data_menu } );
+    $swml->set_global_data( { menu => $meta_data_menu } );
 
     $swml->add_aiparams( { debug_webhook_url => "https://$ENV{USERNAME}:$ENV{PASSWORD}\@$env->{HTTP_HOST}/debughook" } );
 
