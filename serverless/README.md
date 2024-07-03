@@ -2,6 +2,7 @@
 
 # Digital Employee List
 
+* [Open Weather Assistant](https://github.com/signalwire/digital_employees/blob/main/serverless/OpenWeather_Assistant)
 * [Flos_Flowers](https://github.com/signalwire/digital_employees/tree/main/serverless/Flos_Flowers)
 * [Weather_Bot](https://github.com/signalwire/digital_employees/tree/main/serverless/Weather_Bot)
 * [Thermal Thrillers](https://github.com/signalwire/digital_employees/tree/main/serverless/Thermal_Thrillers)
