@@ -1,4 +1,6 @@
-# Open Weather Map
+# Open Weather
+
+![img](https://openweathermap.org/themes/openweathermap/assets/img/logo_white_cropped.png)
 
 [Open Weather Map API](https://api.openweathermap.org) offers both [free and paid](https://openweathermap.org/full-price#current) access to weather information.  In our example, we will be using the **City** and **ZIPCODE** API's to pull data from.
 
