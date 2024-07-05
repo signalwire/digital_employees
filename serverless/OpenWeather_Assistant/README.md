@@ -2,11 +2,11 @@
 
 ![img](https://openweathermap.org/themes/openweathermap/assets/img/logo_white_cropped.png)
 
-[Open Weather Map API](https://api.openweathermap.org) offers both [free and paid](https://openweathermap.org/full-price#current) access to weather information.  In our example, we will be using the **City** and **ZIPCODE** API's to pull data from.
+[Open Weather Map API](https://api.openweathermap.org) offers both [free and paid](https://openweathermap.org/full-price#current) access to weather information.  In our example, we will be using the **City/State/Country** and **ZIPCODE** API's to pull data from.
 
 ## How does it work?
 
-The SignalWire digital employee in this example will make an api call to the openweathermap api and return data that can be used during the call with the user.  We will also give the option to send the details to the user via sms.
+The SignalWire digital employee in this example will make an api call to the openweathermap api and return data that can be used during the call with the user.  We will also give the option to send the weather details to the user via sms.
 
 Full working example can be found [here]( https://github.com/signalwire/digital_employees/blob/main/serverless/OpenWeather_Assistant/full_example.json).
 
@@ -16,7 +16,11 @@ These next sections will show each part of the JSON that comprises the entire JS
 
 ## main
 
-## [answer:](https://developer.signalwire.com/sdks/reference/swml/methods/answer/) Answer the call (optional)
+### [answer](https://developer.signalwire.com/sdks/reference/swml/methods/answer/)
+
+```
+Answer the call.
+```
 
 ### [record_call](https://developer.signalwire.com/sdks/reference/swml/methods/record_call/)
 
@@ -33,6 +37,7 @@ This will record the call in stereo and in a wav format. You can also use mp3 fo
 
 ### [params](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_params/)
 
+debug_webhook_url will provide more verbose return of data from the webhook defined. Very useful for troubleshooting.
 ```json
 
 "params": {
@@ -43,6 +48,8 @@ This will record the call in stereo and in a wav format. You can also use mp3 fo
 ```
 
 [post_prompt_url](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_post_prompt_url)
+
+The url defined to send the post prompt data to.
 ```json
           "post_prompt_url": "https://webhook.site/b97f64b4-a7a0-44c6-b9e5-2ed0112930d6",
           "post_prompt": {
@@ -54,6 +61,7 @@ This will record the call in stereo and in a wav format. You can also use mp3 fo
 ```
 
 ### [pronounce](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_pronounce)
+Replace an abbreviation with the full words.
 ```json
           "pronounce": [
             {
@@ -74,6 +82,7 @@ This will record the call in stereo and in a wav format. You can also use mp3 fo
 ```
 
 ### [languages](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_languages/#supported-voices-and-languages)
+The different languagues used, fillers words to use when executing a function and voice engine used.
 ```json
           "languages": [
             {
@@ -117,10 +126,13 @@ Offer to send the details in a message to the user.
 
 # Step 5
 Ask the user if there is anything else you can help them with. Keep assisting the user until the user is ready to end the call.",
+```
+
+[Temperature](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_prompt) and [top_p](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_prompt) used.
+```json
     "temperature": 0.6,
     "top_p": 0.6
   }
 }
-
 
 ```
