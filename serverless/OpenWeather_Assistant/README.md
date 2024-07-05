@@ -8,7 +8,22 @@
 
 The SignalWire digital employee in this example will make an api call to the openweathermap api and return data that can be used during the call with the user.  We will also give the option to send the details to the user via sms.
 
-## Prompt
+## main
+
+## [answer:](https://developer.signalwire.com/sdks/reference/swml/methods/answer/) Answer the call (optional)
+
+### [record_call](https://developer.signalwire.com/sdks/reference/swml/methods/record_call/)
+
+This will record the call in stereo and in a wav format. You can also use mp3 for the format
+```json
+{
+        "record_call": {
+          "format": "wav",
+          "stereo": "true"
+        }
+```
+
+## [Prompt](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_prompt)
 
 The prompt will give a set of instructions for the digital employee to use guiding the conversation and along with steps to follow.
 
@@ -16,11 +31,10 @@ The prompt will give a set of instructions for the digital employee to use guidi
 
 {
   "prompt": {
-    "text": "You're a weather expert. You have three functions to help you get weather information for users.
+    "text": "You're a weather expert. You have two functions to help you get weather information for users and one function to send messages.
 
 Ask the user for the city or zipcode they want to know the weather for.
-You have to use get_weather_city if the user gives a city name only.
-Remove state name if city name and state name is given or get_weather_zipcode if the user gives a 5 digit zipcode.
+You have to use get_weather_city if the user gives a city and state name is given or get_weather_zipcode if the user gives a 5 digit zipcode.
 
 # Step 1
 Greet the user.
@@ -35,7 +49,7 @@ Tell the user the detailed forecast.
 Offer to send the details in a message to the user.
 
 # Step 5
-Ask the user if there is anything else you can help them with.",
+Ask the user if there is anything else you can help them with. Keep assisting the user until the user is ready to end the call.",
     "temperature": 0.6,
     "top_p": 0.6
   }
