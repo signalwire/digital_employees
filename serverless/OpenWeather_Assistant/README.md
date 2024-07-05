@@ -8,6 +8,12 @@
 
 The SignalWire digital employee in this example will make an api call to the openweathermap api and return data that can be used during the call with the user.  We will also give the option to send the details to the user via sms.
 
+Full working example can be found [here]( https://github.com/signalwire/digital_employees/blob/main/serverless/OpenWeather_Assistant/full_example.json).
+
+## Breaking down the example
+
+These next sections will show each part of the JSON that comprises the entire JSON example.
+
 ## main
 
 ## [answer:](https://developer.signalwire.com/sdks/reference/swml/methods/answer/) Answer the call (optional)
