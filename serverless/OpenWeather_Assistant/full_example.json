@@ -14,9 +14,9 @@
         "ai": {
           "params": {
             "verbose_logs": "true",
-            "debug_webhook_url": "https://webhook.site/b97f64b4-a7a0-44c6-b9e5-2ed0112930d6"
+            "debug_webhook_url": "https://webhook.site/830af56b-2cda-4b64-845b-6591e07da23f"
           },
-          "post_prompt_url": "https://webhook.site/b97f64b4-a7a0-44c6-b9e5-2ed0112930d6",
+          "post_prompt_url": "https://webhook.site/830af56b-2cda-4b64-845b-6591e07da23f",
           "post_prompt": {
             "top_p": 0.6,
             "temperature": 0.6,
@@ -154,7 +154,7 @@
                 "data_map": {
                   "webhooks": [
                     {
-                      "url": "https://api.openweathermap.org/data/2.5/weather?q=${args.city}&units=imperial&appid=cdd2941CHANGE_ME46218144",
+                      "url": "https://api.openweathermap.org/data/2.5/weather?q=${args.city},${args.state},${country}&units=imperial&appid=cdd2941CHANGE_ME46218144",
                       "method": "GET",
                       "output": {
                         "response": "The current weather is ${weather[0].description} with a temperature of '{Math.floor(${main.temp})}' and Longitude ${coord.lon} Latitude ${coord.lat} Weather ID ${weather[0].id} Main Weather ${weather[0].main} Weather Description ${weather[0].description} Weather Icon ${weather[0].icon} Base ${base} Temperature ${main.temp} Feels Like Temperature ${main.feels_like} Minimum Temperature ${main.temp_min} Maximum Temperature ${main.temp_max} Pressure ${main.pressure} Humidity ${main.humidity} Visibility ${visibility} Wind Speed ${wind.speed} Wind Direction ${wind.deg} Wind Gust ${wind.gust} Cloudiness ${clouds.all} Datetime ${dt} System Type ${sys.type} System ID ${sys.id} Country ${sys.country} Sunrise ${sys.sunrise} Sunset ${sys.sunset} Timezone ${timezone} Location ID ${id} Location Name ${name} Status Code ${cod}. ",
@@ -165,12 +165,20 @@
                     }
                   ]
                 },
-                "purpose": "get weather information only using city name",
+                "purpose": "get weather information using city name and 2 letter state name abbreviation. The same city can be in different states and spelled differently. Use %20 between cities that have 2 names. For example: miami%20beach  ",
                 "argument": {
                   "properties": {
                     "city": {
                       "type": "string",
-                      "description": "City name is used to get the weather."
+                      "description": "City name. Use url encoding"
+                    },
+                     "state": {
+                      "type": "string",
+                      "description": "2 letter state name abbreviation used with the city to get the weather information."
+                    },
+                     "country": {
+                      "type": "string",
+                      "description": "2 letter country name abbreviation used with the city and state to get the weather information."
                     }
                   },
                   "type": "object"
@@ -204,7 +212,7 @@
             ]
           },
           "prompt": {
-            "text": "You're a weather expert. You have three functions to help you get weather information for users.\r\n\r\nAsk the user for the city or zipcode they want to know the weather for.\r\nYou have to use get_weather_city if the user gives a city name only. Remove state name if city name and state name is given or get_weather_zipcode if the user gives a 5 digit zipcode.\r\n\r\n\r\n# Step 1\r\nGreet the user.\r\n\r\n# Step 2\r\nGet the detailed forecast for the user.\r\n\r\n# Step 3\r\nTell the user the detailed forecast.\r\n\r\n# Step 4\r\nOffer to send the details in a message to the user.\r\n\r\n# Step 5\r\nAsk the user if there is anything else you can help them with.",
+            "text": "You're a weather expert. You have two functions to help you get weather information for users and one function to send messages.\r\n\r\nAsk the user for the city or zipcode they want to know the weather for.\r\nYou have to use get_weather_city if the user gives a city and state name is given or get_weather_zipcode if the user gives a 5 digit zipcode.\r\n\r\n\r\n# Step 1\r\nGreet the user.\r\n\r\n# Step 2\r\nGet the detailed forecast for the user.\r\n\r\n# Step 3\r\nTell the user the detailed forecast.\r\n\r\n# Step 4\r\nOffer to send the details in a message to the user.\r\n\r\n# Step 5\r\nAsk the user if there is anything else you can help them with. Keep assisting the user until the user is ready to end the call.",
             "temperature": 0.6,
             "top_p": 0.6
           }
