@@ -23,6 +23,66 @@ This will record the call in stereo and in a wav format. You can also use mp3 fo
         }
 ```
 
+## ai
+
+### params
+
+```json
+
+"params": {
+            "verbose_logs": "true",
+            "debug_webhook_url": "https://webhook.site/b97f64b4-a7a0-44c6-b9e5-2ed0112930d6"
+          },
+
+```
+
+```json
+          "post_prompt_url": "https://webhook.site/b97f64b4-a7a0-44c6-b9e5-2ed0112930d6",
+          "post_prompt": {
+            "top_p": 0.6,
+            "temperature": 0.6,
+            "text": "Summarize the conversation"
+          },
+
+```
+
+### [Pronounce](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_pronounce)
+```json
+          "pronounce": [
+            {
+              "ignore_case": 0,
+              "with": "miles per hour",
+              "replace": "mph"
+            }
+          ],
+
+```
+
+```json
+          "hints": [
+            "weather",
+            "forecast"
+          ],
+
+```
+
+### [Languages](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_languages/#supported-voices-and-languages)
+```json
+          "languages": [
+            {
+              "code": "en-US",
+              "voice": "Rachel",
+              "name": "English",
+              "fillers": [
+                "one moment",
+                "one moment please"
+              ],
+              "engine": "elevenlabs"
+            }
+          ],
+
+```
+
 ## [Prompt](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_prompt)
 
 The prompt will give a set of instructions for the digital employee to use guiding the conversation and along with steps to follow.
