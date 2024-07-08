@@ -129,10 +129,206 @@ Ask the user if there is anything else you can help them with. Keep assisting th
 ```
 
 [Temperature](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_prompt) and [top_p](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_prompt) used.
+
 ```json
     "temperature": 0.6,
     "top_p": 0.6
   }
 }
+
+```
+
+[SWAIG](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/)
+
+SWAIG consists of:
+* [defaults](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/defaults)
+* [native_functions](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/native_functions/)
+* [includes](functions)
+* [functions](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/)
+
+```json
+
+"SWAIG": {
+            "defaults": {},
+            "functions": [
+              {
+                "purpose": "use to send text messages to a user",
+                "argument": {
+                  "type": "object",
+                  "properties": {
+                    "to": {
+                      "type": "string",
+                      "description": "The user's number in e.164 format"
+                    },
+                    "message": {
+                      "description": "the message to send to the user",
+                      "type": "string"
+                    }
+                  }
+                },
+                "data_map": {
+                  "expressions": [
+                    {
+                      "string": "${args.message}",
+                      "output": {
+                        "response": "Message sent.",
+                        "action": [
+                          {
+                            "SWML": {
+                              "version": "1.0.0",
+                              "sections": {
+                                "main": [
+                                  {
+                                    "send_sms": {
+                                      "to_number": "${args.to}",
+                                      "region": "us",
+                                      "body": "${args.message}, Reply STOP to stop.",
+                                      "from_number": "+15554441234"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "pattern": ".*"
+                    }
+                  ]
+                },
+                "function": "send_message"
+              },
+              {
+                "purpose": "use to send multimedia messages to a user",
+                "argument": {
+                  "properties": {
+                    "to": {
+                      "description": "The user's number in e.164 format",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "the message to send to the user",
+                      "type": "string"
+                    },
+                    "media": {
+                      "description": "the media URL to send to the user",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+
+```
+```json
+
+                "function": "send_mms",
+                "data_map": {
+                  "expressions": [
+                    {
+                      "pattern": ".*",
+                      "output": {
+                        "response": "Message sent.",
+                        "action": [
+                          {
+                            "SWML": {
+                              "version": "1.0.0",
+                              "sections": {
+                                "main": [
+                                  {
+                                    "send_sms": {
+                                      "to_number": "${args.to}",
+                                      "media": [
+                                        "${args.media}"
+                                      ],
+                                      "body": "${args.message}, Reply STOP to stop.",
+                                      "region": "us",
+                                      "from_number": "+15554441234"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "string": "${args.message}"
+                    }
+                  ]
+                }
+              },
+              {
+
+```
+
+### get_weather_city
+
+This is a function that uses openweathermap.org api that queries by US city and state.
+
+```json
+
+               "function": "get_weather_city",
+                "data_map": {
+                  "webhooks": [
+                    {
+                      "url": "https://api.openweathermap.org/data/2.5/weather?q=${args.city},${args.state},US&units=imperial&appid=cdd2941CHANGE_ME46218144",
+                      "method": "GET",
+                      "output": {
+                        "response": "The current weather is ${weather[0].description} with a temperature of '{Math.floor(${main.temp})}' and Longitude ${coord.lon} Latitude ${coord.lat} Weather ID ${weather[0].id} Main Weather ${weather[0].main} Weather Description ${weather[0].description} Weather Icon ${weather[0].icon} Base ${base} Temperature ${main.temp} Feels Like Temperature ${main.feels_like} Minimum Temperature ${main.temp_min} Maximum Temperature ${main.temp_max} Pressure ${main.pressure} Humidity ${main.humidity} Visibility ${visibility} Wind Speed ${wind.speed} Wind Direction ${wind.deg} Wind Gust ${wind.gust} Cloudiness ${clouds.all} Datetime ${dt} System Type ${sys.type} System ID ${sys.id} Country ${sys.country} Sunrise ${sys.sunrise} Sunset ${sys.sunset} Timezone ${timezone} Location ID ${id} Location Name ${name} Status Code ${cod}. ",
+                        "action": []
+                      }
+                    }
+                  ]
+                },
+                "purpose": "get weather information using city name and 2 letter state name abbreviation",
+                "argument": {
+                  "properties": {
+                    "city": {
+                      "type": "string",
+                      "description": "City name."
+                    },
+                    "state": {
+                      "type": "string",
+                      "description": "2 letter state name abbreviation."
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+
+```
+
+### get_weather_zipcode
+
+This is a function that uses openweathermap.org api that queries by US zipcode and returns json for that specific zipcode.
+
+```json
+
+              {
+                "function": "get_weather_zipcode",
+                "data_map": {
+                  "webhooks": [
+                    {
+                      "url": "https://api.openweathermap.org/data/2.5/weather?zip=${args.zip}&units=imperial&appid=cdd2941CHANGE_ME46218144",
+                      "method": "GET",
+                      "output": {
+                        "response": "The current weather is ${weather[0].description} with a temperature of '{Math.floor(${main.temp})}' and Longitude ${coord.lon} Latitude ${coord.lat} Weather ID ${weather[0].id} Main Weather ${weather[0].main} Weather Description ${weather[0].description} Weather Icon ${weather[0].icon} Base ${base} Temperature ${main.temp} Feels Like Temperature ${main.feels_like} Minimum Temperature ${main.temp_min} Maximum Temperature ${main.temp_max} Pressure ${main.pressure} Humidity ${main.humidity} Visibility ${visibility} Wind Speed ${wind.speed} Wind Direction ${wind.deg} Wind Gust ${wind.gust} Cloudiness ${clouds.all} Datetime ${dt} System Type ${sys.type} System ID ${sys.id} Country ${sys.country} Sunrise ${sys.sunrise} Sunset ${sys.sunset} Timezone ${timezone} Location ID ${id} Location Name ${name} Status Code ${cod}. ",
+                        "action": []
+                      }
+                    }
+                  ]
+                },
+                "purpose": "get detailed forecast for a location using zipcode",
+                "argument": {
+                  "properties": {
+                    "zip": {
+                      "type": "string",
+                      "description": "Zipcode used to get the weather."
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            ]
+          },
 
 ```
