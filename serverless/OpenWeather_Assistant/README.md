@@ -262,7 +262,36 @@ SWAIG consists of:
 
 ### get_weather_city
 
-This is a function that uses openweathermap.org api that queries by US city and state.
+This is a function that uses openweathermap.org api that queries by US city and state to retrieve weather data.
+
+To build a function we first give the function a name. This can be anything but to keep organized we name it as what it is for. Next, we define what the purpose of the function is. This is important and can take some refining so the digital employee has a good idea of what the function is used for. When we get to `data_map` and `argument` we then branch off down two seperate paths of the function.
+
+`data_map` is where the `webhook` is set and the `url` it is and what `method (GET)` was used. The `output` from the `webhook` then outputs the `response` that the digital employee will say to the user. The variables that can be used at this point is from the json reponse we got from the api and used the same json schema. For example:  Feels Like Temperature `${main.feels_like}`. Finally, We can define an `action` to use if needed. A common action would be to trigger SWML.
+
+The other side of the branch is `argument`. `argument` can be an `object` that has `properties`. These `properties` will have a name. The example uses the names `city` and `state`. `city` and `state` will be a `string` and a `description`. The `description` will give the digital employee what the argument will be used for.  When the user says what the city and state they want weather information for, the digital employee will know now that these are needed and will populate the city and state variables the user says in the conversation. 
+
+* [function:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/) This is a name that can be anything. It's best to have a good naming convention to keep organized.
+* [purpose:]() This will define the purpose of the function to the digital employee.
+  * [data_map:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/) The will map out the data that is returned from the api.
+    * [webhooks:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.webhooks) This is the section where a webhook will be used.
+      * [url:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.webhooks) This is the api url to retrieve data from.
+      * [method:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.webhooks) Method used to retrieve data from the url.
+        * [output:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.output) The output of the data retreived.
+          * [response:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.output) This is what our digital employee will say to the user. Variables created from the arguments are used to populate specific data that was retreived from the api.
+            * [action:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.output) No action used in this function. Can be used to trigger SWML.
+
+  
+
+
+* [argument:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/) This is where you sift the data returned from the api and populates the variables for the digital employee to use.
+  * [type:]() object
+    * [properties:]() This is a section that is used to define what is in an argument and can be an array.
+      * [city:]() This can be anything but should use a good naming convention to keep organized and used to build the args variable ${args.city}.
+        * [type:]() string of words that will be used.
+        * [description:]() This describes to the digital employee what city and state is and is similar to the purpose.
+      * [state:]() This can be anything but should use a good naming convention to keep organized and used to build the args variable ${args.state}.
+        * [type:]() string of words that will be used.
+        * [description:]() This describes to the digital employee what state is and is similar to the purpose.
 
 ```json
 
@@ -279,12 +308,12 @@ This is a function that uses openweathermap.org api that queries by US city and 
                     }
                   ]
                 },
-                "purpose": "get weather information using city name and 2 letter state name abbreviation",
+                "purpose": "get weather information using city name and 2 letter state name abbreviation. The same city can be in different states and spelled differently. Use %20 between cities that have 2 names. For example: miami%20beach",
                 "argument": {
                   "properties": {
                     "city": {
                       "type": "string",
-                      "description": "City name."
+                      "description": "City name. Use url encoding."
                     },
                     "state": {
                       "type": "string",
@@ -300,6 +329,26 @@ This is a function that uses openweathermap.org api that queries by US city and 
 ### get_weather_zipcode
 
 This is a function that uses openweathermap.org api that queries by US zipcode and returns json for that specific zipcode.
+
+* [function:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/) This is a name that can be anything. It's best to have a good naming convention to keep organized.
+* [purpose:]() This will define the purpose of the function to the digital employee.
+  * [data_map:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/) The will map out the data that is returned from the api.
+    * [webhooks:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.webhooks) This is the section where a webhook will be used.
+      * [url:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.webhooks) This is the api url to retrieve data from.
+      * [method:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.webhooks) Method used to retrieve data from the url.
+        * [output:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.output) The output of the data retreived.
+          * [response:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.output) This is what our digital employee will say to the user. Variables created from the arguments are used to populate specific data that was retreived from the api.
+            * [action:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.output) No action used in this function. Can be used to trigger SWML.
+
+  
+
+
+* [argument:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/) This is where you sift the data returned from the api and populates the variables for the digital employee to use.
+  * [type:]() object
+    * [properties:]() This is a section that is used to define what is in an argument and can be an array.
+      * [zip:]() This can be anything but should use a good naming convention to keep organized.
+        * [type:]() string of words that will be used.
+        * [description:]() This describes to the digital employee what zip is and is similar to the purpose.
 
 ```json
 
