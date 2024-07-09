@@ -2,6 +2,9 @@
   "sections": {
     "main": [
       {
+        "play": "ring:10.0:us"
+      },
+      {
         "answer": {}
       },
       {
@@ -21,7 +24,7 @@
           "post_prompt": {
             "top_p": 0.6,
             "temperature": 0.6,
-            "text": "Summarize the converstation"
+            "text": "Summarize the conversation"
           },
           "post_prompt_auth_user": "this-is-an-optional-user",
           "pronounce": [
@@ -162,7 +165,7 @@
                     {
                       "method": "GET",
                       "output": {
-                        "response": "The lattitude is ${array[0].lat}, longitude is ${array[0].lon} for ${input.args.city}, ${input.args.state}",
+                        "response": "The latitude is ${array[0].lat}, longitude is ${array[0].lon} for ${input.args.city}, ${input.args.state}",
                         "action": [
                           {
                             "back_to_back_functions": "true"
@@ -173,7 +176,7 @@
                     }
                   ]
                 },
-                "purpose": "lattitude and logitude for any city or state",
+                "purpose": "latitude and longitude for any city or state",
                 "argument": {
                   "properties": {
                     "state": {
@@ -196,13 +199,13 @@
                       "description": "Longitude to four decimal places."
                     },
                     "lat": {
-                      "description": "Lattitude to four decimal places.",
+                      "description": "Latitude to four decimal places.",
                       "type": "string"
                     }
                   },
                   "type": "object"
                 },
-                "purpose": "lattitude and logitude for any city",
+                "purpose": "latitude and longitude for any city",
                 "data_map": {
                   "webhooks": [
                     {
@@ -239,7 +242,7 @@
                   "properties": {
                     "url": {
                       "type": "string",
-                      "description": "complete forcast URL"
+                      "description": "complete forecast URL"
                     }
                   },
                   "type": "object"
@@ -248,7 +251,7 @@
             ]
           },
           "prompt": {
-            "text": "You're a weather expert, You have three functions to help you get weather information for users.\r\n\r\nYou have to use get_lat_lon function, to get the lattitude and logitude by city and state\r\nThen you have to use get_weather_point, that takes lattitude and logitude to get the detailed weather URL\r\nFinally you use get_weather_detailed_forecast, that takes the URL from get_weather_point\r\n\r\n# Step 1\r\nGreet the user\r\n\r\n# Step 2\r\nGet the detailed forecast for the user\r\n\r\n# Step 3\r\nTell the user the detailed forcast\r\n\r\n# Step 4\r\nOffer to send the details in a message to the user",
+            "text": "You're a weather expert, You have three functions to help you get weather information for users.\r\n\r\nYou have to use get_lat_lon function, to get the latitude and longitude by city and state\r\nThen you have to use get_weather_point, that takes latitude and longitude to get the detailed weather URL\r\nFinally you use get_weather_detailed_forecast, that takes the URL from get_weather_point\r\n\r\n# Step 1\r\nGreet the user\r\n\r\n# Step 2\r\nGet the detailed forecast for the user\r\n\r\n# Step 3\r\nTell the user the detailed forecast\r\n\r\n# Step 4\r\nOffer to send the details in a message to the user\r\n\r\n# Step 5\r\nAsk the user if there is anything else you can help them with.",
             "temperature": 0.6,
             "top_p": 0.6
           }
