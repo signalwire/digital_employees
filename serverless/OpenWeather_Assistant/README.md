@@ -223,11 +223,11 @@ SWAIG consists of:
 
 `send_mms` will send an sms message with a defined url to a file. An example would be an image(.jpg,png etc). The image will be included in the sms message.
 
-* data_map
-   * expressions:
-     *  pattern:
-       *  output:
-       *  response:
+* [data_map](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/)
+   * [expressions:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.expressions)
+     *  [pattern:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.expressions)
+       *  [output:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.output)
+       *  [response:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.output)
        *  action: The action will execute SWML. The SWML in this example will send an sms message from ${args.from} a defined number to ${args.to} the user. There is the body of the message populated with the ${args.message} variable. The media url will populate an image to be sent if the function is used.
 
 ```json
