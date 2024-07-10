@@ -206,11 +206,6 @@ SWAIG consists of:
 
 ```
 
-```json
-
-
-
-```
 ### send_mms
 
 `send_mms` will send an sms message with a defined url to a file. An example would be an image(.jpg,png etc). The image will be included in the sms message.
