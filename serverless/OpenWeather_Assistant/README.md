@@ -210,7 +210,7 @@ SWAIG consists of:
 
 `send_mms` will send an sms message with a defined url to a file. An example would be an image(.jpg,png etc). The image will be included in the sms message.
 
-* [purpose](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/): "use to send multimedia messages to a user"
+* [purpose](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/): This describes to the digital employee what the purpose of the function is used for.
 * [argument](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/):
   * [properties]():
     * **to:** This will capture the to number `${args.to}` to use with the SWML(The SWAIG action).
