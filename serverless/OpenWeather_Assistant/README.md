@@ -296,7 +296,7 @@ SWAIG consists of:
 
 This is a function that uses openweathermap.org api that queries by US city and state to retrieve weather data.
 
-To build a function we first give the function a name. This can be anything but to keep organized we name it as what it is for. Next, we define what the purpose of the function is. This is important and can take some refining so the digital employee has a good idea of what the function is used for. When we get to `data_map` and `argument` we then branch off down two seperate paths of the function.
+To build a function we first give the function a name label. This can be anything but to keep organized we name and label it as what it is for. Next, we define what the purpose of the function is. This is important and can take some refining so the digital employee has a good idea of what the function is used for. When we get to `data_map` and `argument` we then branch off down two seperate paths of the function.
 
 `data_map` is where the `webhook` is set and the `url` it is and what `method (GET)` was used. The `output` from the `webhook` then outputs the `response` that the digital employee will say to the user. The variables that can be used at this point is from the json reponse we got from the api and used the same json schema. For example:  Feels Like Temperature `${main.feels_like}`. Finally, We can define an `action` to use if needed. A common action would be to trigger SWML.
 
