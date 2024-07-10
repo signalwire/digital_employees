@@ -151,6 +151,11 @@ SWAIG consists of:
 "SWAIG": {
             "defaults": {},
             "functions": [
+```
+
+### send_message
+
+```json
               {
                 "purpose": "use to send text messages to a user",
                 "argument": {
@@ -198,6 +203,41 @@ SWAIG consists of:
                 },
                 "function": "send_message"
               },
+
+```
+
+```json
+
+
+
+```
+### send_mms
+
+`send_mms` will send an sms message with a defined url to a file. An example would be an image(.jpg,png etc). The image will be included in the sms message.
+
+* [purpose](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/): "use to send multimedia messages to a user"
+* [argument](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/):
+  * [properties]():
+    * to: This will capture the to number `${args.to}` to use with the SWML(The SWAIG action).
+      * [description](): This will describe to the digital employee what context a number is.
+      * [type](): "string"
+    * [message](): This will capture what the body of the sms will be `${args.message}`.
+      * [description](): "the message to send to the user".
+      * [type](): "string"
+    * [media]():
+      * [description](): "the media URL to send to the user".
+      * [type](): "string"
+
+
+* [data_map](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/)
+  * [expressions:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.expressions)
+    * [pattern:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.expressions)
+    * [output:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.output)
+        * [response:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.output)
+      * [action:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.output#actions) The action will execute SWML. The SWML in this example will send an SMS message from ${args.from} a defined number to ${args.to} the user. The body of the message is populated with the ${args.message} variable. The media URL will populate an image to be sent if the function is used.
+
+```json
+
               {
                 "purpose": "use to send multimedia messages to a user",
                 "argument": {
@@ -217,20 +257,6 @@ SWAIG consists of:
                   },
                   "type": "object"
                 },
-
-```
-### send_mms
-
-`send_mms` will send an sms message with a defined url to a file. An example would be an image(.jpg,png etc). The image will be included in the sms message.
-
-* [data_map](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/)
-   * [expressions:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.expressions)
-     *  [pattern:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.expressions)
-       *  [output:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.output)
-         *  [response:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.output)
-           *  [action:](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/ai_swaig.data_map/data_map.output#actions) The action will execute SWML. The SWML in this example will send an sms message from ${args.from} a defined number to ${args.to} the user. There is the body of the message populated with the ${args.message} variable. The media url will populate an image to be sent if the function is used.
-
-```json
 
                 "function": "send_mms",
                 "data_map": {
