@@ -219,13 +219,13 @@ SWAIG consists of:
 * [argument](https://developer.signalwire.com/sdks/reference/swml/methods/ai/ai_swaig/functions/):
   * [properties]():
     * to: This will capture the to number `${args.to}` to use with the SWML(The SWAIG action).
-      * [description](): This will describe to the digital employee what context a number is.
+      * [description](): This will describe to the digital employee what context a number is(e.164 format).
       * [type](): "string"
-    * [message](): This will capture what the body of the sms will be `${args.message}`.
-      * [description](): "the message to send to the user".
+    * message: This will capture what the body of the sms will be `${args.message}`.
+      * [description](): This will describe to the digital employee what context what a message is.
       * [type](): "string"
-    * [media]():
-      * [description](): "the media URL to send to the user".
+    * media: This will capture what media the sms will use `${args.media}.`
+      * [description](): This will describe to the digital employee what context what a media is.
       * [type](): "string"
 
 
