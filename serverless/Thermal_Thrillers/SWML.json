@@ -46,6 +46,11 @@
             "functions": [
               {
                 "purpose": "use to send text messages to a user",
+                "fillers": {
+                  "en-US": [
+                    "Sounds good, You'll receive the message in just a moment."
+                  ]
+                },
                 "data_map": {
                   "expressions": [
                     {
