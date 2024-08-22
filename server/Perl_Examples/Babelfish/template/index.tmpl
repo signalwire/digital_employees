@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.05">
+  <title>Babelfish</title>
+  <meta property="og:title" content="Babelfish" />
+  <meta property="og:description" content="Universal translator for telephone calls." />
+  <meta property="og:image" content="/assets/babelfish.png" />
+  <meta property="og:url" content="https://signalwire.com" />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="icon" href="/assets/icon.png" type="image/png">
+</head>
+<body>
+  <div class="container">
+    <img src="/assets/signalwire.png" alt="SignalWire Logo" class="logo">
+    <img src="/assets/babelfish.png" alt="Babelfish Logo" class="logo">
+    <h1>Babelfish</h1>
+    <form id="callForm">
+      <label for="fromLang">From Language:</label>
+      <select id="fromLang" name="fromLang" required>
+        <!-- Options will be populated by JavaScript -->
+      </select>
+
+      <label for="toLang">To Language:</label>
+      <select id="toLang" name="toLang" required>
+        <!-- Options will be populated by JavaScript -->
+      </select>
+
+      <label for="fromVoice">From Voice:</label>
+      <select id="fromVoice" name="fromVoice" required>
+        <!-- Options will be populated by JavaScript -->
+      </select>
+
+      <label for="toVoice">To Voice:</label>
+      <select id="toVoice" name="toVoice" required>
+        <!-- Options will be populated by JavaScript -->
+      </select>
+
+      <label for="caller">Caller Number:</label>
+      <div class="input-group">
+        <input type="text" id="caller" name="caller" placeholder="Phone number in e.164 format" required>
+      </div>
+
+      <label for="callee">Callee Number:</label>
+      <div class="input-group">
+        <input type="text" id="callee" name="callee" placeholder="Phone number in e.164 format" required>
+      </div>
+
+      <button type="submit" class="disabled" disabled>Call</button>
+
+      <div class="advanced-toggle">Advanced Options</div>
+      <div id="advancedOptions" class="hidden">
+        <div class="option">
+          <label for="recordCall">Record Call</label>
+          <label class="switch">
+            <input type="checkbox" id="recordCall" name="recordCall">
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="option">
+          <input type="hidden" id="webhook" name="webhook">
+        </div>
+      </div>
+    </form>
+
+    <div id="result" class="hidden">
+      <p id="callMessage"></p>
+      <p>Call UUID: <span id="uuid"></span></p>
+      <button id="hangupButton">Hang Up</button>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/libphonenumber-js@1.9.48/bundle/libphonenumber-js.min.js"></script>
+  <script src="js/index.js"></script>
+</body>
+</html>
+
