@@ -98,7 +98,7 @@
           },
           "languages": [
             {
-              "engine": "elevenlabs",
+              "engine": "openai",
               "name": "English",
               "fillers": [
                 "lets see",
@@ -107,7 +107,7 @@
                 "umm"
               ],
               "code": "en-US",
-              "voice": "josh"
+              "voice": "alloy"
             }
           ],
           "params": {

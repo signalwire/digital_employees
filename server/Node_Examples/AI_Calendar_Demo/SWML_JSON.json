@@ -18,7 +18,7 @@
                },
                "languages": [
                   {
-                     "engine": "elevenlabs",
+                     "engine": "openai",
                      "fillers": [
                         "lets see",
                         "uh",
@@ -27,7 +27,7 @@
                      ],
                      "name": "English",
                      "code": "en-US",
-                     "voice": "josh"
+                     "voice": "echo"
                   }
                ],
                "post_prompt": {

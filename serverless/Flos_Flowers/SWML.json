@@ -109,13 +109,13 @@
           "languages": [
             {
               "code": "en-US",
-              "engine": "elevenlabs",
+              "engine": "openai",
               "fillers": [
                 "one moment",
                 "one moment please"
               ],
               "name": "English",
-              "voice": "rachel"
+              "voice": "nova"
             }
           ]
         }

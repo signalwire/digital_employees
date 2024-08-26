@@ -598,8 +598,8 @@ my $swml_app = sub {
      $swml->add_ailanguage({
          code    => 'en-US',
          name    => 'English',
-         voice   => 'Josh',
-         engine  => 'elevenlabs',
+         voice   => 'alloy',
+         engine  => 'openai',
          fillers => [ "one moment", "one moment please" ] });
 
   # Adding Spanish configuration

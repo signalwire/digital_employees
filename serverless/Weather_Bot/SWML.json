@@ -41,13 +41,13 @@
           "languages": [
             {
               "code": "en-US",
-              "voice": "Rachel",
+              "voice": "nova",
               "name": "English",
               "fillers": [
                 "one moment",
                 "one moment please"
               ],
-              "engine": "elevenlabs"
+              "engine": "openai"
             }
           ],
           "SWAIG": {
