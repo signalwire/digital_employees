@@ -1,0 +1,135 @@
+{
+  "sections": {
+    "main": [
+      {
+        "answer": {}
+      },
+      {
+        "record_call": {
+          "format": "wav",
+          "stereo": "true"
+        }
+      },
+      {
+        "ai": {
+          "params": {
+            "verbose_logs": "true",
+            "debug_webhook_url": "https://public.requestbin.com/r"
+          },
+          "post_prompt_url": "https://public.requestbin.com/r",
+          "post_prompt": {
+            "top_p": 0.6,
+            "temperature": 0.6,
+            "text": "Summarize the conversation in an anonymous json object."
+          },
+          "pronounce": [
+            {
+              "ignore_case": 0,
+              "with": "miles per hour",
+              "replace": "mph"
+            }
+          ],
+          "hints": [
+            "weather",
+            "forecast"
+          ],
+          "languages": [
+            {
+              "code": "en-US",
+              "voice": "echo",
+              "name": "English",
+              "fillers": [
+                "one moment",
+                "one moment please"
+              ],
+              "engine": "openai"
+            }
+          ],
+          "SWAIG": {
+            "defaults": {},
+            "functions": [
+              {
+                "purpose": "use to send text messages to a user",
+                "argument": {
+                  "type": "object",
+                  "properties": {
+                    "to": {
+                      "type": "string",
+                      "description": "The user's number in e.164 format"
+                    },
+                    "message": {
+                      "description": "the message to send to the user",
+                      "type": "string"
+                    }
+                  }
+                },
+                "data_map": {
+                  "expressions": [
+                    {
+                      "string": "${args.message}",
+                      "output": {
+                        "response": "Message sent.",
+                        "action": [
+                          {
+                            "SWML": {
+                              "version": "1.0.0",
+                              "sections": {
+                                "main": [
+                                  {
+                                    "send_sms": {
+                                      "to_number": "${args.to}",
+                                      "region": "us",
+                                      "body": " ${args.message} Reply STOP to stop.",
+                                      "from_number": "+15555555555"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "pattern": ".*"
+                    }
+                  ]
+                },
+                "function": "send_message"
+              },
+              {
+                "function": "get_temperature_humidity",
+                "data_map": {
+                  "webhooks": [
+                    {
+                      "url": "https://api.thingspeak.com/channels/1464062/feeds.json?results=2",
+                      "method": "GET",
+                      "output": {
+                        "response": "The current weather is ${feeds[0].field1} and humidity is ${feeds[0].field2}",
+                        "action": []
+                      }
+                    }
+                  ]
+                },
+                "purpose": "get the temperature and humidity.",
+                "argument": {
+                  "properties": {
+                    "zip": {
+                      "type": "string",
+                      "description": "Temperature and humidity."
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            ]
+          },
+          "prompt": {
+            "text": "Your name is Ziggy a digital employee for Ziggy's attic temperature and humidity sensor powered by SignalWire. Greet the user with that information. You have two functions to help you get temperature and humidity information and one function to send messages.\r\n\r\nTell the user what the temperature and humidity is from the sensor.\r\nYou have to use get_temperature_humidity function.\r\n\r\n\r\n# Step 1\r\nGreet the user.\r\n\r\n# Step 2\r\nTell the user the temperature and humidity.\r\n\r\n# Step 3\r\n Ask the user if they would like the information sent to them via sms? Keep assisting the user until the user is ready to end the call.",
+            "temperature": 0.6,
+            "top_p": 0.6
+          }
+        }
+      }
+    ]
+  },
+  "version": "1.0.0"
+}
