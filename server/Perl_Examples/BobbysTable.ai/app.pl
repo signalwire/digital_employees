@@ -979,8 +979,8 @@ my $swml_app = sub {
     $swml->add_ailanguage({
 	code    => 'en-US',
 	name    => 'English',
-	voice   => 'rachel',
-	engine  => 'elevenlabs',
+	voice   => 'nova',
+	engine  => 'openai',
 	fillers => [ "one moment" ] });
 
     $swml->add_aiparams( { debug_webhook_url => "https://$ENV{USERNAME}:$ENV{PASSWORD}\@$env->{HTTP_HOST}/debughook" } );
