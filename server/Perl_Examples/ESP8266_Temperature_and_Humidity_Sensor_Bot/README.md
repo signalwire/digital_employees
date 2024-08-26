@@ -1,7 +1,7 @@
 # Sensor-ai
 ESP8266, thingspeak.com, DHT11 sensor data interacting with SignalWire's AI technology
 
-## [sensor_data Function](https://github.com/Len-PGH/Sensor-ai/blob/main/perl-function.pl)
+## [sensor_data Function](https://github.com/Len-PGH/Sensor-ai/blob/main/app.pl)
 
 Perl modules:
 - `LWP::Simple` for fetching data from the web,
