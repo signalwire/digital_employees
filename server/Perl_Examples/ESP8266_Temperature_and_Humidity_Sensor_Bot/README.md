@@ -1,4 +1,5 @@
-# Sensor-ai
+# ESP8266 Temperature and Humidity Sensor Bot
+
 ESP8266, thingspeak.com, DHT11 sensor data interacting with SignalWire's AI technology
 
 ## [sensor_data Function](https://github.com/Len-PGH/Sensor-ai/blob/main/app.pl)
