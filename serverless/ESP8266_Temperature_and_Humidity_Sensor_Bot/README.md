@@ -13,7 +13,7 @@ ESP8266, thingspeak.com, DHT11 sensor data interacting with SignalWire's AI tech
 
 In this example we have the [ESP8266 kit from Amazon](https://www.amazon.com/gp/product/B07GPBBY7F). The kit will provide the local weather from [Openweathermap](https://openweathermap.org/) that displays on the LCD. The part that will interact with the SignalWire serverless [SWML bin](https://github.com/signalwire/digital_employees/blob/main/serverless/ESP8266_Temperature_and_Humidity_Sensor_Bot/full_example_SWML.json) is the DHT11 temperature and humidity sensor. There is also a light sensor we can get data from. The ESP8266 will send the data from the DHT11 and light sensor to the [Thingspeak api.](api.thingspeak.com). This will create the api responses we need to use with our [SWML bin example](https://github.com/signalwire/digital_employees/blob/main/serverless/ESP8266_Temperature_and_Humidity_Sensor_Bot/full_example_SWML.json)
 
-## Other Variables
+## Json variables to use
 
 - **"Temperature":** `${feeds[0].field1}`: This would map to "80" from the first entry in the feeds array (field1).
 - **"Humidity":** `${feeds[0].field2}`: This would map to "51" from the first entry in the feeds array (field2).
