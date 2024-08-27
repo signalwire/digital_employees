@@ -1,5 +1,0 @@
-requires 'Plack';
-requires 'SignalWire::ML';
-requires 'JSON';
-requires 'LWP::Simple';
-requires 'Carton';
