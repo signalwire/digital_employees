@@ -12,9 +12,10 @@ ESP8266, thingspeak.com, DHT11 sensor data interacting with SignalWire's AI tech
 - [Arduino IDE Sketch](https://github.com/signalwire/digital_employees/tree/main/serverless/ESP8266_Temperature_and_Humidity_Sensor_Bot/arduino_sketch)
 - Frosty beverage (optional)
 
-## How does it work?
+## How it works
 
-In this example we have the [ESP8266 kit from Amazon](https://www.amazon.com/gp/product/B07GPBBY7F). The kit will provide the local weather from [Openweathermap](https://openweathermap.org/) that displays on the LCD. The part that will interact with the SignalWire serverless [SWML bin](https://github.com/signalwire/digital_employees/blob/main/serverless/ESP8266_Temperature_and_Humidity_Sensor_Bot/full_example_SWML.json) is the DHT11 temperature and humidity sensor. There is also a light sensor we can get data from. The ESP8266 will send the data from the DHT11 and light sensor to the [Thingspeak api.](api.thingspeak.com). This will create the api responses we need to use with our [SWML bin example](https://github.com/signalwire/digital_employees/blob/main/serverless/ESP8266_Temperature_and_Humidity_Sensor_Bot/full_example_SWML.json)
+In this example we have the [ESP8266 kit from Amazon](https://www.amazon.com/gp/product/B07GPBBY7F). The kit will provide the local weather from [Openweathermap](https://openweathermap.org/) that displays on the LCD. The part that will interact with the SignalWire serverless [SWML bin](https://github.com/signalwire/digital_employees/blob/main/serverless/ESP8266_Temperature_and_Humidity_Sensor_Bot/full_example_SWML.json) is the DHT11 temperature and humidity sensor. There is also a light sensor we can get data from. The ESP8266 will send the data from the DHT11 and light sensor to the [Thingspeak api.](api.thingspeak.com). This will create the api responses we need to use with our [SWML bin example](https://github.com/signalwire/digital_employees/blob/main/serverless/ESP8266_Temperature_and_Humidity_Sensor_Bot/full_example_SWML.json) The digital employee can now query the api and tell the caller what the temperature and humidity is. The digital employee will also give you the option to send an sms message with the same temperature and humidity info.
+
 
 ## Json variables to use
 
@@ -53,4 +54,90 @@ In this example we have the [ESP8266 kit from Amazon](https://www.amazon.com/gp/
         ]
     }
 }
+```
+
+## Functions used
+
+#### **Function:** `get_temperature_humidity`
+
+```json
+              {
+                "function": "get_temperature_humidity",
+                "data_map": {
+                  "webhooks": [
+                    {
+                      "url": "https://api.thingspeak.com/channels/1464062/feeds.json?results=2",
+                      "method": "GET",
+                      "output": {
+                        "response": "The current weather is ${feeds[0].field1} and humidity is ${feeds[0].field2}",
+                        "action": []
+                      }
+                    }
+                  ]
+                },
+                "purpose": "get the temperature and humidity.",
+                "argument": {
+                  "properties": {
+                    "zip": {
+                      "type": "string",
+                      "description": "Temperature and humidity."
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            ]
+          },
+```
+
+#### **Function:** `send_message`
+
+```json
+              {
+                "purpose": "use to send text messages to a user",
+                "argument": {
+                  "type": "object",
+                  "properties": {
+                    "to": {
+                      "type": "string",
+                      "description": "The user's number in e.164 format"
+                    },
+                    "message": {
+                      "description": "the message to send to the user",
+                      "type": "string"
+                    }
+                  }
+                },
+                "data_map": {
+                  "expressions": [
+                    {
+                      "string": "${args.message}",
+                      "output": {
+                        "response": "Message sent.",
+                        "action": [
+                          {
+                            "SWML": {
+                              "version": "1.0.0",
+                              "sections": {
+                                "main": [
+                                  {
+                                    "send_sms": {
+                                      "to_number": "${args.to}",
+                                      "region": "us",
+                                      "body": " ${args.message} Reply STOP to stop.",
+                                      "from_number": "+15555555555"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "pattern": ".*"
+                    }
+                  ]
+                },
+                "function": "send_message"
+              },
 ```
