@@ -2,6 +2,9 @@
 
 ESP8266, thingspeak.com, DHT11 sensor data interacting with SignalWire's AI technology. Giving a nice experience with software and hardware (IOT).
 
+![image](https://github.com/user-attachments/assets/c8b7671b-e238-48a2-8899-e1d01b2b7eec)
+
+
 ## Stuff you need
 - Create or Log on to your [SignalWire Space](https://signalwire.com/signin)
 - [Kit from Amazon](https://www.amazon.com/gp/product/B07GPBBY7F)
