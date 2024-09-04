@@ -25,6 +25,7 @@ The digital employee Rachael's interaction with customers is streamlined into se
 1. **Greeting and Assistance:** Based on the time of your call, Rachael will greet you with the appropriate message and offer assistance.
 2. **Information Gathering:** Rachael will guide you through a series of steps to gather all necessary information regarding your HVAC needs.
 3. **Appointment Scheduling:** Depending on the time of your call, Rachael will either schedule an appointment or arrange for after-hours service.
+4. **Custom Summarize Conversation:** Define the key information you want to collect by the end of the call. This data can be utilized later for various purposes, such as importing into a database, forwarding in an SMS to a designated recipient (e.g., an on-call technician), or performing any other action you need with the collected information.
 
 ## Summarize Conversation
 
