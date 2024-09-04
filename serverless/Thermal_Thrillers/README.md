@@ -28,7 +28,7 @@ The digital employee Rachael's interaction with customers is streamlined into se
 
 ## Summarize Conversation
 
-`summarize_conversation` is a special built custom function that you can define required array of defined fields the ai agent will summarize and populate to use for after the call is over. 
+`summarize_conversation` is a special built custom function that you can define required array of defined fields the ai agent will summarize and populate to use for after the call is over.  
 
 Example
 
