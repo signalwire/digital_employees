@@ -26,6 +26,46 @@ The digital employee Rachael's interaction with customers is streamlined into se
 2. **Information Gathering:** Rachael will guide you through a series of steps to gather all necessary information regarding your HVAC needs.
 3. **Appointment Scheduling:** Depending on the time of your call, Rachael will either schedule an appointment or arrange for after-hours service.
 
+## Summarize Conversation
+
+`summarize_conversation` is a special built custom function that you can define required array of defined fields the ai agent will summarize and populate to use for after the call is over. 
+
+Example
+
+```json
+
+{
+"AGE": 20,
+"CUSTOMER": "true",
+"OWNER": "true",
+"RENTAL": "false",
+"AFTERHOURS": "false",
+"WARRANTY": "true",
+"PHONE": "+15828554041",
+"TENANT_PHONE": null,
+"DATETIME": "2024-08-27 02:24 PM",
+"SYSTEM": "residential",
+"owner_name": "Jim Smith",
+"owner_phone": "+18675309",
+"tenant_name": null,
+"tenant_phone": null,
+"address": "123 Forbes Avenue",
+"city": "Pittsburgh",
+"state": "PA",
+"zipcode": "15222",
+"customer": "true",
+"owner": "true",
+"hvac_type": "residential",
+"previous_repairs": "No",
+"hvac_make": "Next",
+"hvac_model": "TE 24,000",
+"unit_age": 20,
+"warranty": "true",
+"additional_info": "Maintenance contract",
+"summary": "You are experiencing issues with your air
+}
+```
+
 ---------------------
 
 ### SignalWire
