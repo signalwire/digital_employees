@@ -41,7 +41,7 @@ Example
 "RENTAL": "false",
 "AFTERHOURS": "false",
 "WARRANTY": "true",
-"PHONE": "+15828554041",
+"PHONE": "+15555551234",
 "TENANT_PHONE": null,
 "DATETIME": "2024-08-27 02:24 PM",
 "SYSTEM": "residential",
@@ -62,7 +62,7 @@ Example
 "unit_age": 20,
 "warranty": "true",
 "additional_info": "Maintenance contract",
-"summary": "You are experiencing issues with your air
+"summary": "You are experiencing issues with your air conditioner"
 }
 ```
 
