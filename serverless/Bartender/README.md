@@ -20,7 +20,6 @@ Meet Kevin, the digital employee designed to serve as your personal bartender. K
  
 By leveraging the `get_vector_data` function, Kevin ensures that every answer is grounded in accurate data, making him an indispensable digital employee for any business looking to automate tasks with precision and confidence, and a great co-worker.
 
-
 ### Function Fillers
 
 A function filler is triggered when a specific function is executed. In this example, it specifies what happens when the function is called. The filler text can be customized to create a more personalized interaction with the end user. If defined, this custom filler will override the default filler array, making the interaction more dynamic and engaging.
