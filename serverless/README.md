@@ -6,6 +6,7 @@
 * [Flos_Flowers](https://github.com/signalwire/digital_employees/tree/main/serverless/Flos_Flowers)
 * [Weather_Bot](https://github.com/signalwire/digital_employees/tree/main/serverless/Weather_Bot)
 * [Thermal Thrillers](https://github.com/signalwire/digital_employees/tree/main/serverless/Thermal_Thrillers)
+* [AI Bartender](https://github.com/signalwire/digital_employees/blob/main/serverless/Bartender/README.md)
 ------------------------
 
 Copy, Paste, Edit, Save.  Copy the SWML example, paste into a new SWML bin, edit and save.
