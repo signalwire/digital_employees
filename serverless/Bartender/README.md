@@ -21,18 +21,9 @@ Meet Kevin, the digital employee designed to serve as your personal bartender. K
  
 By leveraging the `get_vector_data` function using the SignalWire Datasphere API is, Kevin ensures that every answer is grounded in accurate data, making him an indispensable digital employee for any business looking to automate tasks with precision and confidence, and a great co-worker.
 
-### Function Fillers
+### [DataSphere API](https://developer.signalwire.com/rest/signalwire-rest/guides/datasphere/curl-usage/)
 
-A function filler is triggered when a specific function is executed. In this example, it specifies what happens when the function is called. The filler text can be customized to create a more personalized interaction with the end user. If defined, this custom filler will override the default filler array, making the interaction more dynamic and engaging.
-
-```json
-                "function": "get_vector_data",
-                "fillers": {
-                  "en-US": [
-                    "This is the get vector data function firing"
-                  ]
-                },
-```
+Kevin is using SignalWire's new Datasphere API in a custom-built Retrieval-Augmented Generation (RAG) stack empowering developers to upload, manipulate, and retrieve information in the context of a SignalWire application. Click here for more information on [SignalWire's Datasphere API](https://developer.signalwire.com/rest/signalwire-rest/guides/datasphere/curl-usage/)
 
 
 get_vector_data
