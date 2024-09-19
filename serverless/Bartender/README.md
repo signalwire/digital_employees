@@ -1,6 +1,11 @@
 Kevin - The AI Bartender
 -------------------
 
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/a909652f-6d3c-4a60-903d-850ec97aaba8" alt="your-image-description" width="200"/>
+</div>
+
+
 ### Introducing Kevin, the Digital Employee for Bartending
 
 Meet Kevin, the digital employee designed to serve as your personal bartender. Kevin is equipped with smart functions and structured responses to enhance the user experience, especially when it comes to crafting the perfect drink.
