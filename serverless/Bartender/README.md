@@ -95,7 +95,7 @@ This JSON block defines a function called `get_vector_data`, which is designed t
         "params": {
           "query_string": "${args.user_question}",
           "document_id": "694ced7b-b656-417e-bc86-ce22549b4562",
-          "count": 5
+          "count": 1
         },
         "output": {
           "response": "Use this information to answer the user's query, only provide answers from this information and do not make up anything: ${chunks[0].text} and ${chunks[0].document_id}",
