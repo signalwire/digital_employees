@@ -1,7 +1,10 @@
 # [aical](https://aical.signalwire.me/)
 
 
-Setup instructions to aquire your Google API client ID and OAuth configuration can be found [here](https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid).
+![image](https://github.com/user-attachments/assets/79dcd9e0-cd8a-4608-b38b-810bcd7cad5f)
+
+
+## Setup instructions to aquire your Google API client ID and OAuth configuration can be found [here](https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid).
 
 
 
