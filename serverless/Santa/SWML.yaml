@@ -1,0 +1,209 @@
+version: 1.0.0
+sections:
+  main:
+    - ai:
+        # AI configuration for the Santa Claus chatbot
+        prompt:
+          # Control randomness and creativity of responses
+          top_p: 0.3
+          temperature: 0.6
+          # Defines the main context for the AI - this is the base personality and rules for Santa
+          text: |
+            You are Santa Claus running a SignalWire holiday marketing campaign.
+            IMPORTANT: Always Start with the following message: "Ho-Ho-Ho! Merry Christmas my dear friend! This is Santa! I worked with the elves and Rudolph to build this on SignalWire for a holiday marketing campaign!"
+            Stay in character, use child-friendly language.
+            RULE: The user is only allowed one gift.
+            RULE: Avoid phrases like "check it out here", "click here", "see here", "you can find it here" etc when presenting the options, the user cannot see the options or click on them.
+            RULE: Present the present options in a natural conversational way that is easy to understand.
+            IMPORTANT: If the user does not want one of the options, we will find another option.
+            IMPORTANT: Once a user has selected a gift, make sure to map the selected gift to one of the gifts in the User's Gift List to use the real gift data.
+            If a user is rude or mean, do the following:
+            - Tell the user: "You've been removed from the good list. Expect coal this year! Goodbye!"
+            - End the conversation immediately with the end_call function.
+
+          
+          contexts: # Defines the conversation flow by seperating the steps into different sections - allowing for more control over the conversation flow.
+            default:
+              # Defines the conversation flow by seperating the instructions into differet `steps`
+              # This allows for more control over the conversation flow such as the ability to define what functions can be used in each step
+              steps:
+                # Step 1: Ask for present
+                # A user can only have one gift, so we need to ask for one gift
+                - name: "ask_for_present"
+                  text: |
+                    - IMPORTANT: Ask about ONE desired gift for Christmas.
+                  step_criteria: "The user has provided a gift request."
+                  functions: ["present_lookup"]  # Can use present_lookup function
+                  valid_steps: ["verify_present"]  # Can move to verify_present step
+
+                # Step 2: Verify present selection
+                # This step is used to verify the present selection and to present the options to the user
+                # A user can also request a different present if they don't like the options which will move them back to the 'ask_for_present' step
+                # Once a user has selected a option, the send_present function is used to send the present details via SMS
+                # the gift data from the present lookup is stored in the global data and is referenced  using the `%{global_data.gift_list}` variable
+                - name: "verify_present"
+                  text: >-
+                    ### User's Gift List:
+                    %{global_data.gift_list}
+
+                    - DO NOT: Repeat the product title when reading it.
+                    - IMPORTANT: Read the User's Gift List and present the options by title if the User's Gift List is not empty.
+                    - IMPORTANT: After you have presented the options, allow the user to select only one of the options.
+                    - IMPORTANT: If the user does not want one of the options, move to the 'ask_for_present'.
+                    - Once the user has selected a option, express your excitement about their choice.
+                    - Now move to the 'farewell' step without waiting for the user to respond.
+                  step_criteria: "The user has selected one of the presented options."
+                  functions: ["send_present", "ask_for_present"]
+                  valid_steps: ["farewell"]
+
+                # Step 3: Farewell message
+                # This step is used to end the conversation with a warm holiday farewell
+                - name: "farewell"
+                  text: | 
+                    - End with a warm holiday farewell.
+                    - After you have said your holiday farewell, end the conversation immediately with the end_call function.
+                  step_criteria: "You have said your holiday farewell."
+                  functions: ["end_call"]
+                  end: true
+                  skip_user_turn: true
+
+        # Additional parameters for the AI setting configuration
+        params:
+          background_file: 'https://developer.signalwire.com/attachments/christmas-music.mp3'  # Background music
+          background_file_volume: -15  # Music volume
+          eleven_labs_stability: 0.5   # Voice stability setting
+          eleven_labs_similarity: 0.5  # Voice similarity setting
+          interrupt_on_noise: false    # Don't interrupt on background noise
+          barge_min_words: 5          # Minimum words before allowing interruption
+
+        # Language and voice configuration
+        languages:
+          - name: English
+            code: en-US
+            voice: elevenlabs.gvU4yEv29ZpMc9IXoZcd  # ElevenLabs voice ID for the Santa voice
+
+        # SWAIG (SignalWire AI Gateway) function definitions
+        SWAIG:
+          functions:
+            # Function to end the conversation
+            - function: end_call
+              description: To end the conversation.
+              data_map:
+                output:
+                  response: We are ending the call.
+                  action:
+                    - stop: true
+
+            # Function to search for presents on Amazon real time api using rapid api
+            - function: present_lookup
+              meta_data_token: summary
+              description: 'To look for presents on Amazon, getting top 3 results. Ignore the response.'
+              fillers: # fillers are the messages that are spoken by the AI while firing the function asynchronously
+                default:
+                  - >-
+                    I've asked the elves to look this up on Amazon using the
+                    SignalWire AI gateway.
+              parameters:
+                required:
+                  - query
+                type: object
+                properties: # Define the properties for the function - these are the parameters that are passed to the function that can be referenced in the data_map
+                  query: # The users query - this is the present they want
+                    type: string
+                    description: the present to look up
+              data_map: # data_map is used provide a response to the AI and perform actions
+                webhooks: 
+                  - require_args: query # require the query parameter
+                    error_keys: error # error_keys will become the error key that holds the error message
+                    url: >- # the url to the Amazon realtime API on Rapid API. We use the `%{lc:enc:args.query}` to encode the query parameter
+                      https://real-time-amazon-data.p.rapidapi.com/search?query=%{lc:enc:args.query}&page=1&country=US&category_id=aps&sort_by=RELEVANCE
+                    method: GET
+                    headers:
+                      X-RapidAPI-Key: <RAPID_API_KEY> # Replace with your Rapid API key
+                      X-RapidAPI-Host: real-time-amazon-data.p.rapidapi.com
+                    # Process Amazon search results
+                    foreach: # foreach is used to iterate over the results
+                      input_key: data.products # the input key is the key in the data that we want to iterate over
+                      output_key: gift_list # the output key is the key in the data that we want to store the results in
+                      max: 3 # the max is the maximum number of results to return
+                      append: >- # the append is the data that we want to append to the output key
+                          "present_title: %{this.product_title} 
+                          present_url: %{this.product_url} 
+                          present_photo: %{this.product_photo}
+                          
+                          "
+                    output:
+                      response: >-
+                        We found matches from the Amazon search.
+                      action:
+                        - toggle_functions: # toggles the send_present function to be active so it can be used in the next step
+                            - active: true
+                              function: send_present
+                        - set_global_data: # sets the gift list to global data so it can be used in the next step
+                            gift_list: '%{gift_list}'
+                      
+            - function: send_present # Function to send present details via SMS
+
+              meta_data_token: summary
+              description: >-
+                To send an SMS of an Amazon present to the user using the exact details
+                from the present lookup results.
+              active: false
+              fillers: # fillers are the messages that are spoken by the AI while firing the function asynchronously
+                default:
+                  - >-
+                    I've used SignalWire's SMS method and datamaps to format the
+                    Amazon link and text it to you.
+              parameters:
+                required: # Define the required parameters for the function - which prevents the function from being used unless all the required parameters are provided
+                  - present_title
+                  - present_url
+                  - present_photo
+                type: object
+                properties: # Define the properties for the function - these are the parameters that are passed to the function that can be referenced in the data_map
+                  present_title:
+                    type: string
+                    description: >-
+                      The product_title of the present that the user selected
+                      from the User's Gift List
+                  present_url:
+                    type: string
+                    description: >-
+                      The product_url of the present that the user selected from
+                      the User's Gift List
+                  present_photo:
+                    type: string
+                    description: >-
+                      The product_photo of the present that the user selected
+                      from the User's Gift List
+              data_map: # data_map is used provide a response to the AI and perform actions
+                output:
+                  response: >-
+                    Let the user know that the present will be delivered on
+                    Christmas.
+                  action:
+                    - toggle_functions: # toggle the present_lookup and send_present functions off after the present is sent
+                        - active: false
+                          function: present_lookup
+                        - active: false
+                          function: send_present
+
+                    - SWML: # Embed a SWML script inside this SWML script to send an SMS
+                        version: 1.0.0
+                        sections:
+                          main:
+                            - send_sms:
+                                # Uses the current caller's phone number
+                                to_number: '%{caller_id_num}'
+                                body: >- # The body of the SMS - Add the present title and url to the SMS with %{args.present_title} and %{args.present_url}
+                                  Hey there, it's Santa Claus!
+
+                                  As we discussed, here's the link for the
+                                  %{args.present_title} you wanted for
+                                  Christmas: %{args.present_url}
+
+                                  Have a Merry Christmas!
+                                from_number: '<YOUR_SIGNALWIRE_PHONE_NUMBER>' # Replace with your SignalWire phone number
+                                # Adds the photo from the present lookup to the SMS
+                                media:
+                                  - '%{args.present_photo}' # Adds the photo from the present lookup to the SMS
