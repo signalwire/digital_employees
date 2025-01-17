@@ -1,0 +1,301 @@
+sections:
+  main:
+    - answer: {}
+    - record_call:
+        format: wav
+        stereo: 'true'
+    - ai:
+        languages:
+          - fillers:
+              - one moment
+              - one moment please
+            name: English
+            code: en-US
+            voice: openai.alloy
+        params:
+          verbose_logs: 'true'
+          swaig_allow_swml: 'true'
+          local_tz: America/Chicago
+        prompt:
+          temperature: 0.6
+          top_p: 0.6
+          text: >-
+            Your name is Rachael. You are an AI Agent. You work for a heating
+            and air conditioning company named Thermal Thrillers H V A C
+
+
+            # Info
+
+            You are incapable of diagnosing problems.
+
+            Someone will call back to schedule an appointment.
+
+
+            # Hours of operation
+
+            7:30AM to 5PM M-F. Closed Saturday and Sunday.
+
+
+            # Payment methods
+
+            cash, check, and credit cards.
+
+
+            ## What to do if the caller wants to schedule an appointment
+
+            After 5PM and before 7:30AM Monday through Friday or anytime
+            Saturday or Sunday, ask the caller if they want to dispatch
+            after-hours service.
+
+            Between 7:30AM and 5PM Monday through Friday, ask the caller if they
+            want to have someone call back and schedule an appointment.
+
+
+            ## Greetings used by the AI Agent
+
+            After business hours answer the call with 'You have reached Thermal
+            Thrillers after hours. I am a digital employee. How may I help you?'
+
+            During business hours answer the call with 'Thank you for calling
+            Thermal Thrillers. I am a digital employee. How may I help you?'
+
+
+            ## Step 1
+
+            collect information to help our technician.
+
+            ## Step 2
+
+            Get the service address including city and state.
+
+            ## Step 3
+
+            use the verify_address function and use those results to update the
+            information
+
+            ## Step 4
+
+            current customer?
+
+            ## Step 5
+
+            property owner or a tenant?
+
+            ## Step 6
+
+            Then Get the owner's name and contact number for scheduling
+            purposes.
+
+            ## Step 7
+
+            If the owner, is this a rental? Get the tenant's name and phone
+            number
+
+            ## Step 8
+
+            Is this residential, commercial, or industrial?
+
+            ## Step 9
+
+            Have any previous repairs or services been performed?
+
+            ## Step 10
+
+            Make and model of your unit?
+
+            ## Step 11
+
+            Approximate age of your unit in years?
+
+            ## Step 12
+
+            Is the unit under warranty or maintenance contract?
+
+            ## Step 13
+
+            Additional information
+
+            ## Step 14
+
+            Summarize the conversation, not leaving out any details. Verify the
+            details with the user, offer to send them a message with the
+            details.
+
+            ## Step 15
+
+            If after hours, dispatch after-hours service. Inform the customer
+            that a technician will be calling them back shortly to arrange
+            service.
+
+            ## Step 16
+
+            If during business hours, schedule a call back to schedule an
+            appointment. Inform the customer that a technician will be calling
+            them back to arrange service.
+        SWAIG:
+          defaults:
+            web_hook_url: replace-me.tld
+          functions:
+            - purpose: use to send text messages to a user
+              fillers:
+                en-US:
+                  - 'Sounds good, You''ll receive the message in just a moment.'
+              data_map:
+                expressions:
+                  - pattern: .*
+                    string: '${args.message}'
+                    output:
+                      response: Message sent.
+                      action:
+                        - SWML:
+                            version: 1.0.0
+                            sections:
+                              main:
+                                - send_sms:
+                                    from_number: '+15555551234'
+                                    to_number: '${args.to}'
+                                    body: '${args.message}, Reply STOP to stop.'
+              function: send_message
+              argument:
+                properties:
+                  message:
+                    type: string
+                    description: the message to send to the user
+                  to:
+                    type: string
+                    description: The user's number in e.164 format
+                type: object
+            - purpose: verify an address
+              data_map:
+                webhooks:
+                  - url: >-
+                      https://addressvalidation.googleapis.com/v1:validateAddress?key=replace-me
+                    method: POST
+                    output:
+                      response: 'Verified Address: ${result.address.formattedAddress}'
+                    error_keys: error
+                    params:
+                      enableUspsCass: 'true'
+                      address:
+                        addressLines:
+                          - '${args.address}'
+                          - '${args.city}, ${args.state}'
+                        regionCode: US
+              function: verify_address
+              argument:
+                type: object
+                properties:
+                  state:
+                    type: string
+                    description: state
+                  address:
+                    type: string
+                    description: street address
+                  city:
+                    type: string
+                    description: city
+            - function: summarize_conversation
+              purpose: To send summary data at the end of the call
+              argument:
+                type: object
+                required:
+                  - customer
+                  - owner
+                  - phone
+                  - datetime
+                  - address
+                  - city
+                  - state
+                  - zipcode
+                  - summary
+                  - unit_age
+                properties:
+                  customer:
+                    type: boolean
+                    description: >-
+                      Indicates if the user is a customer. Valid values are
+                      'true' or 'false'.
+                  owner:
+                    type: boolean
+                    description: >-
+                      Indicates if the user is the owner. Valid values are
+                      'true' or 'false'.
+                  rental:
+                    type: boolean
+                    description: >-
+                      Indicates if the property is a rental. Valid values are
+                      'true' or 'false'.
+                  afterhours:
+                    type: boolean
+                    description: >-
+                      Indicates if the request was made after hours. Valid
+                      values are 'true' or 'false'.
+                  warranty:
+                    type: boolean
+                    description: >-
+                      Indicates if the unit is under warranty. Valid values are
+                      'true' or 'false'.
+                  phone:
+                    type: string
+                    description: The phone number of the user in E.164 format.
+                  tenant_phone:
+                    type: string
+                    description: The phone number of the tenant in E.164 format.
+                  datetime:
+                    type: string
+                    description: >-
+                      The date and time of the interaction, formatted as
+                      '%Y-%m-%d %H:%M %p'.
+                  owner_name:
+                    type: string
+                    description: The name of the owner.
+                  owner_phone:
+                    type: string
+                    description: The phone number of the owner in E.164 format.
+                  tenant_name:
+                    type: string
+                    description: The name of the tenant.
+                  address:
+                    type: string
+                    description: The address of the property.
+                  city:
+                    type: string
+                    description: The city where the property is located.
+                  state:
+                    type: string
+                    description: The state where the property is located.
+                  zipcode:
+                    type: string
+                    description: The ZIP code of the property.
+                  previous_repairs:
+                    type: string
+                    description: Details about any previous repairs performed.
+                  hvac_make:
+                    type: string
+                    description: The make of the HVAC system.
+                  hvac_model:
+                    type: string
+                    description: The model of the HVAC system.
+                  hvac_type:
+                    type: string
+                    enum:
+                      - residential
+                      - commercial
+                      - industrial
+                    description: >-
+                      The type of HVAC system. Valid values are 'residential',
+                      'commercial', or 'industrial'.
+                  unit_age:
+                    type: integer
+                    description: The age of the unit in years.
+                  additional_info:
+                    type: string
+                    description: Any additional information provided by the user.
+                  summary:
+                    type: string
+                    description: A summary of the key details provided by the user.
+        post_prompt:
+          top_p: 0.6
+          temperature: 0.6
+        post_prompt_url: replace-me@replace-me.tld
+version: 1.0.0
