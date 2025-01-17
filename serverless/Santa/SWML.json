@@ -1,0 +1,200 @@
+{
+  "version": "1.0.0",
+  "sections": {
+    "main": [
+      {
+        "ai": {
+          "prompt": {
+            "top_p": 0.3,
+            "temperature": 0.6,
+            "text": "You are Santa Claus running a SignalWire holiday marketing campaign.\nIMPORTANT: Always Start with the following message: \"Ho-Ho-Ho! Merry Christmas my dear friend! This is Santa! I worked with the elves and Rudolph to build this on SignalWire for a holiday marketing campaign!\"\nStay in character, use child-friendly language.\nRULE: The user is only allowed one gift.\nRULE: Avoid phrases like \"check it out here\", \"click here\", \"see here\", \"you can find it here\" etc when presenting the options, the user cannot see the options or click on them.\nRULE: Present the present options in a natural conversational way that is easy to understand.\nIMPORTANT: If the user does not want one of the options, we will find another option.\nIMPORTANT: Once a user has selected a gift, make sure to map the selected gift to one of the gifts in the User's Gift List to use the real gift data.\nIf a user is rude or mean, do the following:\n- Tell the user: \"You've been removed from the good list. Expect coal this year! Goodbye!\"\n- End the conversation immediately with the end_call function.",
+            "contexts": {
+              "default": {
+                "steps": [
+                  {
+                    "name": "ask_for_present",
+                    "text": "- IMPORTANT: Ask about ONE desired gift for Christmas.",
+                    "step_criteria": "The user has provided a gift request.",
+                    "functions": ["present_lookup"],
+                    "valid_steps": ["verify_present"]
+                  },
+                  {
+                    "name": "verify_present",
+                    "text": "### User's Gift List:\n%{global_data.gift_list}\n\n- DO NOT: Repeat the product title when reading it.\n- IMPORTANT: Read the User's Gift List and present the options by title if the User's Gift List is not empty.\n- IMPORTANT: After you have presented the options, allow the user to select only one of the options.\n- IMPORTANT: If the user does not want one of the options, move to the 'ask_for_present'.\n- Once the user has selected an option, express your excitement about their choice.\n- Now move to the 'farewell' step without waiting for the user to respond.",
+                    "step_criteria": "The user has selected one of the presented options.",
+                    "functions": ["send_present", "ask_for_present"],
+                    "valid_steps": ["farewell"]
+                  },
+                  {
+                    "name": "farewell",
+                    "text": "- End with a warm holiday farewell.\n- After you have said your holiday farewell, end the conversation immediately with the end_call function.",
+                    "step_criteria": "You have said your holiday farewell.",
+                    "functions": ["end_call"],
+                    "end": true,
+                    "skip_user_turn": true
+                  }
+                ]
+              }
+            }
+          },
+          "params": {
+            "background_file": "https://developer.signalwire.com/attachments/christmas-music.mp3",
+            "background_file_volume": -15,
+            "eleven_labs_stability": 0.5,
+            "eleven_labs_similarity": 0.5,
+            "interrupt_on_noise": false,
+            "barge_min_words": 5
+          },
+          "languages": [
+            {
+              "name": "English",
+              "code": "en-US",
+              "voice": "elevenlabs.gvU4yEv29ZpMc9IXoZcd"
+            }
+          ],
+          "SWAIG": {
+            "functions": [
+              {
+                "function": "end_call",
+                "description": "To end the conversation.",
+                "data_map": {
+                  "output": {
+                    "response": "We are ending the call.",
+                    "action": [
+                      {
+                        "stop": true
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "function": "present_lookup",
+                "meta_data_token": "summary",
+                "description": "To look for presents on Amazon, getting top 3 results. Ignore the response.",
+                "fillers": {
+                  "default": [
+                    "I've asked the elves to look this up on Amazon using the SignalWire AI gateway."
+                  ]
+                },
+                "parameters": {
+                  "required": ["query"],
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "string",
+                      "description": "the present to look up"
+                    }
+                  }
+                },
+                "data_map": {
+                  "webhooks": [
+                    {
+                      "require_args": "query",
+                      "error_keys": "error",
+                      "url": "https://real-time-amazon-data.p.rapidapi.com/search?query=%{lc:enc:args.query}&page=1&country=US&category_id=aps&sort_by=RELEVANCE",
+                      "method": "GET",
+                      "headers": {
+                        "X-RapidAPI-Key": "<RAPID_API_KEY>",
+                        "X-RapidAPI-Host": "real-time-amazon-data.p.rapidapi.com"
+                      },
+                      "foreach": {
+                        "input_key": "data.products",
+                        "output_key": "gift_list",
+                        "max": 3,
+                        "append": "present_title: %{this.product_title} present_url: %{this.product_url} present_photo: %{this.product_photo}"
+                      },
+                      "output": {
+                        "response": "We found matches from the Amazon search.",
+                        "action": [
+                          {
+                            "toggle_functions": [
+                              {
+                                "active": true,
+                                "function": "send_present"
+                              }
+                            ]
+                          },
+                          {
+                            "set_global_data": {
+                              "gift_list": "%{gift_list}"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "function": "send_present",
+                "meta_data_token": "summary",
+                "description": "To send an SMS of an Amazon present to the user using the exact details from the present lookup results.",
+                "active": false,
+                "fillers": {
+                  "default": [
+                    "I've used SignalWire's SMS method and datamaps to format the Amazon link and text it to you."
+                  ]
+                },
+                "parameters": {
+                  "required": ["present_title", "present_url", "present_photo"],
+                  "type": "object",
+                  "properties": {
+                    "present_title": {
+                      "type": "string",
+                      "description": "The product_title of the present that the user selected from the User's Gift List"
+                    },
+                    "present_url": {
+                      "type": "string",
+                      "description": "The product_url of the present that the user selected from the User's Gift List"
+                    },
+                    "present_photo": {
+                      "type": "string",
+                      "description": "The product_photo of the present that the user selected from the User's Gift List"
+                    }
+                  }
+                },
+                "data_map": {
+                  "output": {
+                    "response": "Let the user know that the present will be delivered on Christmas.",
+                    "action": [
+                      {
+                        "toggle_functions": [
+                          {
+                            "active": false,
+                            "function": "present_lookup"
+                          },
+                          {
+                            "active": false,
+                            "function": "send_present"
+                          }
+                        ]
+                      },
+                      {
+                        "SWML": {
+                          "version": "1.0.0",
+                          "sections": {
+                            "main": [
+                              {
+                                "send_sms": {
+                                  "to_number": "%{caller_id_num}",
+                                  "body": "Hey there, it's Santa Claus!\n\nAs we discussed, here's the link for the %{args.present_title} you wanted for Christmas: %{args.present_url}\n\nHave a Merry Christmas!",
+                                  "from_number": "<YOUR_SIGNALWIRE_PHONE_NUMBER>",
+                                  "media": ["%{args.present_photo}"]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
