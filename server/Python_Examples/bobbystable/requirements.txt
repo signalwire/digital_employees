@@ -1,0 +1,5 @@
+Flask
+Flask_HTTPAuth
+python-dotenv
+signalwire_swaig
+gunicorn

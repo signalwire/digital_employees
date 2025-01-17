@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWAIG Server</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        h1, h2 {
+            color: #4a4a8c;
+            text-align: center;
+        }
+        .content {
+            max-width: 800px;
+            width: 100%;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            border-radius: 8px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4a4a8c;
+            color: #fff;
+            width: 150px; /* Fixed width for the first column */
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        a {
+            color: #4a4a8c;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .function-title {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        .description {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>Welcome to the MovieBot SWAIG Server</h1>
+        <p>This server provides various endpoints to interact with The Movie Database (TMDb) API.</p>
+        <h2>Available Functions:</h2>
+        <ul>
+            <li>
+                <div class="function-title">Search for movies by title</div>
+                <table>
+                    <tr>
+                        <th>Function</th>
+                        <td>search_movie</td>
+                    </tr>
+                    <tr>
+                        <th>Parameters</th>
+                        <td>query (required), language, page, include_adult, region, year, primary_release_year</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>Searches for movies using a title query and returns results based on specified criteria.</td>
+                    </tr>
+                </table>
+            </li>
+            <li>
+                <div class="function-title">Retrieve detailed information about a movie</div>
+                <table>
+                    <tr>
+                        <th>Function</th>
+                        <td>get_movie_details</td>
+                    </tr>
+                    <tr>
+                        <th>Parameters</th>
+                        <td>movie_id (required), language, append_to_response</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>Retrieves comprehensive details about a specific movie using its TMDb ID.</td>
+                    </tr>
+                </table>
+            </li>
+            <li>
+                <div class="function-title">Discover movies by different criteria</div>
+                <table>
+                    <tr>
+                        <th>Function</th>
+                        <td>discover_movies</td>
+                    </tr>
+                    <tr>
+                        <th>Parameters</th>
+                        <td>language, region, sort_by, include_adult, include_video, page, primary_release_year, primary_release_date_gte, primary_release_date_lte, with_genres, with_cast, with_crew, with_keywords, with_runtime_gte, with_runtime_lte</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>Allows discovery of movies based on various filters and sorting options.</td>
+                    </tr>
+                </table>
+            </li>
+            <li>
+                <div class="function-title">Get trending movies</div>
+                <table>
+                    <tr>
+                        <th>Function</th>
+                        <td>get_trending_movies</td>
+                    </tr>
+                    <tr>
+                        <th>Parameters</th>
+                        <td>time_window, language, page</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>Retrieves a list of movies that are currently trending within a specified time window.</td>
+                    </tr>
+                </table>
+            </li>
+            <li>
+                <div class="function-title">Get movie recommendations</div>
+                <table>
+                    <tr>
+                        <th>Function</th>
+                        <td>get_movie_recommendations</td>
+                    </tr>
+                    <tr>
+                        <th>Parameters</th>
+                        <td>movie_id (required), language, page</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>Provides movie recommendations based on a specific movie's TMDb ID.</td>
+                    </tr>
+                </table>
+            </li>
+            <li>
+                <div class="function-title">Retrieve the list of official genres</div>
+                <table>
+                    <tr>
+                        <th>Function</th>
+                        <td>get_genre_list</td>
+                    </tr>
+                    <tr>
+                        <th>Parameters</th>
+                        <td>language</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>Retrieves a list of official movie genres available in TMDb.</td>
+                    </tr>
+                </table>
+            </li>
+            <li>
+                <div class="function-title">Get upcoming movies</div>
+                <table>
+                    <tr>
+                        <th>Function</th>
+                        <td>get_upcoming_movies</td>
+                    </tr>
+                    <tr>
+                        <th>Parameters</th>
+                        <td>language, region, page</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>Retrieves a list of movies that are soon to be released.</td>
+                    </tr>
+                </table>
+            </li>
+            <li>
+                <div class="function-title">Get movies currently playing in theaters</div>
+                <table>
+                    <tr>
+                        <th>Function</th>
+                        <td>get_now_playing_movies</td>
+                    </tr>
+                    <tr>
+                        <th>Parameters</th>
+                        <td>language, region, page</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>Retrieves a list of movies that are currently playing in theaters.</td>
+                    </tr>
+                </table>
+            </li>
+            <li>
+                <div class="function-title">Retrieve similar movies</div>
+                <table>
+                    <tr>
+                        <th>Function</th>
+                        <td>get_similar_movies</td>
+                    </tr>
+                    <tr>
+                        <th>Parameters</th>
+                        <td>movie_id (required), language, page</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>Retrieves a list of movies similar to a specified movie.</td>
+                    </tr>
+                </table>
+            </li>
+            <li>
+                <div class="function-title">Search for movies, TV shows, and people in a single request</div>
+                <table>
+                    <tr>
+                        <th>Function</th>
+                        <td>multi_search</td>
+                    </tr>
+                    <tr>
+                        <th>Parameters</th>
+                        <td>query (required), language, page, include_adult, region</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>Performs a search across movies, TV shows, and people using a single query.</td>
+                    </tr>
+                </table>
+            </li>
+            <li>
+                <div class="function-title">Retrieve cast and crew information for a movie</div>
+                <table>
+                    <tr>
+                        <th>Function</th>
+                        <td>get_movie_credits</td>
+                    </tr>
+                    <tr>
+                        <th>Parameters</th>
+                        <td>movie_id (required), language</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>Retrieves detailed cast and crew information for a specific movie.</td>
+                    </tr>
+                </table>
+            </li>
+            <li>
+                <div class="function-title">Retrieve detailed information about a person</div>
+                <table>
+                    <tr>
+                        <th>Function</th>
+                        <td>get_person_details</td>
+                    </tr>
+                    <tr>
+                        <th>Parameters</th>
+                        <td>person_id (required), language, append_to_response</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>Retrieves comprehensive details about a person using their TMDb ID.</td>
+                    </tr>
+                </table>
+            </li>
+        </ul>
+        <p>For more information, visit the <a href="https://github.com/briankwest/moviebot">GitHub repository</a>.</p>
+    </div>
+</body>
+</html>

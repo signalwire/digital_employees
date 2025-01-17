@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <title>Bobby's Table</title>
+        <meta property="og:title" content="Bobby's Table - Fine Dining Reservations" />
+        <meta property="og:description" content="Reserve your table at Bobby's Table, located at 327 Drop Table Lane, Pompano Beach, FL 33060. Call us at +1 (754) 43-BOBBY." />
+        <meta property="og:image" content="static/img/bobbystable.png" />
+        <meta property="og:url" content="https://bobbystable.ai" />
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="en_US" />
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+                text-align: center;
+            }
+            .logo {
+                max-width: 300px;
+                margin: 20px auto;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0;
+            }
+            th, td {
+                padding: 8px;
+                border: 1px solid #ddd;
+            }
+            th {
+                background-color: #f4f4f4;
+            }
+            .contact-info {
+                margin: 20px 0;
+            }
+            a {
+                color: #0066cc;
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+    <body>
+        <img src="static/img/bobbystable.png" alt="Bobby's Table Logo" class="logo">
+        <div class="contact-info">
+            <p>For Reservations Call:</p>
+            <p><a href="tel:+17544326229">+1 (754) 43-BOBBY</a></p>
+        </div>
+        <div class="reservations-container">
+            <h2>Current Reservations</h2>
+            {{reservations_table}}
+        </div>
+    </body>
+</html> 

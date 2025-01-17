@@ -1,0 +1,164 @@
+#!/usr/bin/env python3
+import argparse
+import requests
+import json
+import sys
+from requests.exceptions import RequestException
+
+def handle_response(response):
+    """Handle HTTP response and common errors"""
+    try:
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.HTTPError as e:
+        if response.status_code == 401:
+            print("Error: Authentication failed. Please check your credentials.")
+        elif response.status_code == 403:
+            print("Error: Access forbidden. Please check your permissions.")
+        elif response.status_code == 404:
+            print("Error: Endpoint not found. Please check the URL.")
+        else:
+            print(f"Error: HTTP {response.status_code} - {str(e)}")
+        sys.exit(1)
+    except json.JSONDecodeError:
+        print("Error: Invalid JSON response from server")
+        print("Response content:", response.text)
+        sys.exit(1)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        sys.exit(1)
+
+def get_signatures(url, function_names):
+    """Get function signatures from the SWAIG server"""
+    try:
+        payload = {
+            "functions": function_names,
+            "action": "get_signature",
+            "version": "2.0",
+            "content_disposition": "function signature request",
+            "content_type": "text/swaig"
+        }
+        response = requests.post(url, json=payload)
+        return handle_response(response)
+    except RequestException as e:
+        print(f"Error connecting to server: {str(e)}")
+        sys.exit(1)
+
+def test_function(url, function_names, args):
+    """Test a specific SWAIG function"""
+    try:
+        signatures = get_signatures(url, function_names)
+        if not signatures:
+            print("Error: No function signatures received")
+            sys.exit(1)
+
+        function_signature = next((f for f in signatures if f['function'] in function_names), None)
+        
+        if not function_signature:
+            print(f"Error: Function {function_names} not found in signatures")
+            sys.exit(1)
+        # Backwards compatibility for older function signatures
+        if 'parameters' not in function_signature and 'argument' in function_signature:
+            function_signature['parameters'] = function_signature['argument']
+            
+        if 'description' not in function_signature and 'purpose' in function_signature:
+            function_signature['description'] = function_signature['purpose']
+
+        required_args = function_signature['parameters']['required']
+        properties = function_signature['parameters']['properties']
+        
+        # Collect required and optional arguments from user
+        function_args = {}
+        for arg, details in properties.items():
+            arg_type = details['type']
+            is_required = arg in required_args
+            description = details.get('description', '')
+            prompt = f"Enter {arg} ({arg_type})"
+            if description:
+                prompt += f" - {description}"
+            if not is_required:
+                prompt += " [optional]"
+            
+            while True:
+                value = input(prompt + ": ")
+                
+                if not value and is_required:
+                    print(f"Error: {arg} is required")
+                    continue
+                elif not value and not is_required:
+                    break
+                
+                try:
+                    if arg_type == "integer":
+                        value = int(value)
+                    elif arg_type == "boolean":
+                        value = value.lower() in ("true", "1", "yes")
+                    function_args[arg] = value
+                    break
+                except ValueError:
+                    print(f"Error: Invalid {arg_type} value")
+
+        # Make the request to test the function
+        payload = {
+            "function": function_names[0],
+            "argument": {"parsed": [function_args]}
+        }
+        
+        print("\nSending request to server...")
+        response = requests.post(url, json=payload)
+        result = handle_response(response)
+        
+        print("\nServer Response:")
+        if isinstance(result, dict):
+            print(json.dumps(result, indent=2))
+        else:
+            print(result)
+
+    except KeyboardInterrupt:
+        print("\nOperation cancelled by user")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        sys.exit(1)
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="SWAIG CLI Tool - Test SignalWire AI Gateway functions",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  Get all function signatures:
+    %(prog)s --url http://username:password@localhost:5002/swaig --get-signatures
+
+  Get specific function signature:
+    %(prog)s --url http://username:password@localhost:5002/swaig --get-signatures --function create_reservation
+
+  Test a function:
+    %(prog)s --url http://username:password@localhost:5002/swaig --function create_reservation
+        """
+    )
+    parser.add_argument('--url', required=True, help='The SWAIG server URL (including auth if required)')
+    parser.add_argument('--get-signatures', action='store_true', help='Get function signatures')
+    parser.add_argument('--function', help='Test a specific function by name')
+
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit(1)
+
+    args = parser.parse_args()
+    function_names = args.function.split(',') if args.function else []
+
+    try:
+        if args.get_signatures:
+            signatures = get_signatures(args.url, function_names)
+            print(json.dumps(signatures, indent=2))
+        elif args.function:
+            test_function(args.url, [args.function], args)
+        else:
+            parser.print_help()
+    except KeyboardInterrupt:
+        print("\nOperation cancelled by user")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()

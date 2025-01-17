@@ -1,0 +1,98 @@
+.TH SWAIG_CLI 1 "October 2023" "Version 1.0" "SWAIG CLI Tool Manual"
+.SH NAME
+swaig_cli \- A command-line tool for testing SignalWire AI Gateway functions.
+
+.SH SYNOPSIS
+.B swaig_cli
+[\fB--url\fR \fIURL\fR] [\fB--get-signatures\fR] [\fB--function\fR \fIFUNCTION_NAME\fR]
+
+.SH DESCRIPTION
+The \fBswaig_cli\fR tool is designed to interact with the SignalWire AI Gateway, allowing users to retrieve function signatures and test specific functions by name.
+
+.SH OPTIONS
+.TP
+\fB--url\fR \fIURL\fR
+Specify the URL of the SWAIG server. This option is required for all operations.
+
+.TP
+\fB--get-signatures\fR
+Retrieve the function signatures from the SWAIG server. This option will output the signatures in JSON format.
+
+.TP
+\fB--function\fR \fIFUNCTION_NAME\fR
+Test a specific function by its name. The tool will prompt the user to input required and optional arguments for the function based on the function signature retrieved from the SWAIG server.
+
+.SH USAGE
+To retrieve function signatures from the SWAIG server, use:
+.EX
+swaig_cli --url http://example.com --get-signatures --function myFunction
+.EE
+
+To test a specific function, use:
+.EX
+swaig_cli --url http://example.com --function myFunction
+.EE
+
+.SH EXAMPLES
+.B Retrieve function signatures:
+.EX
+swaig_cli --url http://example.com --get-signatures --function myFunction
+.EE
+
+.B Example Request:
+.EX
+{
+  "functions": ["myFunction"],
+  "action": "get_signature",
+  "version": "2.0",
+  "content_disposition": "function signature request",
+  "content_type": "text/swaig"
+}
+.EE
+
+.B Example Response:
+.EX
+{
+  "function": "myFunction",
+  "argument": {
+    "required": ["arg1", "arg2"],
+    "properties": {
+      "arg1": {"type": "string"},
+      "arg2": {"type": "integer"}
+    }
+  }
+}
+.EE
+
+.B Test a specific function:
+.EX
+swaig_cli --url http://example.com --function myFunction
+.EE
+
+.B Example Request:
+.EX
+{
+  "function": "myFunction",
+  "argument": {"parsed": [{"arg1": "value1", "arg2": 42}]}
+}
+.EE
+
+.B Example Response:
+.EX
+{
+  "response": "Output fed into the LLM"
+}
+.EE
+
+.SH AUTHOR
+Written by Brian Sest.
+
+.SH REPORTING BUGS
+Report bugs to <brian@signalwire.com>
+
+.SH COPYRIGHT
+This is free software; see the source for copying conditions. There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+.SH SEE ALSO
+.BR curl (1),
+.BR jq (1)
