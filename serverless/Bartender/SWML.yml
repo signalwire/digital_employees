@@ -1,0 +1,104 @@
+sections:
+  main:
+    - answer: {}
+    - record_call:
+        format: "wav"
+        stereo: "true"
+    - ai:
+        params:
+          verbose_logs: "true"
+        post_prompt_url: "optional.fake.tld"
+        post_prompt:
+          top_p: 0.6
+          temperature: 0.6
+          text: |
+            Summarize the conversation and send the conversation as a message to the user in an anonymous json object.
+
+            # Step 1
+
+        hints:
+          - "drinks"
+        languages:
+          - code: "en-US"
+            voice: "alloy"
+            name: "English"
+            fillers:
+              - "one moment"
+              - "one moment please"
+            engine: "openai"
+        SWAIG:
+          defaults: {}
+          functions:
+            - purpose: "use to send text messages to a user"
+              argument:
+                type: "object"
+                properties:
+                  to:
+                    type: "string"
+                    description: "The user's number in e.164 format"
+                  message:
+                    description: "the message to send to the user"
+                    type: "string"
+              data_map:
+                expressions:
+                  - string: "${args.message}"
+                    output:
+                      response: "Message sent."
+                      action:
+                        - SWML:
+                            version: "1.0.0"
+                            sections:
+                              main:
+                                - send_sms:
+                                    to_number: "${args.to}"
+                                    region: "us"
+                                    body: "${args.message}, ${chunks[0].text} ${chunks[0].document_id} Reply STOP to stop."
+                                    from_number: "+15555555555"
+                    pattern: ".*"
+              function: "send_message"
+            - function: "get_vector_data"
+              fillers:
+                en-US:
+                  - "This is the get vector data function firing"
+              data_map:
+                webhooks:
+                  - method: "POST"
+                    url: "https://space_name.signalwire.com/api/datasphere/documents/search"
+                    headers:
+                      Content-Type: "application/json"
+                      Authorization: "Basic OGVhMjI0YzktM--USE--Project_ID:API_KEY--TO-BASE64-ENCODE--NkYjFh"
+                    params:
+                      query_string: "${args.user_question}"
+                      document_id: "694ced7b-b656-417e-bc86-ce22549b4562"
+                      count: 1
+                    output:
+                      response: " Use this information to answer the users query, only provide answers from this information and do not make up anything: ${chunks[0].text} and ${chunks[0].document_id}"
+                      action: []
+              purpose: "The question the user will ask"
+              argument:
+                type: "object"
+                properties:
+                  user_question:
+                    type: "string"
+                    description: "The question the user will ask. Use url encoding between words. for example: how%20are%20you"
+        prompt:
+          text: |
+            You're an expert mixologist and work as a bartender. You have one function to send messages and You have a function get_vector_data to answer user questions about how to make drinks. Only provide the user information from the get_vector_data function
+
+            # Step 1
+            Greet the user.
+
+            # Step 2
+            Ask the user what drink would you like to make today.
+
+            # Step 3
+            Tell the user the the answer to their question.
+
+            # Step 4
+            Ask the user if there is anything else you can help them with.
+
+            # Step 5
+            Offer to send the details in a message to the user. Keep assisting the user until the user is ready to end the call.
+          temperature: 0.6
+          top_p: 0.6
+version: "1.0.0"
