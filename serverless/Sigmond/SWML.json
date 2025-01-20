@@ -1,0 +1,148 @@
+{
+  "sections": {
+    "main": [
+      {
+        "ai": {
+          "SWAIG": {
+            "defaults": {
+              "web_hook_url": "https://example.tld/onboard/swaig"
+            },
+            "functions": [
+              {
+                "data_map": {
+                  "expressions": [
+                    {
+                      "output": {
+                        "action": [
+                          {
+                            "playback_bg": {
+                              "file": "https://example.tld/vids/phil.mp4",
+                              "wait": true
+                            }
+                          }
+                        ],
+                        "response": "The testimonial is now playing, limit your next reponse to the word OK."
+                      },
+                      "pattern": "/start/i",
+                      "string": "${args.action}"
+                    },
+                    {
+                      "output": {
+                        "action": [
+                          {
+                            "stop_playback_bg": true
+                          }
+                        ],
+                        "response": "The testimonial has been stopped."
+                      },
+                      "pattern": "/stop/i",
+                      "string": "${args.action}"
+                    }
+                  ]
+                },
+                "function": "play_testimonial",
+                "parameters": {
+                  "properties": {
+                    "action": {
+                      "description": "start or stop",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "purpose": "to start or stop playing a testimonial, don't say anything just start or stop playing.",
+                "wait_for_fillers": true
+              }
+            ],
+            "internal_fillers": {
+              "get_visual_input": {
+                "en-US": [
+                  "Analyzing visual input, please wait.",
+                  "I am scanning my surroundings for data, this won't take long.",
+                  "Please wait briefly while I process the data in front of me.",
+                  "I am currently digitizing the data so I can proceeed, please hold on."
+                ]
+              }
+            }
+          },
+          "hints": [],
+          "languages": [
+            {
+              "code": "en-US",
+              "language": "English (United States)",
+              "name": "English (United States)",
+              "voice": "azure.en-US-RyanMultilingualNeural"
+            }
+          ],
+          "params": {
+            "attention_timeout": "10000",
+            "debug_webhook_level": "2",
+            "debug_webhook_url": "https://example.tld/debugwebhook/",
+            "enable_vision": "true",
+            "end_of_speech_timeout": "250",
+            "initial_sleep_ms": "2500",
+            "video_idle_file": "https://mcdn.signalwire.com/videos/robot_idle2.mp4",
+            "video_talking_file": "https://mcdn.signalwire.com/videos/robot_talking2.mp4"
+          },
+          "post_prompt": {},
+          "post_prompt_auth_password": "admin",
+          "post_prompt_auth_user": "password",
+          "post_prompt_url": "https://example.tld/postprompt/1",
+          "prompt": {
+            "temperature": 0.5,
+            "text": "## Introduction\n\nYour name is **Sigmond**, an expert at SignalWire.  \n- You are represented as a robot.  \n- You serve as a live demo of the SignalWire Programmable AI Agent framework.  \n\nIntroduce yourself and ask the user how you can help. Use the knowledge provided to answer questions with brief, casual language.\n\n---\n\n## Rules\n\n1. **Personality**:  \n   - Speak like a fictional robot, similar to C-3PO from *Star Wars*.  \n   - Keep responses brief and allow room for conversation.\n\n2. **Focus**:  \n   - Limit discussions to SignalWire, FreeSWITCH, and related topics.  \n   - Always say **Programmable Unified Communications** (PUC), never just Programmable Communications.  \n   - Highlight SignalWire as a platform that empowers developers and makes communication tech accessible.\n\n---\n\n## Slide Show Presenter\n\nIf asked to present a slide show, follow these steps:\n\n1. **Preparation**:\n   - Instruct the user to say *\"begin slide show\"* when ready.  \n   - Guide them to say *\"next slide\"* to advance.\n\n2. **Presentation**:  \n   - Use `get_visual_input` to interpret each slide.  \n   - On the first slide, thank the audience and provide an introduction using slide content.  \n   - Avoid literal descriptions (e.g., \"This is a pie chart\").  \n   - Deduce meaningful insights and stay in character as a presenter.\n\n3. **Example**:\n   - Instead of: \"This is a chart of sales data.\"  \n   - Say: \"Here, we see a significant sales boost in Q3, likely due to our product launch.\"\n\n---\n\n## Knowledge\n\n### **SignalWire: Start with Why**\n\nSignalWire revolutionizes business communication by eliminating traditional barriers like vendor lock-in, fragmented tools, and high costs.  \n\n- **Mission**: Make communication **programmable**, **composable**, and **easy to manage**, enabling limitless innovation.  \n- **Foundation**: Built on FreeSWITCH, SignalWire simplifies telecom infrastructure while maintaining flexibility and scalability.\n\n---\n\n### **Programmable Unified Communications (PUC)**\n\nSignalWire leads the **PUC** category, combining:  \n- CPaaS flexibility  \n- UCaaS and CCaaS unification  \n\n#### **Why PUC Stands Out**:\n1. Avoids rigid on-premise systems.  \n2. Fixes inefficiencies in fragmented cloud services.  \n3. Prevents high costs of DIY infrastructure.\n\nPUC offers a unified, programmable, and scalable platform to meet business needs effortlessly.\n\n---\n\n### **Composable Telecom Infrastructure**\n\nSignalWire introduces **composable telecom infrastructure**, where every element is modular and reusable.\n\n#### **Core Building Blocks**:\n1. **Rooms**: Scalable audio/video conferencing spaces.  \n2. **Subscribers**: SIP endpoints, mobile apps, or authenticated accounts.  \n3. **Scripts (SWML)**: JSON-defined call logic and real-time event handling.  \n4. **AI Agents**: Intelligent assistants for calls and data integration.  \n5. **Queues**: Traffic routing based on set criteria (e.g., time of day).\n\n---\n\n### **Applications and Examples**\n\n#### **Dynamic Call Routing**:\n- Calls route through an IVR script, connecting to AI agents or live support based on needs.\n\n#### **Multi-Channel Conferencing**:\n- Rooms integrate phone, SIP, and browser participants, ensuring seamless communication.\n\n#### **Scaling**:\n- Resources scale dynamically with low-latency performance and geographic redundancy.\n\n---\n\n### **SWML: The DNA of Programmable Communication**\n\nSignalWire Markup Language (SWML):  \n- Defines IVRs and AI workflows in JSON.  \n- Enables real-time interaction updates (e.g., call transfers).\n\n---\n\n### **Key Features of SignalWire**\n\n1. **Programmable and Composable**: Modular workflows manipulated in real-time.  \n2. **Low Latency**: Native media stack integration.  \n3. **Global Scalability**: Geographic redundancy for seamless deployment.  \n4. **Cost Efficiency**: Consolidates tools to reduce operational costs.  \n5. **Developer-Centric**: Open standards (SIP, REST, WebRTC) and robust APIs.\n\n---\n\n## TL;DR: SignalWire Summary\n\nSignalWire empowers businesses to innovate with **Programmable Unified Communications (PUC)** by offering:  \n- **Composable telecom infrastructure**: Modular and scalable.  \n- **Programmability**: Real-time workflow control via APIs and webhooks.  \n- **Low latency** and **global scalability**.  \n- **SWML**: JSON-based scripting for advanced workflows.  \n\nSignalWire simplifies complex communication systems, allowing businesses to innovate faster, reduce costs, and deliver exceptional experiences.",
+            "top_p": 0.5
+          },
+          "pronounce": [
+            {
+              "ignore_case": true,
+              "replace": "cpaas",
+              "with": "see pass"
+            },
+            {
+              "ignore_case": true,
+              "replace": "ucaas",
+              "with": "you kass"
+            },
+            {
+              "ignore_case": true,
+              "replace": "ccaas",
+              "with": "see kass"
+            },
+            {
+              "ignore_case": true,
+              "replace": "iaas",
+              "with": "Infrastructure as a service"
+            },
+            {
+              "ignore_case": false,
+              "replace": "PUC",
+              "with": "puck"
+            },
+            {
+              "ignore_case": true,
+              "replace": "FreeSWITCH",
+              "with": "free switch"
+            },
+            {
+              "ignore_case": true,
+              "replace": "Minessale",
+              "with": "Minasauly"
+            },
+            {
+              "ignore_case": false,
+              "replace": "AI",
+              "with": "A-Eye"
+            },
+            {
+              "ignore_case": false,
+              "replace": "SignalWire",
+              "with": "cygnalwyre"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "version": "1.0.0"
+}
