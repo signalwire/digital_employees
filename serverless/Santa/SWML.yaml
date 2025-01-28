@@ -69,7 +69,7 @@ sections:
 
         # Additional parameters for the AI setting configuration
         params:
-          background_file: 'https://developer.signalwire.com/attachments/christmas-music.mp3'  # Background music
+          background_file: 'https://developer.signalwire.com/media/santa/christmas-music.mp3'  # Background music
           background_file_volume: -15  # Music volume
           eleven_labs_stability: 0.5   # Voice stability setting
           eleven_labs_similarity: 0.5  # Voice similarity setting
