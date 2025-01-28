@@ -38,7 +38,7 @@
             }
           },
           "params": {
-            "background_file": "https://developer.signalwire.com/attachments/christmas-music.mp3",
+            "background_file": "https://developer.signalwire.com/media/santa/christmas-music.mp3",
             "background_file_volume": -15,
             "eleven_labs_stability": 0.5,
             "eleven_labs_similarity": 0.5,
