@@ -1485,6 +1485,8 @@ if __name__ == '__main__':
     create_fake_data()
 EOF
 
+# Create fake data script
+cat > dental_app/create_fake_data.py << 'EOF'
 import sqlite3
 import random
 import faker
