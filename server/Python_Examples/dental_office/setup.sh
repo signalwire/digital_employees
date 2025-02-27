@@ -316,12 +316,12 @@ cat > dental_app/templates/move_appointment.html << 'EOF'
             });
             k.relayHost = "https://puc.signalwire.com";
             k.codeRepository = "https://app.signalwire.com";
-            k.authEndpoint = "https://dev.swire.io/api/fabric/embeds/tokens";
+            k.authEndpoint = `https://{{ signalwire_space }}.signalwire.com/api/fabric/embeds/tokens`;
             w[c] ? k[h](y) : w[c] = (f, ...n) => new Promise((g,) => {w[f] ? g(w[f](...n)) : l(f).then(() => g(w[f](...n)))})
         })({ apiKey: "{{ c2c_api_key }}", v: "0.0.1" });
 
         sw.c2c.spawn('C2CButton', {
-            destination: '/private/${C2C_ADDRESS}',
+            destination: '/private/{{ c2c_address }}',
             buttonParentSelector: '#click2call',
             innerHTML: null,
             callParentSelector: '#call',
@@ -402,7 +402,7 @@ cat > dental_app/templates/admin_dentists.html << 'EOF'
             });
             k.relayHost = "https://puc.signalwire.com";
             k.codeRepository = "https://app.signalwire.com";
-            k.authEndpoint = "https://dev.swire.io/api/fabric/embeds/tokens";
+            k.authEndpoint = `https://{{ signalwire_space }}.signalwire.com/api/fabric/embeds/tokens`;
             w[c] ? k[h](y) : w[c] = (f, ...n) => new Promise((g,) => {w[f] ? g(w[f](...n)) : l(f).then(() => g(w[f](...n)))})
         })({ apiKey: "{{ c2c_api_key }}", v: "0.0.1" });
 
@@ -495,7 +495,7 @@ cat > dental_app/templates/admin_add_dentist.html << 'EOF'
             });
             k.relayHost = "https://puc.signalwire.com";
             k.codeRepository = "https://app.signalwire.com";
-            k.authEndpoint = "https://dev.swire.io/api/fabric/embeds/tokens";
+            k.authEndpoint = `https://{{ signalwire_space }}.signalwire.com/api/fabric/embeds/tokens`;
             w[c] ? k[h](y) : w[c] = (f, ...n) => new Promise((g,) => {w[f] ? g(w[f](...n)) : l(f).then(() => g(w[f](...n)))})
         })({ apiKey: "{{ c2c_api_key }}", v: "0.0.1" });
 
@@ -580,7 +580,7 @@ cat > dental_app/templates/admin_edit_dentist.html << 'EOF'
             });
             k.relayHost = "https://puc.signalwire.com";
             k.codeRepository = "https://app.signalwire.com";
-            k.authEndpoint = "https://dev.swire.io/api/fabric/embeds/tokens";
+            k.authEndpoint = `https://{{ signalwire_space }}.signalwire.com/api/fabric/embeds/tokens`;
             w[c] ? k[h](y) : w[c] = (f, ...n) => new Promise((g,) => {w[f] ? g(w[f](...n)) : l(f).then(() => g(w[f](...n)))})
         })({ apiKey: "{{ c2c_api_key }}", v: "0.0.1" });
 
@@ -664,7 +664,7 @@ cat > dental_app/templates/admin_patients.html << 'EOF'
             });
             k.relayHost = "https://puc.signalwire.com";
             k.codeRepository = "https://app.signalwire.com";
-            k.authEndpoint = "https://dev.swire.io/api/fabric/embeds/tokens";
+            k.authEndpoint = `https://{{ signalwire_space }}.signalwire.com/api/fabric/embeds/tokens`;
             w[c] ? k[h](y) : w[c] = (f, ...n) => new Promise((g,) => {w[f] ? g(w[f](...n)) : l(f).then(() => g(w[f](...n)))})
         })({ apiKey: "{{ c2c_api_key }}", v: "0.0.1" });
 
@@ -754,7 +754,7 @@ cat > dental_app/templates/admin_add_patient.html << 'EOF'
             });
             k.relayHost = "https://puc.signalwire.com";
             k.codeRepository = "https://app.signalwire.com";
-            k.authEndpoint = "https://dev.swire.io/api/fabric/embeds/tokens";
+            k.authEndpoint = `https://{{ signalwire_space }}.signalwire.com/api/fabric/embeds/tokens`;
             w[c] ? k[h](y) : w[c] = (f, ...n) => new Promise((g,) => {w[f] ? g(w[f](...n)) : l(f).then(() => g(w[f](...n)))})
         })({ apiKey: "{{ c2c_api_key }}", v: "0.0.1" });
 
@@ -852,7 +852,7 @@ cat > dental_app/templates/admin_edit_patient.html << 'EOF'
             });
             k.relayHost = "https://puc.signalwire.com";
             k.codeRepository = "https://app.signalwire.com";
-            k.authEndpoint = "https://dev.swire.io/api/fabric/embeds/tokens";
+            k.authEndpoint = `https://{{ signalwire_space }}.signalwire.com/api/fabric/embeds/tokens`;
             w[c] ? k[h](y) : w[c] = (f, ...n) => new Promise((g,) => {w[f] ? g(w[f](...n)) : l(f).then(() => g(w[f](...n)))})
         })({ apiKey: "{{ c2c_api_key }}", v: "0.0.1" });
 
@@ -956,7 +956,7 @@ cat > dental_app/templates/admin_add_appointment.html << 'EOF'
             });
             k.relayHost = "https://puc.signalwire.com";
             k.codeRepository = "https://app.signalwire.com";
-            k.authEndpoint = "https://dev.swire.io/api/fabric/embeds/tokens";
+            k.authEndpoint = `https://{{ signalwire_space }}.signalwire.com/api/fabric/embeds/tokens`;
             w[c] ? k[h](y) : w[c] = (f, ...n) => new Promise((g,) => {w[f] ? g(w[f](...n)) : l(f).then(() => g(w[f](...n)))})
         })({ apiKey: "{{ c2c_api_key }}", v: "0.0.1" });
 
@@ -1057,7 +1057,7 @@ cat > dental_app/templates/admin_patient_visits.html << 'EOF'
             });
             k.relayHost = "https://puc.signalwire.com";
             k.codeRepository = "https://app.signalwire.com";
-            k.authEndpoint = "https://dev.swire.io/api/fabric/embeds/tokens";
+            k.authEndpoint = `https://{{ signalwire_space }}.signalwire.com/api/fabric/embeds/tokens`;
             w[c] ? k[h](y) : w[c] = (f, ...n) => new Promise((g,) => {w[f] ? g(w[f](...n)) : l(f).then(() => g(w[f](...n)))})
         })({ apiKey: "{{ c2c_api_key }}", v: "0.0.1" });
 
@@ -1163,7 +1163,7 @@ cat > dental_app/templates/admin_add_patient_visit.html << 'EOF'
             });
             k.relayHost = "https://puc.signalwire.com";
             k.codeRepository = "https://app.signalwire.com";
-            k.authEndpoint = "https://dev.swire.io/api/fabric/embeds/tokens";
+            k.authEndpoint = `https://{{ signalwire_space }}.signalwire.com/api/fabric/embeds/tokens`;
             w[c] ? k[h](y) : w[c] = (f, ...n) => new Promise((g,) => {w[f] ? g(w[f](...n)) : l(f).then(() => g(w[f](...n)))})
         })({ apiKey: "{{ c2c_api_key }}", v: "0.0.1" });
 
@@ -1238,7 +1238,7 @@ cat > dental_app/templates/debug_db.html << 'EOF'
             });
             k.relayHost = "https://puc.signalwire.com";
             k.codeRepository = "https://app.signalwire.com";
-            k.authEndpoint = "https://dev.swire.io/api/fabric/embeds/tokens";
+            k.authEndpoint = `https://{{ signalwire_space }}.signalwire.com/api/fabric/embeds/tokens`;
             w[c] ? k[h](y) : w[c] = (f, ...n) => new Promise((g,) => {w[f] ? g(w[f](...n)) : l(f).then(() => g(w[f](...n)))})
         })({ apiKey: "{{ c2c_api_key }}", v: "0.0.1" });
 
@@ -1394,7 +1394,7 @@ cat > dental_app/templates/generate_token.html << 'EOF'
             });
             k.relayHost = "https://puc.signalwire.com";
             k.codeRepository = "https://app.signalwire.com";
-            k.authEndpoint = "https://dev.swire.io/api/fabric/embeds/tokens";
+            k.authEndpoint = `https://{{ signalwire_space }}.signalwire.com/api/fabric/embeds/tokens`;
             w[c] ? k[h](y) : w[c] = (f, ...n) => new Promise((g,) => {w[f] ? g(w[f](...n)) : l(f).then(() => g(w[f](...n)))})
         })({ apiKey: "{{ c2c_api_key }}", v: "0.0.1" });
 
