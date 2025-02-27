@@ -1569,6 +1569,7 @@ print(f"Using database: {app.config['DATABASE']}")
 
 SIGNALWIRE_TOKEN = os.getenv("SIGNALWIRE_TOKEN")
 C2C_API_KEY = os.getenv("C2C_API_KEY")
+C2C_ADDRESS = os.getenv("C2C_ADDRESS")
 DENTIST_API = os.getenv("DENTIST_API")
 PROJECT_ID = os.getenv("SIGNALWIRE_PROJECT_ID")
 SPACE = os.getenv("SIGNALWIRE_SPACE")
@@ -2043,7 +2044,7 @@ def generate_token():
 
 @app.route('/')
 def index():
-    return render_template('index.html', signalwire_token=SIGNALWIRE_TOKEN, c2c_api_key=C2C_API_KEY)
+    return render_template('index.html', signalwire_token=SIGNALWIRE_TOKEN, c2c_api_key=C2C_API_KEY, c2c_address=C2C_ADDRESS)
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_appointment():
@@ -2081,7 +2082,7 @@ def add_appointment():
         )
         db.commit()
         return redirect(url_for('index'))
-    return render_template('add_appointment.html', dentists=dentists, patients=patients, c2c_api_key=C2C_API_KEY)
+    return render_template('add_appointment.html', dentists=dentists, patients=patients, c2c_api_key=C2C_API_KEY, c2c_address=C2C_ADDRESS)
 
 @app.route('/move/<int:appointment_id>', methods=['GET', 'POST'])
 def move_appointment(appointment_id):
