@@ -2420,6 +2420,19 @@ psutil
 faker
 EOF
 
+# Install Ngrok
+if ! command -v ngrok &> /dev/null; then
+    echo "ngrok not found. Installing ngrok..."
+    curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | \
+        sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
+    echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | \
+        sudo tee /etc/apt/sources.list.d/ngrok.list
+    sudo apt-get update && sudo apt-get install ngrok -y
+    echo "ngrok installed successfully."
+else
+    echo "ngrok found: $(ngrok --version)"
+fi
+
 # Make script executable and run setup
 chmod +x $0
 echo "Setting up environment..."
