@@ -2445,7 +2445,11 @@ echo "Initializing database..."
 python dental_app/init_db.py
 echo "Creating fake data..."
 python dental_app/create_fake_data.py
-echo "Setup complete! Run your Flask app with: python dental_app/app.py"
+
+echo "----------------"
+echo "Setup Complete"
+echo "Start your venv with: source dental_app/venv/bin/activate"
+echo "Run your Flask app with: python dental_app/app.py"
 
 echo " ----Edit dental_app/rename.env to .env and complete the VARIABLES---- "
 # Create .env file with required environment variables
