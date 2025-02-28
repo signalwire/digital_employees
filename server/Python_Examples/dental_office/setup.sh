@@ -2046,7 +2046,7 @@ def generate_token():
 
 @app.route('/')
 def index():
-    return render_template('index.html', signalwire_token=SIGNALWIRE_TOKEN, c2c_api_key=C2C_API_KEY, c2c_address=C2C_ADDRESS)
+    return render_template('index.html', signalwire_token=SIGNALWIRE_TOKEN, c2c_api_key=C2C_API_KEY, signalwire_space=SPACE, c2c_address=C2C_ADDRESS)
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_appointment():
@@ -2418,6 +2418,7 @@ signalwire-swaig
 requests
 psutil
 faker
+pyngrok
 EOF
 
 # Install Ngrok
