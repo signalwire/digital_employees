@@ -1,5 +1,9 @@
 # Dr. Bob Confirm
 
+<img src="https://github.com/user-attachments/assets/066ab999-2fe1-42e8-89fd-a28f4234dcf8" alt="image" width="20%" />
+
+
+
 Dr. Bob Confirm is an example that uses the SignalWire confirm option. In this process, a person calls a SignalWire number, C2C, or SIP endpoint, and SignalWire's AI digital employee answers the call. The user then requests to speak to a representative, and Confirm has predefined endpoints that dial in parallel, causing each endpoint to ring at the same time. When an endpoint answers, a second SWML script is executed, prompting the endpoint to either press 1 to accept the call or decline. If the endpoint accepts, the call transfer is complete.
 
 - A person calls a SignalWire number, C2C, or SIP endpoint.
