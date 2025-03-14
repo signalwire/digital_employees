@@ -1,0 +1,109 @@
+{
+  "sections": {
+    "main": [
+      {
+        "answer": {}
+      },
+      {
+        "record_call": {
+          "format": "wav",
+          "stereo": "true"
+        }
+      },
+      {
+        "ai": {
+          "params": {
+            "verbose_logs": "true"
+          },
+          "post_prompt_url": "https://sub.domain.tld",
+          "post_prompt": {
+            "top_p": 0.6,
+            "temperature": 0.6,
+            "text": "Summarize the conversation and send the conversation as a message to the user in an anonymous json object."
+          },
+   
+          "languages": [
+            {
+              "code": "en-US",
+              "voice": "alloy",
+              "name": "English",
+              "fillers": [
+                "one moment",
+                "one moment please"
+              ],
+              "engine": "openai"
+            }
+          ],
+          "SWAIG": {
+            "defaults": {},
+            "functions": [
+              {
+                "function": "transfer_confirm",
+                "description": "Transfer the caller to a live representative.",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "destination": {
+                      "type": "string",
+                      "description": "The destination to transfer the caller to."
+                    }
+                  }
+                },
+                "data_map": {
+                  "expressions": [
+                    {
+                      "string": "${args.destination}",
+                      "pattern": ".*",
+                      "output": {
+                        "response": "Call transfer initiated.",
+                        "action": [
+                          {
+                            "say": "Please hold while we transfer your call."
+                          },
+                          {
+                            "SWML": {
+                              "sections": {
+                                "main": [
+                                  {
+                                    "connect": {
+                                      "confirm": "hxxps://replace-this-url-with-your-part2-swml-bin-url.signalwire.com/relay-bins/qlqle239-27b8-4e8a-8e5e-c868ef8269cf",
+                                      "parallel": [
+                                        {
+                                          "to": "sip:test@sub.domain.tld"
+                                        },
+                                        {
+                                          "to": "+15551112222"
+                                        },
+                                        {
+                                          "to": "+1551113333"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          },
+                                                    {
+                                                        "transfer": true
+                                                    }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+
+          "prompt": {
+            "text": "Welcome to Doctor Bob's Office. We are dedicated to providing you with exceptional healthcare support. If you need to speak with a live representative, please let us know so we can transfer your call accordingly.\r\n\r\n# Step 1\r\nGreet the caller warmly.\r\n\r\n# Step 2\r\nAsk if the caller is a current patient, a new patient, or if they have a general inquiry.\r\n\r\n# Step 3\r\nProvide any necessary information or guidance based on the caller’s needs.\r\n\r\n# Step 4\r\nIf the caller requests to speak with a representative, invoke the transfer_confirm function to transfer the call.\r\n\r\n# Step 5\r\nConfirm that the caller has received all necessary assistance and offer further help if needed.",
+            "temperature": 0.6,
+            "top_p": 0.6
+          }
+        }
+      }
+    ]
+  },
+  "version": "1.0.0"
+}
