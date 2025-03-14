@@ -85,6 +85,9 @@
                           },
                           {
                             "transfer": true
+                          },
+                          {
+                            "stop": true
                           }
                         ]
                       }
