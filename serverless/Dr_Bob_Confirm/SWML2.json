@@ -1,0 +1,37 @@
+{
+  "version": "1.0.0",
+  "sections": {
+    "main": [
+      {
+        "play": [
+          "say:This is the overflow for customer service."
+        ]
+      },
+      {
+        "prompt": {
+          "play": "say:Please press 1 to connect to the caller."
+        }
+      },
+      {
+        "switch": {
+          "variable": "prompt_value",
+          "default": [
+            {
+              "play": "say:You have declined the call. Goodbye."
+            },
+            {
+              "hangup": {}
+            }
+          ],
+          "case": {
+            "1": [
+              {
+                "play": "say:Connecting you to the caller now."
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
