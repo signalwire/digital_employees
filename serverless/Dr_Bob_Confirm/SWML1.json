@@ -21,7 +21,6 @@
             "temperature": 0.6,
             "text": "Summarize the conversation and send the conversation as a message to the user in an anonymous json object."
           },
-   
           "languages": [
             {
               "code": "en-US",
@@ -84,9 +83,9 @@
                               }
                             }
                           },
-                                                    {
-                                                        "transfer": true
-                                                    }
+                          {
+                            "transfer": true
+                          }
                         ]
                       }
                     }
@@ -95,7 +94,6 @@
               }
             ]
           },
-
           "prompt": {
             "text": "Welcome to Doctor Bob's Office. We are dedicated to providing you with exceptional healthcare support. If you need to speak with a live representative, please let us know so we can transfer your call accordingly.\r\n\r\n# Step 1\r\nGreet the caller warmly.\r\n\r\n# Step 2\r\nAsk if the caller is a current patient, a new patient, or if they have a general inquiry.\r\n\r\n# Step 3\r\nProvide any necessary information or guidance based on the caller’s needs.\r\n\r\n# Step 4\r\nIf the caller requests to speak with a representative, invoke the transfer_confirm function to transfer the call.\r\n\r\n# Step 5\r\nConfirm that the caller has received all necessary assistance and offer further help if needed.",
             "temperature": 0.6,
