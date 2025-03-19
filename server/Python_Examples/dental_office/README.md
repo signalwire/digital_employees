@@ -1,6 +1,8 @@
 SignalWire Dental Office
 ----------------
 
+<img src="https://github.com/user-attachments/assets/b71a75e4-5aa4-422b-bcd7-4502036fe429" alt="image" style="width:75%;">
+
 
 SignalWire Dental Office is a demo of how a Dental Office could use SignalWire's AI capabilites.
 
