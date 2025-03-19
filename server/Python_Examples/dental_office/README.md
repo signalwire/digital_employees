@@ -1,6 +1,66 @@
 SignalWire Dental Office
 ----------------
 
+
+SignalWire Dental Office is a demo of how a Dental Office could use SignalWire's AI capabilites.
+
+The example highlights:
+
+* Click to Call
+* Web Calendar
+* MFA Multifactor Authentication
+* PSTN connectivity
+* AI Agent (Digital Employee) interaction
+* Typical schedule, move, delete appointments that interacts with SQLITE
+* Mock patient and dentist data
+
+## Create Custom AI Agent
+
+1. Go to `Resources` left side tab.
+
+<img src="https://github.com/user-attachments/assets/b5dd5804-207a-42b0-a22c-f4575bd3a225" alt="image" style="width:15%;">
+
+
+2. Click the button `Add New`
+
+<img src="https://github.com/user-attachments/assets/07eea87d-b2fc-4a92-8c7a-dfb97c462eaa" alt="image" style="width:15%;">
+
+
+3. Choose `AI Agent`
+
+<img src="https://github.com/user-attachments/assets/a0dc60a6-a871-402c-8ec7-07da15e8113e" alt="image" style="width:50%;">
+
+
+4. Choose `Custom AI Agent`
+
+<img src="https://github.com/user-attachments/assets/a5ee97ff-3d06-4c10-86a7-ba6c6422d99b" alt="image" style="width:50%;">
+
+
+5. Click the `functions` tab
+
+<img src="https://github.com/user-attachments/assets/041c2e7c-3187-4c6d-adf4-4e87c1f1f3af" alt="image" style="width:50%;">
+
+
+
+6. Enter the URL in the search box. In this example we are using NGROK. https://admin:password@test.ngrok-free.app/swaig
+
+<img src="https://github.com/user-attachments/assets/e83fb060-4444-46b3-a5a2-3cf4e643a701" alt="image" style="width:50%;">
+
+
+7. Click the checkbox to enable the functions. Then click the `create` button.
+
+
+<img src="https://github.com/user-attachments/assets/f4073afa-4b54-4cda-a807-71ddc697acb3" alt="image" style="width:50%;">
+
+
+8. Then click the `save` button.
+
+<img src="https://github.com/user-attachments/assets/528c5188-19db-4460-b8de-ee4d11bda4fe" alt="image" style="width:50%;">
+
+
+
+## Install Script Specifics
+
 ### Section 1: Script Header and Directory Structure
 - **File**: None (just creates directories)
 - **Content**: `mkdir -p dental_app/templates dental_app/static/css dental_app/static/js`
