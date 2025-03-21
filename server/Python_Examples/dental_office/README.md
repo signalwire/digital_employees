@@ -100,6 +100,45 @@ From the SignalWire dashboard:
 <img src="https://github.com/user-attachments/assets/0dfcaccb-e13c-4c7c-bd3f-c8b34444fed9" alt="image" style="width:50%;">
 
 
+## Populate Variables in .env
+
+The setup script will output a .env file that your will populate with credentials and API Key's
+
+
+```
+HTTP_USERNAME=admin
+HTTP_PASSWORD=password
+SIGNALWIRE_PROJECT_ID=
+SIGNALWIRE_TOKEN=
+SIGNALWIRE_SPACE=
+FROM_NUMBER=
+C2C_ADDRESS=
+C2C_API_KEY=
+NGROK_DOMAIN=
+NGROK_PATH=/usr/local/bin/ngrok
+NGROK_AUTH_TOKEN=
+```
+
+
+* `HTTP_USERNAME` HTTP username that is used in the dashboard endpoint SWML URL.
+* `HTTP_PASSWORD` HTTP password that is used in the dashboard endpoint SWML URL.
+* `SIGNALWIRE_PROJECT_ID` Your SignalWire Project ID. This is found in the dashboard.
+* `SIGNALWIRE_TOKEN` Your SignalWire Token (API Key). This is generated in the dashboard under API.
+* `SignalWire Space` This is your subdomain name. For example: hxxps://subdomain.signalwire.com.
+* `FROM_NUMBER` This is a phone number from your SignalWire dashboard and is project specific.
+* `C2C_ADDRESS` This is the address that is created when you create a Click To Call resource widget.
+  *  This is found under Tools > Click To Call > Then click on the widget.
+  *  Use the Address. In this example you would use `dental-office-kihyn`
+
+<img src="https://github.com/user-attachments/assets/ae05c14d-dd58-410c-a513-9ef141c9b6db" alt="image" style="width:50%;">
+
+* `C2C_API_KEY` Use the Copy Token (Key)
+* `NGROK_DOMAIN` Use if you have a custom NGROK domain
+* `NGROK_PATH` Edit this if your ngrok path is different.
+* `NGROK_AUTH_TOKEN` Use the token from the NGROK dashboard.
+
+
+
 ## Install Script Specifics
 
 ### Section 1: Script Header and Directory Structure
