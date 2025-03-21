@@ -22,7 +22,7 @@ The example highlights:
 
 1. [Create Custom AI Agent](#Create-Custom-AI-Agent)
 2. [Creating a Click 2 Call Resource](#Creating-a-Click-To-Call-Resource)
-3. [Populate Variables in .env](#Populate-Variables-in-.env)
+3. [Populate Variables in .env](#Populate-Variables-in-env)
 4. [Install Script Specifics](#Install-Script-Specifics)
 
 
@@ -100,7 +100,7 @@ From the SignalWire dashboard:
 <img src="https://github.com/user-attachments/assets/0dfcaccb-e13c-4c7c-bd3f-c8b34444fed9" alt="image" style="width:50%;">
 
 
-## Populate Variables in .env
+## Populate Variables in env
 
 The setup script will output a .env file that your will populate with credentials and API Key's
 
