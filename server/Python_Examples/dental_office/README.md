@@ -13,8 +13,20 @@ The example highlights:
 * MFA Multifactor Authentication
 * PSTN connectivity
 * AI Agent (Digital Employee) interaction
-* Typical schedule, move, delete appointments that interacts with SQLITE
+* Schedule, move, delete appointments that interacts with SQLITE
 * Mock patient and dentist data
+
+---
+
+## Table of Contents
+
+1. [Create Custom AI Agent](#Create-Custom-AI-Agent)
+2. [Creating a Click 2 Call Resource](#Creating-a-Click-To-Call-Resource)
+3. [Populate Variables in .env](#Populate-Variables-in-.env)
+4. [Install Script Specifics](#Install-Script-Specifics)
+
+
+---
 
 ## Create Custom AI Agent
 
@@ -59,6 +71,33 @@ The example highlights:
 
 <img src="https://github.com/user-attachments/assets/528c5188-19db-4460-b8de-ee4d11bda4fe" alt="image" style="width:50%;">
 
+
+
+## Creating a Click To Call Resource
+
+From the SignalWire dashboard:
+
+1. Click Tools at the bottom left menu, then Click To Call
+
+<img src="https://github.com/user-attachments/assets/1662fc43-d20c-4479-b221-c26038f83daf" alt="image" style="width:10%;">
+
+
+2. Click + Add
+
+<img src="https://github.com/user-attachments/assets/26876fbf-e8ed-4c06-9177-9ad27d5c7b53" alt="image" style="width:10%;">
+
+3. Choose and select the Resource
+
+<img src="https://github.com/user-attachments/assets/5e1a9a6e-d7e9-445a-b413-06d79b3e83d2" alt="image" style="width:50%;">
+
+
+4. Click the work Add
+
+<img src="https://github.com/user-attachments/assets/02adb341-dc2d-448c-aa09-34b03a19e508" alt="image" style="width:50%;">
+
+5. You now have a click to call widget
+
+<img src="https://github.com/user-attachments/assets/0dfcaccb-e13c-4c7c-bd3f-c8b34444fed9" alt="image" style="width:50%;">
 
 
 ## Install Script Specifics
