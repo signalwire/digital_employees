@@ -4,7 +4,7 @@ SignalWire Dental Office
 <img src="https://github.com/user-attachments/assets/b71a75e4-5aa4-422b-bcd7-4502036fe429" alt="image" style="width:75%;">
 
 
-SignalWire Dental Office is a demo of how a Dental Office could use SignalWire's AI capabilites.
+SignalWire Dental Office is a demo of how a Dental Office could use SignalWire's AI capabilities.
 
 The example highlights:
 
@@ -21,7 +21,7 @@ The example highlights:
 ## Table of Contents
 
 1. [Create Custom AI Agent](#Create-Custom-AI-Agent)
-2. [Creating a Click 2 Call Resource](#Creating-a-Click-To-Call-Resource)
+2. [Creating a Click To Call Resource](#Creating-a-Click-To-Call-Resource)
 3. [Populate Variables in .env](#Populate-Variables-in-env)
 4. [Install Script Specifics](#Install-Script-Specifics)
 
@@ -91,7 +91,7 @@ From the SignalWire dashboard:
 <img src="https://github.com/user-attachments/assets/5e1a9a6e-d7e9-445a-b413-06d79b3e83d2" alt="image" style="width:50%;">
 
 
-4. Click the work Add
+4. Click the word Add
 
 <img src="https://github.com/user-attachments/assets/02adb341-dc2d-448c-aa09-34b03a19e508" alt="image" style="width:50%;">
 
@@ -102,7 +102,7 @@ From the SignalWire dashboard:
 
 ## Populate Variables in env
 
-The setup script will output a .env file that your will populate with credentials and API Key's
+The setup script will output a .env file that you will populate with credentials and API keys.
 
 
 ```
