@@ -8,7 +8,7 @@ SignalWire Dental Office is a demo of how a Dental Office could use SignalWire's
 
 The example highlights:
 
-* Click to Call
+* [Click to Call](https://developer.signalwire.com/tools/c2c/technical-reference#methods)
 * Web Calendar
 * MFA Multifactor Authentication
 * PSTN connectivity
