@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "sections": {
+    "main": [
+      {
+        "tap": {
+          "uri": "rtp://127.0.0.1/tap",
+          "direction": "both"
+        }
+        }
+      }
+    ]
+  }
+}
