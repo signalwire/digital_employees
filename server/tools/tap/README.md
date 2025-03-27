@@ -80,7 +80,7 @@ To initiate a (RTP) tap:
     "main": [
       {
         "tap": {
-          "uri": "rtp://127.0.0.1/tap",
+          "uri": "rtp://127.0.0.1:5004",
           "direction": "both"
         }
       }
@@ -89,4 +89,4 @@ To initiate a (RTP) tap:
 }
 ```
 
-**Note:** Update `uri` ip address to the public ip address.
+**Note:** Update `uri` ip address to your public ip address.
