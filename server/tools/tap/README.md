@@ -71,7 +71,7 @@ The `tap` method in SignalWire Markup Language (SWML) enables developers to stre
 
 ### Example Usage
 
-To initiate a (RTP) tap:
+Add to your SWML script to enable (RTP) tap:
 
 ```json
 {
