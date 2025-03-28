@@ -7,7 +7,8 @@
 **Table of Contents**
 
 - [Core Functionality](#core-functionality)
-- [How to Use](#how-to-use)
+- [Using tap.py](#using-tap)
+- [Using web_tap.py](#using-web-tap)
 - [Utilizing the `tap` Method in SWML](#utilizing-the-tap-method-in-swml)
 
 ---
@@ -34,7 +35,7 @@ The `tap` Python script is designed to listen to Real-time Transport Protocol (R
 
 ---
 
-## How to Use
+## Using tap
 
 - **Run the Script**: Execute it in a Windows command prompt or terminal.
 - **Controls**:
@@ -42,6 +43,20 @@ The `tap` Python script is designed to listen to Real-time Transport Protocol (R
   - **Right Arrow**: Switch to the next active SSRC.
   - **'q'**: Exit the script.
 - **Requirements**: Ensure PyAudio is installed (`pip install pyaudio`) and your system has an audio output device.
+
+---
+
+## Using web tap
+
+- **Run the Script**: Execute it in a Windows command prompt or terminal.
+- **View Webpage**: Goto `http://ip:8080` Use the ip of where the python script is running. For example: `http://192.168.100.50:8080`
+- **Start Listening**: Click to start listening for the incoming rtp stream
+- **Listen/Listening**: If you have more than 1 stream you can click "Listen". This will turn to "Listening" and hear the rtp stream via your web browser.
+
+
+
+![image](https://github.com/user-attachments/assets/e964f1bf-21a3-4b6f-9561-a4a562aa5204)
+
 
 ---
 
