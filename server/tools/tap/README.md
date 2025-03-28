@@ -7,8 +7,8 @@
 **Table of Contents**
 
 - [Core Functionality](#core-functionality)
-- [Using tap.py](#using-tap)
-- [Using web_tap.py](#using-web-tap)
+- [Using tap](#using-tap)
+- [Using web tap](#using-web-tap)
 - [Utilizing the `tap` Method in SWML](#utilizing-the-tap-method-in-swml)
 
 ---
@@ -19,7 +19,7 @@ The `tap` Python script is designed to listen to Real-time Transport Protocol (R
 
 ## Core Functionality
 
-`Tap` script handles the following tasks:
+The `tap` script handles the following tasks:
 
 - **RTP Packet Reception**:  
   Listens for UDP-based RTP packets on a specified IP and port (e.g., `0.0.0.0:5004`).
@@ -28,7 +28,7 @@ The `tap` Python script is designed to listen to Real-time Transport Protocol (R
   Converts PCMU audio (payload type 0) to 16-bit PCM using a μ-law lookup table for playback.
 
 - **Multi-Stream Support**:  
-  Tracks multiple Synchronization Sources (SSRCs) and allows switching between them with arrow keys.
+  Tracks multiple Synchronization Sources (SSRCs) and allows switching between them using arrow keys.
 
 - **Stream Cleanup**:  
   Removes inactive SSRCs after a 2-second timeout.
@@ -49,14 +49,13 @@ The `tap` Python script is designed to listen to Real-time Transport Protocol (R
 ## Using web tap
 
 - **Run the Script**: Execute it in a Windows command prompt or terminal.
-- **View Webpage**: Goto `http://ip:8080` Use the ip of where the python script is running. For example: `http://192.168.100.50:8080`
-- **Start Listening**: Click to start listening for the incoming rtp stream
-- **Listen/Listening**: If you have more than 1 stream you can click "Listen". This will turn to "Listening" and hear the rtp stream via your web browser.
-
-
+- **View Webpage**:  
+  Go to `http://ip:8080`, where `ip` is the address of the machine running the Python script. For example: `http://192.168.100.50:8080`.
+- **Start Listening**: Click to start receiving the incoming RTP stream.
+- **Listen/Listening**:  
+  If you have one or more than one stream, click "Listen." This will change the button to "Listening," and you will be able to hear the RTP stream through your web browser.
 
 ![image](https://github.com/user-attachments/assets/e964f1bf-21a3-4b6f-9561-a4a562aa5204)
-
 
 ---
 
@@ -86,7 +85,7 @@ The `tap` method in SignalWire Markup Language (SWML) enables developers to stre
 
 ### Example Usage
 
-Add to your SWML script to enable (RTP) tap:
+Add the following to your SWML script to enable RTP tap:
 
 ```json
 {
@@ -104,4 +103,4 @@ Add to your SWML script to enable (RTP) tap:
 }
 ```
 
-**Note:** Update `uri` ip address to your public ip address.
+Note: Update the uri IP address to your public IP address.
