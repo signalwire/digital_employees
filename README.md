@@ -26,6 +26,9 @@ Try out the following serverless examples in the dashboard of your SignalWire Sp
 
 ## Server
 
+#### 📽️ [Movie Bot](https://github.com/signalwire/digital_employees/tree/main/server/Python_Examples/moviebot)
+  * Movie Expert AI Agent with SignalWire AI Gateway.
+
 #### 💐 [Flo's Flowers 2](https://github.com/signalwire/digital_employees/tree/main/server/Perl_Examples/FlosFlowers2)
   * Flo's Flowers 2.0 can send an SMS e-card with an image of any type of flower now. Just tell Flo what kind of flowers to send.
 
@@ -46,6 +49,10 @@ Try out the following serverless examples in the dashboard of your SignalWire Sp
   * This digital employee is able to send a 6 digit code via SMS, and verify the 6 digit code with SignalWire's MFA API.
     
 
+## Tools
+
+#### 🎧 [TAP](https://github.com/signalwire/digital_employees/tree/main/server/tools/tap)
+  * Listen to Real-time Transport Protocol (RTP) audio streams. Supports multiple streams.
 
 --------------
 Explore the possibilities of Remote Communication, Workflow Integration, and Real-time Collaboration with SignalWire's Scalable Solutions, enhanced with Natural Language Processing (NLP) capabilities.
