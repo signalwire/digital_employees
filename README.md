@@ -8,6 +8,15 @@ Below are Quick links to Serverless and Server examples.
 
 Try out the following serverless examples in the dashboard of your SignalWire Space. Navigate to the **Relay/SWML** sidebar item and the **SWML Scripts** tab.
 
+#### 🤖  [Sigmond](https://github.com/signalwire/digital_employees/tree/main/serverless/Sigmond)
+  * Sigmond - SignalWire AI Agent Sigmond is a live demo robot with a friendly, C-3PO-inspired personality that assists users with SignalWire, FreeSWITCH, and Programmable Unified Communications by showcasing innovative features such as real-time API-driven workflows, global scalability, low latency, and interactive support through SWML scripting.
+
+#### 🎅 [Interactive Santa](https://github.com/signalwire/digital_employees/tree/main/serverless/Santa)
+  * Santa - This JSON config defines a Santa Claus-themed SignalWire holiday marketing campaign where an AI Santa, using child-friendly language, guides the user through selecting a single Christmas gift from a dynamically generated list via SWML functions, while enforcing rules for polite behavior and concluding with a festive farewell.
+
+#### 👨‍⚕️  [Dr. Bob Confirm](https://github.com/signalwire/digital_employees/tree/main/serverless/Dr_Bob_Confirm)
+  * Dr. Bob - A person calls a SignalWire number or endpoint, the AI digital employee answers, and when the user requests a representative, multiple endpoints are dialed in parallel, with the call transferring once one endpoint accepts by pressing 1.
+
 #### 💐  [Flo's Flowers](https://github.com/signalwire/digital_employees/tree/main/serverless/Flos_Flowers)
   * Flo - Send an SMS e-card with an image url to a user's phone number. Flo will give four flower options to choose from to send. The user can include a message with the flower image.
 
