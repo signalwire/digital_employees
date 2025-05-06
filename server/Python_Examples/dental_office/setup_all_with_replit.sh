@@ -2372,7 +2372,7 @@ EOF
 
 
 # Make script executable and run setup
-sudo apt-get update && sudo apt-get install python3-venv -y
+apt-get update && apt-get install python3-venv -y
 chmod +x $0
 echo "Setting up environment..."
 python3 -m venv dental_app/venv
