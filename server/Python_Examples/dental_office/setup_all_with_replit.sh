@@ -2043,6 +2043,8 @@ def generate_token():
     return render_template('generate_token.html', token=DENTIST_API, c2c_api_key=C2C_API_KEY)
 
 @app.route('/')
+def health_check():
+    return 'OK', 200
 def index():
     return render_template('index.html', signalwire_token=SIGNALWIRE_TOKEN, c2c_api_key=C2C_API_KEY, signalwire_space=SPACE, c2c_address=C2C_ADDRESS)
 
