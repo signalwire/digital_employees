@@ -2345,19 +2345,6 @@ def admin_edit_dentist(dentist_id):
     return render_template('admin_edit_dentist.html', dentist=dentist, c2c_api_key=C2C_API_KEY)
 
 # =======================
-# Ngrok Process Management
-# =======================
-
-def is_ngrok_running():
-    for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
-        try:
-            if 'ngrok' in proc.info['name'].lower() or (proc.info['cmdline'] and 'ngrok' in ' '.join(proc.info['cmdline']).lower()):
-                return proc.info['pid']
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-            continue
-    return None
-
-# =======================
 # Application Runner
 # =======================
 
