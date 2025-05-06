@@ -1,6 +1,6 @@
 modules = ["bash", "c-clang14", "python-3.12", "nodejs-20"]
 
-run = "cd server/Python_Examples/dental_office && bash setup.sh && python app.py"
+run = "cd server/Python_Examples/dental_office && bash setup_all_with_replit.sh && python app.py"
 
 [nix]
 channel = "stable-24_05"
@@ -8,4 +8,4 @@ packages = ["nano"]
 
 
 [deployment]
-run = ["sh", "-c", "cd server/Python_Examples/dental_office && bash setup.sh && python app.py"]
+run = ["sh", "-c", "cd server/Python_Examples/dental_office && bash setup_all_with_replit.sh && python app.py"]
