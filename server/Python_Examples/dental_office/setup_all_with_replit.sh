@@ -1485,41 +1485,6 @@ if __name__ == '__main__':
     create_fake_data()
 EOF
 
-# Create fake data script
-cat > dental_app/create_fake_data.py << 'EOF'
-import sqlite3
-import random
-import faker
-
-fake = faker.Faker()
-
-def create_fake_data():
-    conn = sqlite3.connect('dental_app/calendar.db')
-    c = conn.cursor()
-
-    # Fake patients
-    for _ in range(20):
-        c.execute('''INSERT INTO patients (first_name, last_name, date_of_birth, gender, address, phone, email, insurance)
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
-                  (fake.first_name(), fake.last_name(), fake.date_of_birth(minimum_age=18, maximum_age=80),
-                   random.choice(['M', 'F']), fake.address(), fake.phone_number(),
-                   fake.email(), fake.company()))
-
-    # Fake dentists
-    specialties = ['General', 'Orthodontics', 'Periodontics', 'Endodontics']
-    for _ in range(5):
-        c.execute('''INSERT INTO dentists (first_name, last_name, specialty, phone, email)
-                     VALUES (?, ?, ?, ?, ?)''',
-                  (fake.first_name(), fake.last_name(), random.choice(specialties),
-                   fake.phone_number(), fake.email()))
-
-    conn.commit()
-    conn.close()
-
-if __name__ == '__main__':
-    create_fake_data()
-EOF
-
 # Create database initialization script
 cat > dental_app/init_db.py << 'EOF'
 import sqlite3
@@ -2050,6 +2015,7 @@ def health_status():
 @app.route('/')
 def index():
     return render_template('index.html', signalwire_token=SIGNALWIRE_TOKEN, c2c_api_key=C2C_API_KEY, signalwire_space=SPACE, c2c_address=C2C_ADDRESS), 200
+
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_appointment():
