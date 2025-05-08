@@ -1566,11 +1566,6 @@ load_dotenv()
 
 app = Flask(__name__)
 
-@app.route('/')
-def health_check():
-    """Route for health checks"""
-    return jsonify({"status": "ok"})
-
 app.config['DATABASE'] = os.path.abspath(os.path.join(app.root_path, 'calendar.db'))
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.secret_key = os.getenv("FLASK_SECRET_KEY", os.urandom(24))
@@ -2048,9 +2043,13 @@ def generate_token():
         return render_template('generate_token.html', token=new_token, c2c_api_key=C2C_API_KEY)
     return render_template('generate_token.html', token=DENTIST_API, c2c_api_key=C2C_API_KEY)
 
+@app.route('/health')
+def health_status():
+    return jsonify({"status": "ok"})
+
 @app.route('/')
 def index():
-    return render_template('index.html', signalwire_token=SIGNALWIRE_TOKEN, c2c_api_key=C2C_API_KEY, signalwire_space=SPACE, c2c_address=C2C_ADDRESS) , 200
+    return render_template('index.html', signalwire_token=SIGNALWIRE_TOKEN, c2c_api_key=C2C_API_KEY, signalwire_space=SPACE, c2c_address=C2C_ADDRESS), 200
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_appointment():
