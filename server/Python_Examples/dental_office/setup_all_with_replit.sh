@@ -1565,6 +1565,12 @@ logging.getLogger('signalwire').setLevel(logging.DEBUG)
 load_dotenv()
 
 app = Flask(__name__)
+
+@app.route('/')
+def health_check():
+    """Route for health checks"""
+    return jsonify({"status": "ok"})
+
 app.config['DATABASE'] = os.path.abspath(os.path.join(app.root_path, 'calendar.db'))
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.secret_key = os.getenv("FLASK_SECRET_KEY", os.urandom(24))
@@ -2043,10 +2049,8 @@ def generate_token():
     return render_template('generate_token.html', token=DENTIST_API, c2c_api_key=C2C_API_KEY)
 
 @app.route('/')
-def health_check():
-    return 'OK', 200
 def index():
-    return render_template('index.html', signalwire_token=SIGNALWIRE_TOKEN, c2c_api_key=C2C_API_KEY, signalwire_space=SPACE, c2c_address=C2C_ADDRESS)
+    return render_template('index.html', signalwire_token=SIGNALWIRE_TOKEN, c2c_api_key=C2C_API_KEY, signalwire_space=SPACE, c2c_address=C2C_ADDRESS) , 200
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_appointment():
@@ -2354,7 +2358,7 @@ if __name__ == '__main__':
     if not os.path.exists(app.config['DATABASE']):
         logging.info("Creating new database")
         init_db()
-
+    app.run(host='0.0.0.0', port=8080)
 EOF
 
 # Install required Python packages
@@ -2393,14 +2397,17 @@ echo "Run your Flask app with: python dental_app/app.py"
 
 echo " ----Edit dental_app/rename.env to .env and complete the VARIABLES---- "
 # Create .env file with required environment variables
+
 cat > dental_app/rename.env << 'EOF'
 HTTP_USERNAME=admin
 HTTP_PASSWORD=password
-SIGNALWIRE_PROJECT_ID=
-SIGNALWIRE_TOKEN=
-SIGNALWIRE_SPACE=
-FROM_NUMBER=
-C2C_ADDRESS=
-C2C_API_KEY=
+SIGNALWIRE_PROJECT_ID=demo
+SIGNALWIRE_TOKEN=demo
+SIGNALWIRE_SPACE=demo
+FROM_NUMBER=+1234567890
+C2C_ADDRESS=demo
+C2C_API_KEY=demo
 
 EOF
+# Renaming env file automatically for deployment
+cp -r dental_app/rename.env dental_app/.env
