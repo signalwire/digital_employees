@@ -1,0 +1,9 @@
+flask
+python-dotenv
+signalwire
+signalwire_swaig==2.7
+signalwire_pom==2.7
+signalwire_swml==2.7
+requests
+psutil
+faker
