@@ -6,9 +6,8 @@ SignalWire Dental Office
 
 SignalWire Dental Office is a demo of how a Dental Office could use SignalWire's AI capabilities.
 
-[![Run on Replit](https://replit.com/badge/github/signalwire/digital_employees.svg)](https://replit.com/github/signalwire/digital_employees)
+[![Run on Replit](https://replit.com/badge/github/len-pgh/sw_dental_office.svg)](https://replit.com/github/len-pgh/sw_dental_office)
 
-> After opening, Replit will auto-run `server/Python_Examples/dental_office/setup_all_with_replit.sh`
 
 
 The example highlights:
