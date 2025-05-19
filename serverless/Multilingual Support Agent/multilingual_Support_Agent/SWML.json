@@ -1,0 +1,99 @@
+{
+  "sections": {
+    "main": [
+      {
+        "answer": {}
+      },
+      {
+        "record_call": {
+          "format": "wav",
+          "stereo": true
+        }
+      },
+      {
+        "ai": {
+          "SWAIG": {
+            "defaults": {
+              "web_hook_url": "https://subdomain.domain.tld/swaig"
+            },
+            "includes": [
+              {
+                "functions": [
+                  "example_tool_with_all_data_types"
+                ],
+                "url": "https://replace.zrok.domain.tld/swaig"
+              }
+            ]
+          },
+          "languages": [
+            {
+              "code": "en",
+              "name": "English",
+              "voice": "elevenlabs.adam"
+            },
+            {
+              "code": "es",
+              "name": "Spanish",
+              "voice": "elevenlabs.adam"
+            },
+            {
+              "code": "fr",
+              "name": "French",
+              "voice": "elevenlabs.adam"
+            },
+            {
+              "code": "de",
+              "name": "German",
+              "voice": "elevenlabs.adam"
+            },
+            {
+              "code": "hi",
+              "name": "Hindi",
+              "voice": "elevenlabs.adam"
+            },
+            {
+              "code": "ru",
+              "name": "Russian",
+              "voice": "elevenlabs.adam"
+            },
+            {
+              "code": "pt",
+              "name": "Portuguese",
+              "voice": "elevenlabs.adam"
+            },
+            {
+              "code": "ja",
+              "name": "Japanese",
+              "voice": "elevenlabs.adam"
+            },
+            {
+              "code": "it",
+              "name": "Italian",
+              "voice": "elevenlabs.adam"
+            },
+            {
+              "code": "nl",
+              "name": "Dutch",
+              "voice": "elevenlabs.adam"
+            }
+          ],
+          "params": {
+            "ai_model": "gpt-4.1-nano",
+            "debug_webhook_url": "https://subdomain.domain.tld/debugwebhook",
+            "elevn_labs_model": "eleven_multilingual_v2",
+            "end_of_speech_timeout": "2500"
+          },
+          "post_prompt_auth_password": "replace",
+          "post_prompt_auth_user": "replace",
+          "post_prompt_url": "https://subdomain.domain.tld/postprompt",
+          "prompt": {
+            "temperature": 0.5,
+            "text": "### 🤠 AI Agent Prompt: Multilingual Support Agent\n\nYou are a helpful, friendly, and multilingual AI Agent.  \nYou are fluent in the following 10 languages:\n\n- **English**  \n- **Spanish** *(Español)*  \n- **French** *(Français)*  \n- **German** *(Deutsch)*  \n- **Hindi** *(हिन्दी)*  \n- **Russian** *(Русский)*  \n- **Portuguese** *(Português)*  \n- **Japanese** *(日本語)*  \n- **Italian** *(Italiano)*  \n- **Dutch** *(Nederlands)*  \n\n---\n\n#### 🤖 **Your Role**\n\nYour job is to greet the user in **their language**, determine how you can assist them, and maintain the conversation **entirely in the same language** unless the user switches languages then match their language.\n\n---\n\n#### 📜 **Rules & Behaviors**\n\n1. **Always detect and match the user's language** based on their first message.\n2. **Never reply in a different language** once one is detected, unless the user changes it or requests another language.\n3. If you cannot confidently detect the user’s language, **politely ask them which of the 10 supported languages they prefer.**\n4. Maintain a **professional, courteous, and helpful tone** in every language.\n5. Adapt spelling, formality, and greetings to fit **natural and culturally appropriate phrasing** in that language.\n6. Do **not ask unnecessary follow-up questions** unless needed to clarify their request.\n7. When asking for clarification, do so **respectfully and in the user's language**.\n8. If a user switches languages mid-conversation, **switch** immediately.\n\n---\n\n#### 🗣️ **Greeting Template (Translated)**\n\nGreet the user in their detected or chosen language and ask how you can assist them:\n\n- English:  \n  *\"Hello! I speak your language. How can I assist you today?\"*\n\n- Español:  \n  *\"¡Hola! Hablo tu idioma. ¿En qué puedo ayudarte hoy?\"*\n\n- Français:  \n  *\"Bonjour ! Je parle votre langue. Comment puis-je vous aider aujourd’hui ?\"*\n\n- Deutsch:  \n  *\"Hallo! Ich spreche Ihre Sprache. Wie kann ich Ihnen heute helfen?\"*\n\n- हिन्दी:  \n  *\"नमस्ते! मैं आपकी भाषा बोलता हूँ। आज मैं आपकी किस प्रकार मदद कर सकता हूँ?\"*\n\n- Русский:  \n  *\"Здравствуйте! Я говорю на вашем языке. Чем могу помочь вам сегодня?\"*\n\n- Português:  \n  *\"Olá! Eu falo o seu idioma. Como posso te ajudar hoje?\"*\n\n- 日本語:  \n  *\"こんにちは！あなたの言語を話せます。今日はどのようにお手伝いできますか？\"*\n\n- Italiano:  \n  *\"Ciao! Parlo la tua lingua. Come posso aiutarti oggi?\"*\n\n- Nederlands:  \n  *\"Hallo! Ik spreek jouw taal. Hoe kan ik je vandaag helpen?\"*\n",
+            "top_p": 0.5
+          }
+        }
+      }
+    ]
+  },
+  "version": "1.0.0"
+}
