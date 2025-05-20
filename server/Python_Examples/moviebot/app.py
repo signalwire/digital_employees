@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, send_file
 import requests
 import os
-from signalwire_swaig.core import SWAIG, SWAIGArgument
+from signalwire.swaig import SWAIG, SWAIGArgument
 import logging
 import random
 from dotenv import load_dotenv
@@ -23,7 +23,6 @@ HTTP_PASSWORD = os.getenv("HTTP_PASSWORD")
 TMDB_BASE_URL = "https://api.themoviedb.org/3"
 
 app = Flask(__name__)
-app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
 swaig = SWAIG(
     app,
@@ -47,7 +46,7 @@ def call_tmdb_api(endpoint, params):
     region=SWAIGArgument("string", "Specify a region to prioritize search results", required=False),
     year=SWAIGArgument("integer", "Filter results by release year", required=False),
     primary_release_year=SWAIGArgument("integer", "Filter results by primary release year", required=False))
-def search_movie(query, language="en-US", page=1, include_adult=False, region=None, year=None, primary_release_year=None):
+def search_movie(query, language="en-US", page=1, include_adult=False, region=None, year=None, primary_release_year=None, meta_data_token=None, meta_data=None):
     endpoint = "/search/movie"
     params = {
         "query": query,
@@ -66,7 +65,7 @@ def search_movie(query, language="en-US", page=1, include_adult=False, region=No
 @swaig.endpoint("Get detailed movie information",
     movie_id=SWAIGArgument("integer", "The TMDb ID of the movie"),
     language=SWAIGArgument("string", "Language of the results", required=False))
-def get_movie_details(movie_id, language="en-US"):
+def get_movie_details(movie_id, language="en-US", meta_data_token=None, meta_data=None):
     endpoint = f"/movie/{movie_id}"
     params = {"language": language}
     response = call_tmdb_api(endpoint, params)
@@ -77,7 +76,7 @@ def get_movie_details(movie_id, language="en-US"):
 @swaig.endpoint("Get movie recommendations",
     movie_id=SWAIGArgument("integer", "The TMDb ID of the movie"),
     language=SWAIGArgument("string", "Language of the results", required=False))
-def get_movie_recommendations(movie_id, language="en-US"):
+def get_movie_recommendations(movie_id, language="en-US", meta_data_token=None, meta_data=None):
     endpoint = f"/movie/{movie_id}/recommendations"
     params = {"language": language}
     response = call_tmdb_api(endpoint, params)
@@ -88,7 +87,7 @@ def get_movie_recommendations(movie_id, language="en-US"):
 @swaig.endpoint("Get trending movies",
     time_window=SWAIGArgument("string", "Time window (day/week)", required=False),
     language=SWAIGArgument("string", "Language of the results", required=False))
-def get_trending_movies(time_window="week", language="en-US"):
+def get_trending_movies(time_window="week", language="en-US", meta_data_token=None, meta_data=None):
     endpoint = f"/trending/movie/{time_window}"
     params = {"language": language}
     response = call_tmdb_api(endpoint, params)
@@ -114,7 +113,7 @@ def get_trending_movies(time_window="week", language="en-US"):
     with_runtime_lte=SWAIGArgument("integer", "Filter movies with runtime less than or equal to this value", required=False))
 def discover_movies(language="en-US", region=None, sort_by="popularity.desc", include_adult=False, include_video=False, 
                    page=1, primary_release_year=None, primary_release_date_gte=None, primary_release_date_lte=None,
-                   with_genres=None, with_cast=None, with_crew=None, with_keywords=None, with_runtime_gte=None, with_runtime_lte=None):
+                   with_genres=None, with_cast=None, with_crew=None, with_keywords=None, with_runtime_gte=None, with_runtime_lte=None, meta_data_token=None, meta_data=None):
     endpoint = "/discover/movie"
     params = locals()
     response = call_tmdb_api(endpoint, params)
@@ -124,7 +123,7 @@ def discover_movies(language="en-US", region=None, sort_by="popularity.desc", in
 
 @swaig.endpoint("Get genre list",
     language=SWAIGArgument("string", "Language of the results", required=False))
-def get_genre_list(language="en-US"):
+def get_genre_list(language="en-US", meta_data_token=None, meta_data=None):
     endpoint = "/genre/movie/list"
     params = {"language": language}
     response = call_tmdb_api(endpoint, params)
@@ -135,7 +134,7 @@ def get_genre_list(language="en-US"):
 @swaig.endpoint("Get upcoming movies",
     language=SWAIGArgument("string", "Language of the results", required=False),
     region=SWAIGArgument("string", "Specify a region to filter release dates", required=False))
-def get_upcoming_movies(language="en-US", region=None):
+def get_upcoming_movies(language="en-US", region=None, meta_data_token=None, meta_data=None):
     endpoint = "/movie/upcoming"
     params = {"language": language, "region": region}
     response = call_tmdb_api(endpoint, params)
@@ -146,7 +145,7 @@ def get_upcoming_movies(language="en-US", region=None):
 @swaig.endpoint("Get now playing movies",
     language=SWAIGArgument("string", "Language of the results", required=False),
     region=SWAIGArgument("string", "Specify a region to filter release dates", required=False))
-def get_now_playing_movies(language="en-US", region=None):
+def get_now_playing_movies(language="en-US", region=None, meta_data_token=None, meta_data=None):
     endpoint = "/movie/now_playing"
     params = {"language": language, "region": region}
     response = call_tmdb_api(endpoint, params)
@@ -157,7 +156,7 @@ def get_now_playing_movies(language="en-US", region=None):
 @swaig.endpoint("Get similar movies",
     movie_id=SWAIGArgument("integer", "The TMDb ID of the movie"),
     language=SWAIGArgument("string", "Language of the results", required=False))
-def get_similar_movies(movie_id, language="en-US"):
+def get_similar_movies(movie_id, language="en-US", meta_data_token=None, meta_data=None):
     endpoint = f"/movie/{movie_id}/similar"
     params = {"language": language}
     response = call_tmdb_api(endpoint, params)
@@ -171,7 +170,7 @@ def get_similar_movies(movie_id, language="en-US"):
     page=SWAIGArgument("integer", "Page number for pagination", required=False),
     include_adult=SWAIGArgument("boolean", "Whether to include adult content", required=False),
     region=SWAIGArgument("string", "Specify a region to prioritize search results", required=False))
-def multi_search(query, language="en-US", page=1, include_adult=False, region=None):
+def multi_search(query, language="en-US", page=1, include_adult=False, region=None, meta_data_token=None, meta_data=None):
     endpoint = "/search/multi"
     params = locals()
     response = call_tmdb_api(endpoint, params)
@@ -182,7 +181,7 @@ def multi_search(query, language="en-US", page=1, include_adult=False, region=No
 @swaig.endpoint("Get movie credits",
     movie_id=SWAIGArgument("integer", "The TMDb ID of the movie"),
     language=SWAIGArgument("string", "Language of the results", required=False))
-def get_movie_credits(movie_id, language="en-US"):
+def get_movie_credits(movie_id, language="en-US", meta_data_token=None, meta_data=None):
     endpoint = f"/movie/{movie_id}/credits"
     params = {"language": language}
     response = call_tmdb_api(endpoint, params)
@@ -194,7 +193,7 @@ def get_movie_credits(movie_id, language="en-US"):
     person_id=SWAIGArgument("integer", "The TMDb ID of the person"),
     language=SWAIGArgument("string", "Language of the results", required=False),
     append_to_response=SWAIGArgument("string", "Additional requests to append to the result", required=False))
-def get_person_details(person_id, language="en-US", append_to_response=None):
+def get_person_details(person_id, language="en-US", append_to_response=None, meta_data_token=None, meta_data=None):
     endpoint = f"/person/{person_id}"
     params = {"language": language}
     if append_to_response:
