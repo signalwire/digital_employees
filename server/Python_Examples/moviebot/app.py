@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, send_file
 import requests
 import os
-from signalwire.swaig import SWAIG, SWAIGArgument
+from signalwire_swaig.swaig import SWAIG, SWAIGArgument
 import logging
 import random
 from dotenv import load_dotenv
