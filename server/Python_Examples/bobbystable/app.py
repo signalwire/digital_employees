@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 from dotenv import load_dotenv
 import logging
 import os
-from signalwire.swaig import SWAIG, SWAIGArgument
+from signalwire_swaig.swaig import SWAIG, SWAIGArgument
 
 from reservation_system import (
     create_reservation_response,
