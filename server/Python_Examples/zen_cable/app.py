@@ -34,6 +34,9 @@ swaig = None
 LAST_MFA_ID = None
 VERIFIED_CUSTOMER_DATA = {}
 
+# Global variables for customer verification
+VERIFIED_CUSTOMERS = {}  # Store verified customer data by session/token
+
 # Initialize MFA utility
 mfa_util = None
 
@@ -121,25 +124,45 @@ def register_swaig_endpoints():
                 ]
             }
         ),
-        customer_id=SWAIGArgument(type="string", description="The customer's account ID", required=True),
-        meta_data=SWAIGArgument(type="object", description="Additional metadata", required=False),
-        meta_data_token=SWAIGArgument(type="string", description="Metadata token", required=False)
+        customer_id=SWAIGArgument(type="string", description="The customer's account ID", required=False),
+        meta_data=SWAIGArgument(type="object", description="Additional metadata including verified customer data", required=False),
+        meta_data_token=SWAIGArgument(type="string", description="Metadata token for session tracking", required=False)
     )
-    def check_balance(customer_id, meta_data=None, meta_data_token=None):
+    def check_balance(customer_id=None, meta_data=None, meta_data_token=None):
         try:
+            # Try to get customer_id from metadata first
+            verified_customer_id = None
+            if meta_data and isinstance(meta_data, dict):
+                verified_customer_id = meta_data.get('verified_customer_id')
+            
+            # Use verified customer ID if available, otherwise use provided customer_id
+            final_customer_id = verified_customer_id or customer_id
+            
+            if not final_customer_id:
+                return "Please provide your customer ID to check your balance.", []
+            
             db = get_db()
-            customer = db.execute('SELECT * FROM customers WHERE id = ?', (customer_id,)).fetchone()
+            customer = db.execute('SELECT * FROM customers WHERE id = ?', (final_customer_id,)).fetchone()
             if not customer:
                 return "I couldn't find your account. Please verify your account number.", []
+            
+            # Store verified customer ID in metadata for future use
+            response_metadata = {
+                'verified_customer_id': final_customer_id,
+                'customer_verified': True,
+                'verification_timestamp': datetime.now().isoformat()
+            }
+            
             billing = db.execute('''
                 SELECT * FROM billing 
                 WHERE customer_id = ? 
                 ORDER BY due_date DESC LIMIT 1
-            ''', (customer_id,)).fetchone()
+            ''', (final_customer_id,)).fetchone()
             db.close()
+            
             if billing:
-                return f"Your current balance is ${billing['amount']:.2f}, due on {billing['due_date']}.", []
-            return "No billing information found for your account.", []
+                return f"Your current balance is ${billing['amount']:.2f}, due on {billing['due_date']}.", [response_metadata]
+            return "No billing information found for your account.", [response_metadata]
         except Exception as e:
             app.logger.error(f"Error in check_balance: {str(e)}")
             return "Error checking balance. Please try again later.", []
@@ -157,34 +180,58 @@ def register_swaig_endpoints():
                 ]
             }
         ),
-        customer_id=SWAIGArgument(type="string", description="The customer's account ID", required=True),
+        customer_id=SWAIGArgument(type="string", description="The customer's account ID", required=False),
         amount=SWAIGArgument(type="number", description="The amount to pay", required=True),
         payment_method=SWAIGArgument(type="string", description="Payment method", enum=["credit_card", "bank_transfer"], required=False),
-        meta_data=SWAIGArgument(type="object", description="Additional metadata", required=False),
-        meta_data_token=SWAIGArgument(type="string", description="Metadata token", required=False)
+        meta_data=SWAIGArgument(type="object", description="Additional metadata including verified customer data", required=False),
+        meta_data_token=SWAIGArgument(type="string", description="Metadata token for session tracking", required=False)
     )
-    def make_payment(customer_id, amount, payment_method=None, meta_data=None, meta_data_token=None):
+    def make_payment(amount, customer_id=None, payment_method=None, meta_data=None, meta_data_token=None):
         try:
-            db = get_db()
-            customer = db.execute('SELECT * FROM customers WHERE id = ?', (customer_id,)).fetchone()
-            if not customer:
-                return "I couldn't find your account. Please verify your account number.", []
+            # Try to get customer_id from metadata first
+            verified_customer_id = None
+            if meta_data and isinstance(meta_data, dict):
+                verified_customer_id = meta_data.get('verified_customer_id')
+            
+            # Use verified customer ID if available, otherwise use provided customer_id
+            final_customer_id = verified_customer_id or customer_id
+            
+            if not final_customer_id:
+                return "Please provide your customer ID to process the payment.", []
+            
             if not amount or amount <= 0:
                 return "Please provide a valid payment amount.", []
+            
+            db = get_db()
+            customer = db.execute('SELECT * FROM customers WHERE id = ?', (final_customer_id,)).fetchone()
+            if not customer:
+                return "I couldn't find your account. Please verify your account number.", []
+            
             # Insert payment record
+            transaction_id = secrets.token_hex(16)
             db.execute('''
                 INSERT INTO payments (customer_id, amount, payment_date, payment_method, status, transaction_id)
                 VALUES (?, ?, CURRENT_TIMESTAMP, ?, 'pending', ?)
-            ''', (customer_id, amount, payment_method or 'phone', secrets.token_hex(16)))
+            ''', (final_customer_id, amount, payment_method or 'phone', transaction_id))
+            
             # Update balance
-            current_balance = db.execute('SELECT amount FROM billing WHERE customer_id = ? ORDER BY due_date DESC LIMIT 1', (customer_id,)).fetchone()
+            current_balance = db.execute('SELECT amount FROM billing WHERE customer_id = ? ORDER BY due_date DESC LIMIT 1', (final_customer_id,)).fetchone()
             if current_balance:
                 new_balance = current_balance['amount'] - amount
                 db.execute('UPDATE billing SET amount = ? WHERE id = (SELECT id FROM billing WHERE customer_id = ? ORDER BY due_date DESC LIMIT 1)', 
-                           (new_balance, customer_id))
+                           (new_balance, final_customer_id))
             db.commit()
             db.close()
-            return f"Payment of ${amount:.2f} initiated. Confirmation text incoming.", []
+            
+            # Return metadata with verified customer info
+            response_metadata = {
+                'verified_customer_id': final_customer_id,
+                'customer_verified': True,
+                'verification_timestamp': datetime.now().isoformat(),
+                'transaction_id': transaction_id
+            }
+            
+            return f"Payment of ${amount:.2f} initiated. Confirmation text incoming.", [response_metadata]
         except Exception as e:
             app.logger.error(f"Error in make_payment: {str(e)}")
             return "Error processing payment. Please try again.", []
@@ -202,21 +249,41 @@ def register_swaig_endpoints():
                 ]
             }
         ),
-        customer_id=SWAIGArgument(type="string", description="The customer's account ID", required=True),
-        meta_data=SWAIGArgument(type="object", description="Additional metadata", required=False),
-        meta_data_token=SWAIGArgument(type="string", description="Metadata token", required=False)
+        customer_id=SWAIGArgument(type="string", description="The customer's account ID", required=False),
+        meta_data=SWAIGArgument(type="object", description="Additional metadata including verified customer data", required=False),
+        meta_data_token=SWAIGArgument(type="string", description="Metadata token for session tracking", required=False)
     )
-    def check_modem_status(customer_id, meta_data=None, meta_data_token=None):
+    def check_modem_status(customer_id=None, meta_data=None, meta_data_token=None):
         try:
+            # Try to get customer_id from metadata first
+            verified_customer_id = None
+            if meta_data and isinstance(meta_data, dict):
+                verified_customer_id = meta_data.get('verified_customer_id')
+            
+            # Use verified customer ID if available, otherwise use provided customer_id
+            final_customer_id = verified_customer_id or customer_id
+            
+            if not final_customer_id:
+                return "Please provide your customer ID to check modem status.", []
+            
             db = get_db()
-            customer = db.execute('SELECT * FROM customers WHERE id = ?', (customer_id,)).fetchone()
+            customer = db.execute('SELECT * FROM customers WHERE id = ?', (final_customer_id,)).fetchone()
             if not customer:
                 return "I couldn't find your account. Please verify your account number.", []
-            modem = db.execute('SELECT * FROM modems WHERE customer_id = ?', (customer_id,)).fetchone()
+            
+            modem = db.execute('SELECT * FROM modems WHERE customer_id = ?', (final_customer_id,)).fetchone()
             db.close()
+            
+            # Return metadata with verified customer info
+            response_metadata = {
+                'verified_customer_id': final_customer_id,
+                'customer_verified': True,
+                'verification_timestamp': datetime.now().isoformat()
+            }
+            
             if modem:
-                return f"Your modem is {modem['status']}. MAC: {modem['mac_address']}.", []
-            return "No modem information found for your account.", []
+                return f"Your modem is {modem['status']}. MAC: {modem['mac_address']}.", [response_metadata]
+            return "No modem information found for your account.", [response_metadata]
         except Exception as e:
             app.logger.error(f"Error in check_modem_status: {str(e)}")
             return "Error checking modem status.", []
@@ -234,33 +301,52 @@ def register_swaig_endpoints():
                 ]
             }
         ),
-        customer_id=SWAIGArgument(type="string", description="The customer's account ID", required=True),
-        meta_data=SWAIGArgument(type="object", description="Additional metadata", required=False),
-        meta_data_token=SWAIGArgument(type="string", description="Metadata token", required=False)
+        customer_id=SWAIGArgument(type="string", description="The customer's account ID", required=False),
+        meta_data=SWAIGArgument(type="object", description="Additional metadata including verified customer data", required=False),
+        meta_data_token=SWAIGArgument(type="string", description="Metadata token for session tracking", required=False)
     )
-    def reboot_modem(customer_id, meta_data=None, meta_data_token=None):
+    def reboot_modem(customer_id=None, meta_data=None, meta_data_token=None):
         try:
+            # Try to get customer_id from metadata first
+            verified_customer_id = None
+            if meta_data and isinstance(meta_data, dict):
+                verified_customer_id = meta_data.get('verified_customer_id')
+            
+            # Use verified customer ID if available, otherwise use provided customer_id
+            final_customer_id = verified_customer_id or customer_id
+            
+            if not final_customer_id:
+                return "Please provide your customer ID to reboot your modem.", []
+            
             db = get_db()
-            customer = db.execute('SELECT * FROM customers WHERE id = ?', (customer_id,)).fetchone()
+            customer = db.execute('SELECT * FROM customers WHERE id = ?', (final_customer_id,)).fetchone()
             if not customer:
                 return "I couldn't find your account. Please verify your account number.", []
 
-            modem = db.execute('SELECT * FROM modems WHERE customer_id = ?', (customer_id,)).fetchone()
+            modem = db.execute('SELECT * FROM modems WHERE customer_id = ?', (final_customer_id,)).fetchone()
             if not modem:
                 return "No modem information found for your account.", []
 
             # Update modem status to rebooting
             db.execute('UPDATE modems SET status = "rebooting", last_seen = CURRENT_TIMESTAMP WHERE customer_id = ?', 
-                      (customer_id,))
+                      (final_customer_id,))
             db.commit()
 
             # Start the reboot simulation in a background thread
-            thread = threading.Thread(target=simulate_modem_reboot, args=(customer_id,))
+            thread = threading.Thread(target=simulate_modem_reboot, args=(final_customer_id,))
             thread.daemon = True
             thread.start()
 
             db.close()
-            return "Modem reboot initiated. This will take about 15 seconds.", []
+            
+            # Return metadata with verified customer info
+            response_metadata = {
+                'verified_customer_id': final_customer_id,
+                'customer_verified': True,
+                'verification_timestamp': datetime.now().isoformat()
+            }
+            
+            return "Modem reboot initiated. This will take about 15 seconds.", [response_metadata]
         except Exception as e:
             app.logger.error(f"Error in reboot_modem: {str(e)}")
             return "Error rebooting modem.", []
@@ -700,6 +786,54 @@ def register_swaig_endpoints():
         except Exception as e:
             app.logger.error(f"Error in swap_modem: {str(e)}")
             return "Error updating modem information.", []
+
+    @swaig.endpoint(
+        "Verify and store customer identity for subsequent interactions",
+        SWAIGFunctionProperties(
+            active=True,
+            wait_for_fillers=True,
+            fillers={
+                "default": [
+                    "Verifying your customer information...",
+                    "Confirming your identity...",
+                    "One moment while I verify your account..."
+                ]
+            }
+        ),
+        customer_id=SWAIGArgument(type="string", description="The customer's account ID to verify", required=True),
+        phone_last_four=SWAIGArgument(type="string", description="Last 4 digits of phone number for verification", required=False),
+        meta_data=SWAIGArgument(type="object", description="Additional metadata", required=False),
+        meta_data_token=SWAIGArgument(type="string", description="Metadata token for session tracking", required=False)
+    )
+    def verify_customer_identity(customer_id, phone_last_four=None, meta_data=None, meta_data_token=None):
+        try:
+            db = get_db()
+            customer = db.execute('SELECT * FROM customers WHERE id = ?', (customer_id,)).fetchone()
+            if not customer:
+                return "I couldn't find an account with that customer ID. Please check your account number.", []
+            
+            # Additional verification with phone number if provided
+            verification_passed = True
+            if phone_last_four:
+                if not customer['phone'] or not customer['phone'].endswith(phone_last_four):
+                    verification_passed = False
+            
+            if not verification_passed:
+                return "The verification information doesn't match our records. Please try again.", []
+            
+            # Store verified customer data in metadata
+            response_metadata = {
+                'verified_customer_id': customer_id,
+                'customer_verified': True,
+                'verification_timestamp': datetime.now().isoformat(),
+                'customer_name': f"{customer['first_name']} {customer['last_name']}"
+            }
+            
+            db.close()
+            return f"Thank you {customer['first_name']}! Your identity has been verified. I can now assist you with your account.", [response_metadata]
+        except Exception as e:
+            app.logger.error(f"Error in verify_customer_identity: {str(e)}")
+            return "Error verifying customer identity. Please try again.", []
 
     @swaig.endpoint(
         "Check for existing appointments for the customer",

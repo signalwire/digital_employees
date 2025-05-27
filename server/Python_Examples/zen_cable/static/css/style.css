@@ -45,6 +45,30 @@ body {
     background-color: #3d3d3d !important;
 }
 
+/* Badge improvements */
+.badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.35em 0.65em;
+}
+
+.bg-primary, .badge.bg-primary {
+    background-color: #007bff !important;
+}
+
+.bg-success, .badge.bg-success {
+    background-color: #28a745 !important;
+}
+
+.bg-warning, .badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+.bg-danger, .badge.bg-danger {
+    background-color: #dc3545 !important;
+}
+
 /* Status indicators */
 .status-indicator {
     width: 12px;
@@ -72,27 +96,80 @@ body {
 
 /* Calendar customization */
 .fc {
-    background-color: #2d2d2d;
+    background-color: white !important;
+    color: black !important;
     border-radius: 8px;
     padding: 16px;
+    border: 1px solid #dee2e6;
 }
 
 .fc-theme-standard td, 
 .fc-theme-standard th {
-    border-color: #404040;
+    border-color: #dee2e6 !important;
+    color: black !important;
 }
 
 .fc-theme-standard .fc-scrollgrid {
-    border-color: #404040;
+    border-color: #dee2e6 !important;
+}
+
+.fc-daygrid-day-number,
+.fc-col-header-cell-cushion,
+.fc-daygrid-day-top,
+.fc-day-today,
+.fc-toolbar-title {
+    color: black !important;
+}
+
+.fc-button-primary {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    color: white !important;
+}
+
+.fc-button-primary:hover,
+.fc-button-primary:focus {
+    background-color: #0056b3 !important;
+    border-color: #0056b3 !important;
+    color: white !important;
+}
+
+.fc-button-primary:not(:disabled):active,
+.fc-button-primary:not(:disabled).fc-button-active {
+    background-color: #004085 !important;
+    border-color: #004085 !important;
 }
 
 .fc-event {
-    background-color: #007bff;
-    border-color: #0056b3;
+    background-color: #007bff !important;
+    border-color: #0056b3 !important;
+    color: white !important;
+    cursor: pointer;
 }
 
 .fc-event:hover {
-    background-color: #0056b3;
+    background-color: #0056b3 !important;
+    border-color: #004085 !important;
+}
+
+.fc-event-title,
+.fc-event-time {
+    color: white !important;
+}
+
+.fc-today-button,
+.fc-prev-button,
+.fc-next-button {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+    color: white !important;
+}
+
+.fc-today-button:hover,
+.fc-prev-button:hover,
+.fc-next-button:hover {
+    background-color: #5a6268 !important;
+    border-color: #545b62 !important;
 }
 
 /* Form controls */
@@ -113,23 +190,55 @@ body {
 
 /* Buttons */
 .btn-primary {
-    background-color: #007bff;
-    border-color: #0056b3;
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    color: white !important;
 }
 
-.btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #004494;
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: #0056b3 !important;
+    border-color: #0056b3 !important;
+    color: white !important;
 }
 
 .btn-outline-primary {
-    color: #007bff;
-    border-color: #007bff;
+    color: #007bff !important;
+    border-color: #007bff !important;
+    background-color: transparent !important;
 }
 
-.btn-outline-primary:hover {
-    background-color: #007bff;
-    border-color: #0056b3;
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    color: white !important;
+}
+
+.btn-outline-warning {
+    color: #ffc107 !important;
+    border-color: #ffc107 !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-warning:hover,
+.btn-outline-warning:focus {
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+.btn-outline-danger {
+    color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-danger:hover,
+.btn-outline-danger:focus {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: white !important;
 }
 
 /* Animations */
