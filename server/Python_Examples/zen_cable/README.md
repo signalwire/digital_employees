@@ -1,6 +1,10 @@
 # Zen Cable Customer Portal
 
-A modern customer portal for cable service management, featuring real-time modem status monitoring, service management, and appointment scheduling.
+
+A modern customer demo portal for cable service management, featuring real-time modem status monitoring, service management, MFA password reset and appointment scheduling.
+
+<img src="https://github.com/user-attachments/assets/703f8245-0439-4009-9d7f-4020e595c2d6" alt="image" style="width:75%;">
+
 
 ## Features
 
