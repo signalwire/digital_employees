@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zen Cable - Appointments</title>
+  
+  <!-- Bootstrap & FullCalendar CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
+
+  <!-- SignalWire Theme -->
+  <style>
+    :root {
+      --signalwire-blue: #0A84FF;
+      --signalwire-dark-blue: #004999;
+      --signalwire-light-blue: #E6F0FF;
+      --signalwire-gray: #333333;
+    }
+
+    body {
+      background-color: var(--signalwire-light-blue) !important;
+      color: var(--signalwire-gray) !important;
+    }
+
+    .navbar {
+      background-color: var(--signalwire-blue) !important;
+      border-bottom: 2px solid var(--signalwire-dark-blue) !important;
+    }
+
+    .navbar-brand, .nav-link {
+      color: white !important;
+    }
+
+    .nav-link:hover {
+      color: var(--signalwire-light-blue) !important;
+    }
+
+    .card {
+      background-color: white !important;
+      border: 1px solid var(--signalwire-blue) !important;
+      box-shadow: 0 2px 4px rgba(10, 132, 255, 0.1);
+    }
+
+    .card-title {
+      color: var(--signalwire-dark-blue) !important;
+    }
+
+    .btn-primary {
+      background-color: var(--signalwire-blue) !important;
+      border-color: var(--signalwire-blue) !important;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--signalwire-dark-blue) !important;
+      border-color: var(--signalwire-dark-blue) !important;
+    }
+
+    .table {
+      color: var(--signalwire-gray) !important;
+    }
+
+    .table-dark {
+      background-color: white !important;
+    }
+
+    .table-dark td, .table-dark th {
+      border-color: var(--signalwire-light-blue) !important;
+    }
+
+    .badge {
+      font-size: 0.9em;
+      padding: 0.5em 0.8em;
+    }
+  </style>
+</head>
+<body class="bg-dark text-light">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary">
+    <div class="container">
+      <a class="navbar-brand" href="#">Zen Cable</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="{{ url_for('appointments') }}">Appointments</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('billing') }}">Billing</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('settings') }}">Settings</a>
+          </li>
+        </ul>
+        <div class="d-flex">
+          <span class="navbar-text me-3">
+            Welcome, {{ customer.first_name }} {{ customer.last_name }} (ID: {{ customer.id }})
+          </span>
+          <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>Your Appointments</h2>
+          <button class="btn btn-primary" onclick="showAppointmentModal()">Schedule New Appointment</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calendar View -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card bg-dark border-secondary">
+          <div class="card-body">
+            <div id="calendar"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card bg-dark border-secondary">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-dark">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Technician</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="appointmentsList">
+                  {% for appointment in appointments %}
+                  <tr>
+                    <td>{{ appointment.start_time[:10] }}</td>
+                    <td>{{ appointment.start_time[11:16] }} - {{ appointment.end_time[11:16] }}</td>
+                    <td>{{ appointment.type|title }}</td>
+                    <td>
+                      <span class="badge bg-{{ appointment.status|status_color }}">
+                        {{ appointment.status|title }}
+                      </span>
+                    </td>
+                    <td>{{ appointment.technician_name or 'Not Assigned' }}</td>
+                    <td>
+                      <div class="btn-group">
+                        <button class="btn btn-sm btn-outline-primary" onclick="viewAppointment({{ appointment.id }})">
+                          View
+                        </button>
+                        {% if appointment.status == 'scheduled' %}
+                        <button class="btn btn-sm btn-outline-warning" onclick="rescheduleAppointment({{ appointment.id }})">
+                          Reschedule
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="cancelAppointment({{ appointment.id }})">
+                          Cancel
+                        </button>
+                        {% endif %}
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Appointment Modal -->
+  <div class="modal fade" id="appointmentModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title">Schedule Appointment</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="appointmentForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-3">
+              <label class="form-label">Appointment Type</label>
+              <select class="form-select bg-dark text-light" name="type" required>
+                <option value="installation">Installation</option>
+                <option value="repair">Repair</option>
+                <option value="upgrade">Upgrade</option>
+                <option value="modem_swap">Modem Swap</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Date</label>
+              <input type="date" class="form-control bg-dark text-light" name="date" required 
+                     min="{{ today }}" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Time Slot</label>
+              <select class="form-select bg-dark text-light" name="time_slot" required>
+                <option value="morning">Morning (8AM-11AM)</option>
+                <option value="afternoon">Afternoon (2PM-4PM)</option>
+                <option value="evening">Evening (6PM-8PM)</option>
+                <option value="all_day">All Day (8AM-8PM)</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Notes</label>
+              <textarea class="form-control bg-dark text-light" name="notes" rows="3"></textarea>
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="smsReminder" name="sms_reminder" checked>
+              <label class="form-check-label" for="smsReminder">Send SMS Reminder</label>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Schedule Appointment</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Appointment Modal -->
+  <div class="modal fade" id="viewAppointmentModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title">Appointment Details</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" id="appointmentDetails">
+          <!-- Content will be dynamically populated -->
+          <div id="appointmentHistorySection" style="display:none; margin-top: 1em;">
+            <h6>History</h6>
+            <ul id="appointmentHistoryList" class="list-group list-group-flush bg-dark"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reschedule Appointment Modal -->
+  <div class="modal fade" id="rescheduleModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title">Reschedule Appointment</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="rescheduleForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" id="rescheduleAppointmentId" name="appointment_id">
+            <div class="mb-3">
+              <label class="form-label">Date</label>
+              <input type="date" class="form-control bg-dark text-light" name="date" id="rescheduleDate" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Time Slot</label>
+              <select class="form-select bg-dark text-light" name="time_slot" id="rescheduleTimeSlot" required>
+                <option value="morning">Morning (8AM-11AM)</option>
+                <option value="afternoon">Afternoon (2PM-4PM)</option>
+                <option value="evening">Evening (6PM-8PM)</option>
+                <option value="all_day">All Day (8AM-8PM)</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Notes</label>
+              <textarea class="form-control bg-dark text-light" name="notes" id="rescheduleNotes" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Reschedule Appointment</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.js"></script>
+  <script>
+    const csrfToken = "{{ csrf_token() }}";
+    const internalApiKey = "{{ INTERNAL_API_KEY }}";
+    let appointmentSubmitting = false;
+
+    function showAppointmentModal() {
+      const modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
+      modal.show();
+    }
+
+    function viewAppointment(id) {
+      fetch(`/api/appointments/${id}?include_history=true`)
+        .then(response => response.json())
+        .then(data => {
+          let html = `<strong>Type:</strong> ${data.type}<br>` +
+                     `<strong>Status:</strong> ${data.status}<br>` +
+                     `<strong>Date:</strong> ${data.start_time ? data.start_time.slice(0, 10) : ''}<br>` +
+                     `<strong>Time:</strong> ${data.start_time ? data.start_time.slice(11, 16) : ''} - ${data.end_time ? data.end_time.slice(11, 16) : ''}<br>` +
+                     `<strong>Technician:</strong> ${data.technician_name || 'Not Assigned'}<br>` +
+                     `<strong>Notes:</strong> ${data.notes || ''}<br>` +
+                     `<strong>Job Number:</strong> ${data.job_number || ''}<br>`;
+          // Build history HTML inline
+          if (data.history && data.history.length > 0) {
+            html += `<div style='margin-top:1em;'><h6>History</h6><ul class='list-group list-group-flush bg-dark'>`;
+            data.history.forEach(h => {
+              let details = '';
+              try { details = JSON.parse(h.details); } catch (e) { details = h.details; }
+              html += `<li class='list-group-item bg-dark text-light'>` +
+                `<strong>${h.action.charAt(0).toUpperCase() + h.action.slice(1)}</strong> - ${h.created_at}<br>` +
+                (typeof details === 'object' ? Object.entries(details).map(([k,v]) => `<em>${k}:</em> ${v}`).join(', ') : details) +
+                `</li>`;
+            });
+            html += `</ul></div>`;
+          }
+          document.getElementById('appointmentDetails').innerHTML = html;
+          new bootstrap.Modal(document.getElementById('viewAppointmentModal')).show();
+        })
+        .catch(error => {
+          alert('Failed to load appointment details');
+        });
+    }
+
+    function getStatusColor(status) {
+      const colors = {
+        'scheduled': 'primary',
+        'completed': 'success',
+        'cancelled': 'danger',
+        'pending': 'warning'
+      };
+      return colors[status.toLowerCase()] || 'secondary';
+    }
+
+    function rescheduleAppointment(id) {
+      // Fetch appointment details and pre-fill the modal
+      fetch(`/api/appointments/${id}`)
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('rescheduleAppointmentId').value = id;
+          document.getElementById('rescheduleDate').value = data.start_time ? data.start_time.slice(0, 10) : '';
+          // Guess time slot from start_time
+          let slot = 'all_day';
+          if (data.start_time && data.end_time) {
+            const start = data.start_time.slice(11, 16);
+            const end = data.end_time.slice(11, 16);
+            if (start === '08:00' && end === '11:00') slot = 'morning';
+            else if (start === '14:00' && end === '16:00') slot = 'afternoon';
+            else if (start === '18:00' && end === '20:00') slot = 'evening';
+            else if (start === '08:00' && end === '20:00') slot = 'all_day';
+          }
+          document.getElementById('rescheduleTimeSlot').value = slot;
+          document.getElementById('rescheduleNotes').value = data.notes || '';
+          new bootstrap.Modal(document.getElementById('rescheduleModal')).show();
+        })
+        .catch(error => {
+          alert('Failed to load appointment details for rescheduling');
+        });
+    }
+
+    function cancelAppointment(id) {
+      if (confirm('Are you sure you want to cancel this appointment?')) {
+        fetch(`/api/appointments/${id}/cancel`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+            'X-Internal-API-Key': internalApiKey
+          },
+          body: '{}' // Always send an empty JSON object
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert(data.error || 'Failed to cancel appointment');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Failed to cancel appointment');
+        });
+      }
+    }
+
+    // Handle appointment form submission
+    document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (appointmentSubmitting) return;
+      appointmentSubmitting = true;
+      const formData = new FormData(this);
+      const data = {
+        type: formData.get('type'),
+        date: formData.get('date'),
+        time_slot: formData.get('time_slot'),
+        notes: formData.get('notes'),
+        sms_reminder: formData.get('sms_reminder') === 'on'
+      };
+
+      fetch('/api/appointments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
+          'X-Internal-API-Key': internalApiKey
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.text().then(text => { throw new Error(text); });
+        }
+        return response.json();
+      })
+      .then(data => {
+        appointmentSubmitting = false;
+        if (data.success) {
+          location.reload();
+        } else {
+          alert(data.error || 'Failed to schedule appointment');
+        }
+      })
+      .catch(error => {
+        appointmentSubmitting = false;
+        console.error('Error:', error);
+        alert('Failed to schedule appointment: ' + error.message);
+      });
+    });
+
+    document.getElementById('rescheduleForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const id = document.getElementById('rescheduleAppointmentId').value;
+      const data = {
+        date: document.getElementById('rescheduleDate').value,
+        time_slot: document.getElementById('rescheduleTimeSlot').value,
+        notes: document.getElementById('rescheduleNotes').value
+      };
+      fetch(`/api/appointments/${id}/reschedule`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
+          'X-Internal-API-Key': internalApiKey
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.text().then(text => { throw new Error(text); });
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          location.reload();
+        } else {
+          alert(data.error || 'Failed to reschedule appointment');
+        }
+      })
+      .catch(error => {
+        alert('Failed to reschedule appointment: ' + error.message);
+      });
+    });
+
+    // Initialize FullCalendar
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+      if (calendarEl) {
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth',
+          headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          },
+          events: function(fetchInfo, successCallback, failureCallback) {
+            // Fetch events from API with correct date range
+            fetch(`/api/appointments?start=${fetchInfo.startStr}&end=${fetchInfo.endStr}`)
+              .then(response => response.json())
+              .then(data => {
+                if (data.appointments) {
+                  const events = data.appointments.map(appt => ({
+                    id: appt.id,
+                    title: appt.type.charAt(0).toUpperCase() + appt.type.slice(1),
+                    start: appt.start_time,
+                    end: appt.end_time,
+                    extendedProps: {
+                      status: appt.status,
+                      notes: appt.notes,
+                      sms_reminder: appt.sms_reminder,
+                      type: appt.type
+                    },
+                    color: appt.status === 'cancelled' ? '#FF3B30' : (appt.status === 'completed' ? '#34C759' : '#0A84FF')
+                  }));
+                  successCallback(events);
+                } else {
+                  successCallback([]);
+                }
+              })
+              .catch(failureCallback);
+          },
+          selectable: true,
+          select: function(info) {
+            document.getElementById('appointmentStart').value = info.startStr;
+            document.getElementById('appointmentEnd').value = info.endStr;
+            new bootstrap.Modal(document.getElementById('appointmentModal')).show();
+          },
+          eventClick: function(info) {
+            showAppointmentDetails(info.event);
+          },
+          eventTimeFormat: {
+            hour: 'numeric',
+            minute: '2-digit',
+            meridiem: 'short'
+          },
+          height: 'auto',
+          themeSystem: 'bootstrap5',
+          eventColor: '#0d6efd',
+          eventTextColor: '#ffffff',
+          dayMaxEvents: true,
+          nowIndicator: true,
+          businessHours: {
+            daysOfWeek: [1, 2, 3, 4, 5],
+            startTime: '08:00',
+            endTime: '20:00'
+          }
+        });
+        window.calendar = calendar;
+        calendar.render();
+      }
+    });
+  </script>
+</body>
+</html> 

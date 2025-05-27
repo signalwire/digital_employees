@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zen Cable - Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body class="bg-dark text-light">
+    <div class="container">
+        <div class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-md-6 col-lg-4">
+                <div class="card bg-dark border-secondary">
+                    <div class="card-body p-5">
+                        <h2 class="text-center mb-4">Zen Cable</h2>
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                        <form method="post">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control bg-dark text-light" 
+                                       id="email" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control bg-dark text-light" 
+                                       id="password" name="password" required>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                                <label class="form-check-label" for="remember">Remember me</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Login</button>
+                        </form>
+                        <div class="text-center mt-3">
+                            <a href="#" id="forgotPasswordLink" class="text-light">Forgot Password?</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title">Reset Password</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="step1">
+                        <p>Enter your email address to receive a verification code.</p>
+                        <form id="forgotPasswordForm">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <div class="mb-3">
+                                <label for="resetEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control bg-dark text-light" id="resetEmail" name="email" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Send Code</button>
+                        </form>
+                    </div>
+                    <div id="step2" style="display:none;">
+                        <p>Enter the verification code sent to your phone.</p>
+                        <form id="verifyCodeForm">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <div class="mb-3">
+                                <input type="text" class="form-control bg-dark text-light" id="verificationCode" name="code" required pattern="[0-9]{6}" maxlength="6" placeholder="Enter 6-digit code">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Verify Code</button>
+                        </form>
+                    </div>
+                    <div id="step3" style="display:none;">
+                        <p>Set your new password.</p>
+                        <form id="newPasswordForm">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <div class="mb-3">
+                                <label for="newPassword" class="form-label">New Password</label>
+                                <input type="password" class="form-control bg-dark text-light" id="newPassword" name="new_password" required minlength="8">
+                                <small class="text-muted">Minimum 8 characters</small>
+                            </div>
+                            <div class="mb-3">
+                                <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                                <input type="password" class="form-control bg-dark text-light" id="confirmPassword" name="confirm_password" required minlength="8">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Reset Password</button>
+                        </form>
+                    </div>
+                    <div id="errorMessage" class="alert alert-danger mt-3" style="display:none;"></div>
+                    <div id="successMessage" class="alert alert-success mt-3" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+            const forgotPasswordModal = new bootstrap.Modal(document.getElementById('forgotPasswordModal'));
+            const step1 = document.getElementById('step1');
+            const step2 = document.getElementById('step2');
+            const step3 = document.getElementById('step3');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            let mfaId = null;
+
+            forgotPasswordLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                forgotPasswordModal.show();
+            });
+
+            document.getElementById('forgotPasswordForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = document.getElementById('resetEmail').value;
+                fetch('/api/password/reset/initiate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        showError(data.error);
+                    } else {
+                        mfaId = data.mfa_id;
+                        step1.style.display = 'none';
+                        step2.style.display = 'block';
+                        showSuccess('Verification code sent!');
+                    }
+                })
+                .catch(error => {
+                    showError('Failed to send verification code.');
+                });
+            });
+
+            document.getElementById('verifyCodeForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const code = document.getElementById('verificationCode').value;
+                fetch('/api/verify-mfa', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: code, mfa_id: mfaId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        showError(data.error);
+                    } else {
+                        step2.style.display = 'none';
+                        step3.style.display = 'block';
+                        showSuccess('Code verified!');
+                    }
+                })
+                .catch(error => {
+                    showError('Failed to verify code.');
+                });
+            });
+
+            document.getElementById('newPasswordForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                if (newPassword !== confirmPassword) {
+                    showError('Passwords do not match.');
+                    return;
+                }
+                fetch('/api/password/reset/complete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ new_password: newPassword })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        showError(data.error);
+                    } else {
+                        showSuccess('Password reset successfully!');
+                        setTimeout(() => {
+                            forgotPasswordModal.hide();
+                            window.location.reload();
+                        }, 2000);
+                    }
+                })
+                .catch(error => {
+                    showError('Failed to reset password.');
+                });
+            });
+
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+            }
+
+            function showSuccess(message) {
+                successMessage.textContent = message;
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html> 

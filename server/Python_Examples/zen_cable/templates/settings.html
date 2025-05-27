@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zen Cable - Settings</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
+</head>
+<body class="bg-dark text-light">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary">
+    <div class="container">
+      <a class="navbar-brand" href="#">Zen Cable</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('appointments') }}">Appointments</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('billing') }}">Billing</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="{{ url_for('settings') }}">Settings</a>
+          </li>
+        </ul>
+        <div class="d-flex">
+          <span class="navbar-text me-3">
+            Welcome, {{ customer.first_name }} {{ customer.last_name }} (ID: {{ customer.id }})
+          </span>
+          <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card bg-dark border-secondary mb-4">
+          <div class="card-header border-secondary">
+            <h5 class="card-title mb-0">Profile Settings</h5>
+          </div>
+          <div class="card-body">
+            <form id="profileForm">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <div class="mb-3">
+                <label class="form-label">First Name</label>
+                <input type="text" class="form-control bg-dark text-light" name="first_name" 
+                       value="{{ customer.first_name }}" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Last Name</label>
+                <input type="text" class="form-control bg-dark text-light" name="last_name" 
+                       value="{{ customer.last_name }}" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Phone Number</label>
+                <input type="tel" class="form-control bg-dark text-light" name="phone" id="phone" required pattern="^\+\d{10,15}$" placeholder="+12345678900" value="{{ customer.phone }}" />
+                <div class="form-text text-muted">Phone number must be in E.164 format (e.g., +12345678900)</div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Address</label>
+                <textarea class="form-control bg-dark text-light" name="address" rows="3" required>{{ customer.address }}</textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Update Profile</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card bg-dark border-secondary">
+          <div class="card-header border-secondary">
+            <h5 class="card-title mb-0">Password Settings</h5>
+          </div>
+          <div class="card-body">
+            <form id="passwordForm">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <div class="mb-3">
+                <label class="form-label">Current Password</label>
+                <input type="password" class="form-control bg-dark text-light" name="current_password" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">New Password</label>
+                <input type="password" class="form-control bg-dark text-light" name="new_password" 
+                       required minlength="8" />
+                <small class="text-muted">Minimum 8 characters</small>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Confirm New Password</label>
+                <input type="password" class="form-control bg-dark text-light" name="confirm_password" 
+                       required minlength="8" />
+              </div>
+              <button type="submit" class="btn btn-primary">Change Password</button>
+            </form>
+
+            <hr class="border-secondary my-4">
+
+            <h6>Reset Password with MFA</h6>
+            <p class="text-muted">We'll send a verification code to your phone number.</p>
+            <button class="btn btn-outline-primary" onclick="initiatePasswordReset()">
+              Reset Password with MFA
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-6">
+        <div class="card bg-dark border-secondary mb-4">
+          <div class="card-header border-secondary">
+            <h5 class="card-title mb-0">Communication Settings</h5>
+          </div>
+          <div class="card-body">
+            <div class="mb-4">
+              <h6>Test SMS</h6>
+              <p class="text-muted">Send a test SMS to verify your phone number is working correctly.</p>
+              <button class="btn btn-outline-primary" id="testSmsBtn">Send Test SMS</button>
+            </div>
+            <div class="mb-4">
+              <h6>Test MFA</h6>
+              <p class="text-muted">Test the Multi-Factor Authentication system.</p>
+              <button class="btn btn-outline-primary" id="testMfaBtn">Send Test MFA Code</button>
+              <button class="btn btn-outline-success ms-2" id="verifyMfaBtn">Verify MFA</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MFA Verification Modal -->
+  <div class="modal fade" id="mfaModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title">Verify Your Identity</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p>Enter the verification code sent to your phone.</p>
+          <form id="mfaForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-3">
+              <input type="text" class="form-control bg-dark text-light" name="verification_code" id="verificationCode"
+                     required pattern="[0-9]{6}" maxlength="6" placeholder="Enter 6-digit code" />
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Verify</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Password Modal -->
+  <div class="modal fade" id="newPasswordModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title">Set New Password</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="resetPasswordForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-3">
+              <label class="form-label">New Password</label>
+              <input type="password" class="form-control bg-dark text-light" name="new_password" 
+                     required minlength="8" />
+              <small class="text-muted">Minimum 8 characters</small>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Confirm New Password</label>
+              <input type="password" class="form-control bg-dark text-light" name="confirm_password" 
+                     required minlength="8" />
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Reset Password</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.getElementById('profileForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const data = {
+        first_name: formData.get('first_name'),
+        last_name: formData.get('last_name'),
+        phone: formData.get('phone'),
+        address: formData.get('address')
+      };
+
+      fetch('/api/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          alert(data.error);
+        } else {
+          alert('Profile updated successfully');
+          location.reload();
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to update profile');
+      });
+    });
+
+    document.getElementById('passwordForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      if (formData.get('new_password') !== formData.get('confirm_password')) {
+        alert('Passwords do not match');
+        return;
+      }
+
+      const data = {
+        current_password: formData.get('current_password'),
+        new_password: formData.get('new_password')
+      };
+
+      fetch('/api/password', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          alert(data.error);
+        } else {
+          alert('Password changed successfully');
+          this.reset();
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to change password');
+      });
+    });
+
+    function initiatePasswordReset() {
+      fetch('/api/password/reset/initiate', {
+        method: 'POST'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          alert(data.error);
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('mfaModal'));
+          modal.show();
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to initiate password reset');
+      });
+    }
+
+    document.getElementById('mfaForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const code = document.getElementById('verificationCode').value;
+      fetch('/api/verify-mfa', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code: code })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('MFA verification successful!');
+          var modal = bootstrap.Modal.getInstance(document.getElementById('mfaModal'));
+          modal.hide();
+        } else {
+          alert('Invalid MFA code. Please try again.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to verify MFA code');
+      });
+    });
+
+    document.getElementById('resetPasswordForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      if (formData.get('new_password') !== formData.get('confirm_password')) {
+        alert('Passwords do not match');
+        return;
+      }
+
+      const data = {
+        new_password: formData.get('new_password')
+      };
+
+      fetch('/api/password/reset/complete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          alert(data.error);
+        } else {
+          alert('Password reset successfully');
+          bootstrap.Modal.getInstance(document.getElementById('newPasswordModal')).hide();
+          location.reload();
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to reset password');
+      });
+    });
+
+    document.getElementById('testSmsBtn').addEventListener('click', function() {
+      fetch('/api/test-sms', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Test SMS sent successfully!');
+        } else {
+          alert('Failed to send test SMS: ' + (data.error || 'Unknown error'));
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to send test SMS');
+      });
+    });
+
+    document.getElementById('testMfaBtn').addEventListener('click', function() {
+      fetch('/api/test-mfa', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Test MFA code sent! Check your phone.');
+          var modal = new bootstrap.Modal(document.getElementById('mfaModal'));
+          modal.show();
+        } else {
+          alert('Failed to send MFA code: ' + (data.error || 'Unknown error'));
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to send MFA code');
+      });
+    });
+
+    // Remove the separate verify button handler since verification is now part of the test flow
+    document.getElementById('verifyMfaBtn').style.display = 'none';
+  </script>
+</body>
+</html>

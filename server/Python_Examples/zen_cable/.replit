@@ -1,0 +1,19 @@
+modules = ["python-3.12", "web", "bash"]
+run = "export ENABLE_CSRF=false && python3 init_db.py && python3 init_test_data.py && python3 app.py"
+
+[nix]
+channel = "stable-24_05"
+
+[unitTest]
+language = "python3"
+
+[gitHubImport]
+requiredFiles = [".replit", "replit.nix"]
+
+[deployment]
+run = ["sh", "-c", "export ENABLE_CSRF=false && python3 init_db.py && python3 init_test_data.py && python3 app.py"]
+deploymentTarget = "cloudrun"
+
+[[ports]]
+localPort = 8080
+externalPort = 80

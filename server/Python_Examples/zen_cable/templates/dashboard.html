@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zen Cable - Customer Dashboard</title>
+
+  <!-- Bootstrap & FullCalendar CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css" rel="stylesheet" />
+
+  <!-- Your custom styles -->
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
+
+  <!-- SignalWire Theme -->
+  <style>
+    :root {
+      --signalwire-blue: #0A84FF;
+      --signalwire-dark-blue: #004999;
+      --signalwire-light-blue: #E6F0FF;
+      --signalwire-gray: #333333;
+    }
+
+    body {
+      background-color: var(--signalwire-light-blue) !important;
+      color: var(--signalwire-gray) !important;
+    }
+
+    .navbar {
+      background-color: var(--signalwire-blue) !important;
+      border-bottom: 2px solid var(--signalwire-dark-blue) !important;
+    }
+
+    .navbar-brand, .nav-link {
+      color: white !important;
+    }
+
+    .nav-link:hover {
+      color: var(--signalwire-light-blue) !important;
+    }
+
+    .card {
+      background-color: white !important;
+      border: 1px solid var(--signalwire-blue) !important;
+      box-shadow: 0 2px 4px rgba(10, 132, 255, 0.1);
+    }
+
+    .card-title {
+      color: var(--signalwire-dark-blue) !important;
+    }
+
+    .btn-primary {
+      background-color: var(--signalwire-blue) !important;
+      border-color: var(--signalwire-blue) !important;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--signalwire-dark-blue) !important;
+      border-color: var(--signalwire-dark-blue) !important;
+    }
+
+    .btn-outline-primary {
+      color: var(--signalwire-blue) !important;
+      border-color: var(--signalwire-blue) !important;
+    }
+
+    .btn-outline-primary:hover {
+      background-color: var(--signalwire-blue) !important;
+      color: white !important;
+    }
+
+    .btn-warning {
+      background-color: #FF9500 !important;
+      border-color: #FF9500 !important;
+      color: white !important;
+    }
+
+    .btn-warning:hover {
+      background-color: #CC7700 !important;
+      border-color: #CC7700 !important;
+      color: white !important;
+    }
+
+    .btn-danger {
+      background-color: #FF3B30 !important;
+      border-color: #FF3B30 !important;
+    }
+
+    .btn-danger:hover {
+      background-color: #CC2F26 !important;
+      border-color: #CC2F26 !important;
+    }
+
+    .modal-content {
+      background-color: white !important;
+      color: var(--signalwire-gray) !important;
+    }
+
+    .modal-header {
+      background-color: var(--signalwire-blue) !important;
+      color: white !important;
+      border-bottom: 2px solid var(--signalwire-dark-blue) !important;
+    }
+
+    .modal-title {
+      color: white !important;
+    }
+
+    .form-control, .form-select {
+      border-color: var(--signalwire-blue) !important;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: var(--signalwire-dark-blue) !important;
+      box-shadow: 0 0 0 0.25rem rgba(10, 132, 255, 0.25) !important;
+    }
+
+    /* Status indicators */
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .status-indicator.online { background-color: #34C759; }
+    .status-indicator.offline { background-color: #FF3B30; }
+    .status-indicator.rebooting { background-color: #FF9500; }
+    .status-indicator.initializing { background-color: var(--signalwire-blue); }
+
+    .online { color: #34C759; }
+    .offline { color: #FF3B30; }
+    .rebooting { color: #FF9500; }
+    .initializing { color: var(--signalwire-blue); }
+
+    /* Calendar customization */
+    .fc-event {
+      background-color: var(--signalwire-blue) !important;
+      border-color: var(--signalwire-dark-blue) !important;
+    }
+
+    .fc-event:hover {
+      background-color: var(--signalwire-dark-blue) !important;
+    }
+
+    .fc-button-primary {
+      background-color: var(--signalwire-blue) !important;
+      border-color: var(--signalwire-blue) !important;
+    }
+
+    .fc-button-primary:hover {
+      background-color: var(--signalwire-dark-blue) !important;
+      border-color: var(--signalwire-dark-blue) !important;
+    }
+
+    .fc-button-primary:not(:disabled):active,
+    .fc-button-primary:not(:disabled).fc-button-active {
+      background-color: var(--signalwire-dark-blue) !important;
+      border-color: var(--signalwire-dark-blue) !important;
+    }
+
+    .fc-today {
+      background-color: var(--signalwire-light-blue) !important;
+    }
+
+    /* Alert customization */
+    .alert-success {
+      background-color: #34C759 !important;
+      border-color: #34C759 !important;
+      color: white !important;
+    }
+
+    .alert-danger {
+      background-color: #FF3B30 !important;
+      border-color: #FF3B30 !important;
+      color: white !important;
+    }
+
+    .alert-warning {
+      background-color: #FF9500 !important;
+      border-color: #FF9500 !important;
+      color: white !important;
+    }
+
+    .alert-info {
+      background-color: var(--signalwire-blue) !important;
+      border-color: var(--signalwire-blue) !important;
+      color: white !important;
+    }
+  </style>
+</head>
+<body class="bg-dark text-light">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary">
+    <div class="container">
+      <a class="navbar-brand" href="#">Zen Cable</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="{{ url_for('dashboard') }}">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('appointments') }}">Appointments</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('billing') }}">Billing</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('settings') }}">Settings</a>
+          </li>
+        </ul>
+        <div class="d-flex">
+          <span class="navbar-text me-3">
+            Welcome, {{ customer.first_name }} {{ customer.last_name }} (ID: {{ customer.id }})
+          </span>
+          <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <!-- Account Balance, Modem Status & Active Services -->
+    <div class="row mb-4">
+      <!-- Account Balance -->
+      <div class="col-md-4">
+        <div class="card bg-white text-dark border-secondary">
+          <div class="card-body">
+            <h5 class="card-title">Account Balance</h5>
+            <h2 id="balance" class="text-{{ 'success' if billing.status=='paid' else 'warning' }}">
+              ${{ "%.2f"|format(billing.amount) }}
+            </h2>
+            <p class="text-muted">Due: {{ billing.due_date }}</p>
+            <button class="btn btn-primary w-100" onclick="showPaymentModal()">Make Payment</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modem Status -->
+      <div class="col-md-4">
+        <div class="card bg-white text-dark border-secondary">
+          <div class="card-body">
+            <h5 class="card-title">Modem Status</h5>
+            <div class="d-flex align-items-center mb-2">
+              <div id="modemStatus" class="status-indicator {{ modem.status }} me-2"></div>
+              <h3 id="modemStatusText" class="mb-0 {{ modem.status }}">
+                {{ modem.status|title }}
+              </h3>
+            </div>
+            <p id="macAddress" class="text-muted">MAC: {{ modem.mac_address }}</p>
+            <div class="d-flex gap-2">
+              <button id="rebootModem" class="btn btn-outline-primary flex-grow-1" onclick="updateModemStatus('rebooting')">
+                Reboot Modem
+              </button>
+              <button id="swapModem" class="btn btn-outline-warning flex-grow-1" onclick="showSwapModal()">
+                Swap Modem
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Services -->
+      <div class="col-md-4">
+        <div class="card bg-white text-dark border-secondary">
+          <div class="card-body">
+            <h5 class="card-title">Active Services</h5>
+            <ul class="list-unstyled">
+              {% if services %}
+                {% for service in services|unique(attribute='id') %}
+                  <li class="mb-2">
+                    <div class="d-flex justify-content-between">
+                      <span>{{ service.name }}</span>
+                      <span>${{ "%.2f"|format(service.price) }}/mo</span>
+                    </div>
+                  </li>
+                {% endfor %}
+              {% else %}
+                <li>No active services found.</li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Modal -->
+  <div class="modal fade" id="paymentModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title">Make Payment</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="paymentForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-3">
+              <label class="form-label">Amount</label>
+              <input type="number" class="form-control bg-dark text-light" value="{{ '%.2f' % billing.amount }}" step="0.01" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Payment Method</label>
+              <select class="form-select bg-dark text-light" required>
+                <option value="credit_card">Credit Card</option>
+                <option value="debit_card">Debit Card</option>
+                <option value="bank_transfer">Bank Transfer</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Submit Payment</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Appointment Modal -->
+  <div class="modal fade" id="appointmentModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title">Schedule Appointment</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="appointmentForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" id="appointmentStart" name="start">
+            <input type="hidden" id="appointmentEnd" name="end">
+            <div class="mb-3">
+              <label class="form-label">Appointment Type</label>
+              <select class="form-select bg-dark text-light" name="type" required>
+                <option value="installation">Installation</option>
+                <option value="repair">Repair</option>
+                <option value="upgrade">Upgrade</option>
+                <option value="modem_swap">Modem Swap</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Time Slot</label>
+              <select class="form-select bg-dark text-light" name="time_slot" required>
+                <option value="morning">Morning (08:00 AM - 11:00 AM)</option>
+                <option value="afternoon">Afternoon (02:00 PM - 04:00 PM)</option>
+                <option value="evening">Evening (06:00 PM - 08:00 PM)</option>
+                <option value="all_day">All Day (08:00 AM - 08:00 PM)</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Notes</label>
+              <textarea class="form-control bg-dark text-light" name="notes" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Schedule Appointment</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modem Swap Modal -->
+  <div class="modal fade" id="swapModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title">Swap Modem</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="swapForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-3">
+              <label class="form-label">Make</label>
+              <input type="text" class="form-control bg-dark text-light" name="make" required 
+                     placeholder="e.g., Motorola, Netgear, etc." />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Model</label>
+              <input type="text" class="form-control bg-dark text-light" name="model" required 
+                     placeholder="e.g., MB8600, CM1000, etc." />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">MAC Address</label>
+              <input type="text" class="form-control bg-dark text-light" name="mac_address" required 
+                     pattern="^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$"
+                     placeholder="XX:XX:XX:XX:XX:XX" />
+              <div class="form-text text-muted">Format: XX:XX:XX:XX:XX:XX (where X is a hexadecimal digit)</div>
+            </div>
+            <button type="submit" class="btn btn-warning w-100">Update Modem</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Appointment Details Modal -->
+  <div class="modal fade" id="appointmentDetailsModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title">Appointment Details</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label fw-bold">Type</label>
+            <p id="appointmentType" class="mb-2"></p>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Status</label>
+            <p id="appointmentStatus" class="mb-2"></p>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Date & Time</label>
+            <p id="appointmentDateTime" class="mb-2"></p>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Notes</label>
+            <p id="appointmentNotes" class="mb-2"></p>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">SMS Reminder</label>
+            <p id="appointmentSmsReminder" class="mb-2"></p>
+          </div>
+          <div class="d-flex gap-2">
+            <button id="rescheduleAppointment" class="btn btn-primary flex-grow-1">Reschedule</button>
+            <button id="cancelAppointment" class="btn btn-danger flex-grow-1">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.js"></script>
+  <script>
+    const csrfToken = "{{ csrf_token() }}";
+    const internalApiKey = "{{ INTERNAL_API_KEY }}";
+
+    // Initialize FullCalendar
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        events: '/api/appointments',
+        selectable: true,
+        select: function(info) {
+          document.getElementById('appointmentStart').value = info.startStr;
+          document.getElementById('appointmentEnd').value = info.endStr;
+          new bootstrap.Modal(document.getElementById('appointmentModal')).show();
+        },
+        eventClick: function(info) {
+          showAppointmentDetails(info.event);
+        },
+        eventTimeFormat: {
+          hour: 'numeric',
+          minute: '2-digit',
+          meridiem: 'short'
+        },
+        height: 'auto',
+        themeSystem: 'bootstrap5',
+        eventColor: '#0d6efd',
+        eventTextColor: '#ffffff',
+        dayMaxEvents: true,
+        nowIndicator: true,
+        businessHours: {
+          daysOfWeek: [1, 2, 3, 4, 5],
+          startTime: '08:00',
+          endTime: '20:00'
+        }
+      });
+      calendar.render();
+    });
+
+    // Update Modem Status
+    function updateModemStatus(status) {
+      const statusBadge = document.getElementById('modemStatus');
+      const statusText = document.getElementById('modemStatusText');
+      const rebootBtn = document.getElementById('rebootModem');
+      const allStates = ['online', 'offline', 'rebooting', 'initializing'];
+
+      // Clear old classes
+      allStates.forEach(s => {
+        statusBadge.classList.remove(s);
+        statusText.classList.remove(s);
+      });
+
+      // Apply new classes and text
+      statusBadge.classList.add(status);
+      statusText.classList.add(status);
+      statusText.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+
+      if (status === 'rebooting') {
+        rebootBtn.disabled = true;
+        rebootBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Rebooting...';
+
+        // Poll until online
+        const poll = setInterval(() => {
+          fetch('/api/modem/status')
+            .then(res => res.json())
+            .then(data => {
+              if (data.status === 'online') {
+                clearInterval(poll);
+                updateModemStatus('online');
+                rebootBtn.disabled = false;
+                rebootBtn.textContent = 'Reboot Modem';
+              }
+            })
+            .catch(error => console.error('Error polling modem status:', error));
+        }, 5000);
+      } else {
+        rebootBtn.disabled = false;
+        rebootBtn.textContent = 'Reboot Modem';
+      }
+    }
+
+    // Function to poll modem status dynamically
+    function pollModemStatus() {
+      fetch('/api/modem/status')
+        .then(response => response.json())
+        .then(data => {
+          if (data.status) {
+            const statusBadge = document.getElementById('modemStatus');
+            const statusText = document.getElementById('modemStatusText');
+            const allStates = ['online', 'offline', 'rebooting', 'initializing'];
+
+            // Clear old classes
+            allStates.forEach(s => {
+              statusBadge.classList.remove(s);
+              statusText.classList.remove(s);
+            });
+
+            // Apply new classes and text
+            statusBadge.classList.add(data.status);
+            statusText.classList.add(data.status);
+            statusText.textContent = data.status.charAt(0).toUpperCase() + data.status.slice(1);
+
+            // Update MAC address
+            if (data.mac_address) {
+              document.getElementById('macAddress').textContent = 'MAC: ' + data.mac_address;
+            }
+          }
+        })
+        .catch(error => console.error('Error fetching modem status:', error));
+    }
+
+    // Function to poll balance dynamically
+    function pollBalance() {
+      fetch('/api/billing/balance')
+        .then(response => response.json())
+        .then(data => {
+          if (data.balance !== undefined) {
+            const balanceElement = document.getElementById('balance');
+            balanceElement.textContent = `$${data.balance.toFixed(2)}`;
+            balanceElement.className = data.balance <= 0 ? 'text-success' : 'text-warning';
+          }
+        })
+        .catch(error => console.error('Error fetching balance:', error));
+    }
+
+    // Poll every 5 seconds
+    setInterval(pollModemStatus, 5000);
+    setInterval(pollBalance, 5000);
+
+    // Payment modal
+    function showPaymentModal() {
+      new bootstrap.Modal(document.getElementById('paymentModal')).show();
+    }
+
+    document.getElementById('paymentForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const amount = document.querySelector('#paymentForm input[type="number"]').value;
+      const data = {
+        amount: parseFloat(amount),
+        payment_method: 'credit_card'
+      };
+
+      fetch('/api/payments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Internal-API-Key': internalApiKey,
+          'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          alert(data.error);
+        } else {
+          location.reload();
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to process payment');
+      });
+    });
+
+    // Update appointment form handler to include time_slot and credentials: 'include'
+    document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const data = {
+        type: formData.get('type'),
+        date: new Date(formData.get('start')).toISOString().split('T')[0],
+        time_slot: formData.get('time_slot'),
+        notes: formData.get('notes')
+      };
+
+      fetch('/api/appointments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Internal-API-Key': internalApiKey,
+          'X-CSRFToken': csrfToken
+        },
+        credentials: 'include',
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.text().then(text => { throw new Error(text); });
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.error) {
+          alert(data.error);
+        } else {
+          calendar.refetchEvents();
+          bootstrap.Modal.getInstance(document.getElementById('appointmentModal')).hide();
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to schedule appointment: ' + error.message);
+      });
+    });
+
+    // Add these functions to your existing JavaScript
+    function showSwapModal() {
+      const swapModal = new bootstrap.Modal(document.getElementById('swapModal'));
+      swapModal.show();
+    }
+
+    document.getElementById('swapForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const data = {
+        make: formData.get('make'),
+        model: formData.get('model'),
+        mac_address: formData.get('mac_address')
+      };
+
+      try {
+        const response = await fetch('/api/modem/swap', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Internal-API-Key': internalApiKey,
+            'X-CSRFToken': csrfToken
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          document.getElementById('macAddress').textContent = `MAC: ${result.mac_address}`;
+          bootstrap.Modal.getInstance(document.getElementById('swapModal')).hide();
+          showAlert('success', 'Modem information updated successfully!');
+        } else {
+          const error = await response.json();
+          showAlert('danger', error.error || 'Failed to update modem information');
+        }
+      } catch (error) {
+        showAlert('danger', 'An error occurred while updating modem information');
+      }
+    });
+
+    function showAlert(type, message) {
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3`;
+      alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      `;
+      document.body.appendChild(alertDiv);
+      setTimeout(() => alertDiv.remove(), 5000);
+    }
+
+    // Function to show appointment details
+    function showAppointmentDetails(event) {
+      // Format the date and time
+      const startDate = new Date(event.start);
+      const endDate = new Date(event.end);
+      const dateTimeStr = `${startDate.toLocaleDateString()} ${startDate.toLocaleTimeString()} - ${endDate.toLocaleTimeString()}`;
+
+      // Update modal content
+      document.getElementById('appointmentType').textContent = event.extendedProps.type || 'N/A';
+      document.getElementById('appointmentStatus').textContent = event.extendedProps.status || 'Scheduled';
+      document.getElementById('appointmentDateTime').textContent = dateTimeStr;
+      document.getElementById('appointmentNotes').textContent = event.extendedProps.notes || 'No notes';
+      document.getElementById('appointmentSmsReminder').textContent = event.extendedProps.sms_reminder ? 'Enabled' : 'Disabled';
+
+      // Set up reschedule button
+      document.getElementById('rescheduleAppointment').onclick = function() {
+        // Close details modal
+        bootstrap.Modal.getInstance(document.getElementById('appointmentDetailsModal')).hide();
+        
+        // Open appointment modal with pre-filled data
+        document.getElementById('appointmentStart').value = event.start.toISOString();
+        document.getElementById('appointmentEnd').value = event.end.toISOString();
+        document.querySelector('#appointmentForm select[name="type"]').value = event.extendedProps.type || 'installation';
+        document.querySelector('#appointmentForm select[name="time_slot"]').value = event.extendedProps.time_slot || 'morning';
+        document.querySelector('#appointmentForm textarea[name="notes"]').value = event.extendedProps.notes || '';
+        
+        // Show appointment modal
+        new bootstrap.Modal(document.getElementById('appointmentModal')).show();
+      };
+
+      // Set up cancel button
+      document.getElementById('cancelAppointment').onclick = function() {
+        if (confirm('Are you sure you want to cancel this appointment?')) {
+          fetch(`/api/appointments/${event.id}/cancel`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Internal-API-Key': internalApiKey,
+              'X-CSRFToken': csrfToken
+            },
+            credentials: 'include'
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.error) {
+              alert(data.error);
+            } else {
+              calendar.refetchEvents();
+              bootstrap.Modal.getInstance(document.getElementById('appointmentDetailsModal')).hide();
+              showAlert('success', 'Appointment cancelled successfully');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            showAlert('danger', 'Failed to cancel appointment');
+          });
+        }
+      };
+
+      // Show the modal
+      new bootstrap.Modal(document.getElementById('appointmentDetailsModal')).show();
+    }
+
+    document.getElementById('rescheduleForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const id = document.getElementById('rescheduleAppointmentId').value;
+      const data = {
+        date: document.getElementById('rescheduleDate').value,
+        time_slot: document.getElementById('rescheduleTimeSlot').value,
+        notes: document.getElementById('rescheduleNotes').value
+      };
+      fetch(`/api/appointments/${id}/reschedule`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
+          'X-Internal-API-Key': internalApiKey
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.text().then(text => { throw new Error(text); });
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          location.reload();
+        } else {
+          alert(data.error || 'Failed to reschedule appointment');
+        }
+      })
+      .catch(error => {
+        alert('Failed to reschedule appointment: ' + error.message);
+      });
+    });
+  </script>
+</body>
+</html>

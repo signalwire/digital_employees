@@ -1,0 +1,180 @@
+/* Custom styles for Zen Cable Customer Portal */
+
+/* Dark theme overrides */
+body {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+.card {
+    background-color: #2d2d2d;
+    border-color: #404040;
+}
+
+.navbar {
+    background-color: #2d2d2d !important;
+    border-bottom: 1px solid #404040;
+}
+
+/* Table styles */
+.table {
+    color: #ffffff !important;
+}
+
+.table-dark {
+    background-color: #2d2d2d !important;
+}
+
+.table-dark td, 
+.table-dark th {
+    border-color: #404040 !important;
+    color: #ffffff !important;
+}
+
+.table-dark thead th {
+    background-color: #1a1a1a !important;
+    color: #ffffff !important;
+    border-bottom: 2px solid #404040 !important;
+}
+
+.table-dark tbody tr {
+    background-color: #2d2d2d !important;
+}
+
+.table-dark tbody tr:hover {
+    background-color: #3d3d3d !important;
+}
+
+/* Status indicators */
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.status-indicator.online {
+    background-color: #28a745;
+    box-shadow: 0 0 8px #28a745;
+}
+
+.status-indicator.offline {
+    background-color: #dc3545;
+    box-shadow: 0 0 8px #dc3545;
+}
+
+.status-indicator.rebooting {
+    background-color: #ffc107;
+    box-shadow: 0 0 8px #ffc107;
+    animation: pulse 2s infinite;
+}
+
+/* Calendar customization */
+.fc {
+    background-color: #2d2d2d;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.fc-theme-standard td, 
+.fc-theme-standard th {
+    border-color: #404040;
+}
+
+.fc-theme-standard .fc-scrollgrid {
+    border-color: #404040;
+}
+
+.fc-event {
+    background-color: #007bff;
+    border-color: #0056b3;
+}
+
+.fc-event:hover {
+    background-color: #0056b3;
+}
+
+/* Form controls */
+.form-control,
+.form-select {
+    background-color: #1a1a1a;
+    border-color: #404040;
+    color: #ffffff;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: #1a1a1a;
+    border-color: #007bff;
+    color: #ffffff;
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #007bff;
+    border-color: #0056b3;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004494;
+}
+
+.btn-outline-primary {
+    color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    border-color: #0056b3;
+}
+
+/* Animations */
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Service cards */
+.service-card {
+    transition: transform 0.2s;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Payment modal */
+.modal-content {
+    background-color: #2d2d2d;
+    border-color: #404040;
+}
+
+.modal-header {
+    border-bottom-color: #404040;
+}
+
+.modal-footer {
+    border-top-color: #404040;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .card {
+        margin-bottom: 15px;
+    }
+} 
