@@ -159,7 +159,7 @@ def register_swaig_endpoints():
         ),
         customer_id=SWAIGArgument(type="string", description="The customer's account ID", required=True),
         amount=SWAIGArgument(type="number", description="The amount to pay", required=True),
-        payment_method=SWAIGArgument(type="string", description="Payment method", enum=["credit_card", "bank_transfer", "cash"], required=False),
+        payment_method=SWAIGArgument(type="string", description="Payment method", enum=["credit_card", "bank_transfer"], required=False),
         meta_data=SWAIGArgument(type="object", description="Additional metadata", required=False),
         meta_data_token=SWAIGArgument(type="string", description="Metadata token", required=False)
     )
@@ -260,7 +260,7 @@ def register_swaig_endpoints():
             thread.start()
 
             db.close()
-            return "Modem reboot initiated. This will take about 30 seconds.", []
+            return "Modem reboot initiated. This will take about 15 seconds.", []
         except Exception as e:
             app.logger.error(f"Error in reboot_modem: {str(e)}")
             return "Error rebooting modem.", []
@@ -314,12 +314,12 @@ def register_swaig_endpoints():
             ''', (customer_id, appointment_date)).fetchone()
             if existing:
                 return f"You already have an appointment on {date}. Would you like to reschedule it?", []
-            # Set time slots
+            # Set time slots with 24-hour format for database storage
             time_slots = {
-                'morning': ('08:00 AM', '11:00 AM'),
-                'afternoon': ('02:00 PM', '04:00 PM'),
-                'evening': ('06:00 PM', '08:00 PM'),
-                'all_day': ('08:00 AM', '08:00 PM')
+                'morning': ('08:00:00', '11:00:00'),
+                'afternoon': ('14:00:00', '16:00:00'),
+                'evening': ('18:00:00', '20:00:00'),
+                'all_day': ('08:00:00', '20:00:00')
             }
             start_time, end_time = time_slots[time_slot]
             # Check if time slot is available
@@ -376,7 +376,7 @@ def register_swaig_endpoints():
                 try:
                     compat_url = f"https://{SIGNALWIRE_SPACE}.signalwire.com/api/laml/2010-04-01/Accounts/{SIGNALWIRE_PROJECT_ID}/Messages.json"
                     appointment_time = appointment['start_time']
-                    message = f"Your {appointment['type']} appointment (Job #{appointment['job_number']}) is scheduled for {appointment_time}. Call 1-800-ZEN-CABLE to reschedule."
+                    message = f"Your {appointment['type']} appointment (Job #{appointment['job_number']}) is scheduled for {appointment_time}. Call {FROM_NUMBER} to reschedule."
                     payload = {
                         "From": FROM_NUMBER,
                         "To": customer['phone'],
@@ -456,12 +456,12 @@ def register_swaig_endpoints():
             except ValueError:
                 db.close()
                 return "Invalid date format.", []
-            # Set time slots
+            # Set time slots with 24-hour format for database storage
             time_slots = {
-                'morning': ('08:00 AM', '11:00 AM'),
-                'afternoon': ('02:00 PM', '04:00 PM'),
-                'evening': ('06:00 PM', '08:00 PM'),
-                'all_day': ('08:00 AM', '08:00 PM')
+                'morning': ('08:00:00', '11:00:00'),
+                'afternoon': ('14:00:00', '16:00:00'),
+                'evening': ('18:00:00', '20:00:00'),
+                'all_day': ('08:00:00', '20:00:00')
             }
             start_time, end_time = time_slots[time_slot]
             # Check for slot conflict
@@ -515,7 +515,7 @@ def register_swaig_endpoints():
                 try:
                     compat_url = f"https://{SIGNALWIRE_SPACE}.signalwire.com/api/laml/2010-04-01/Accounts/{SIGNALWIRE_PROJECT_ID}/Messages.json"
                     appointment_time = updated_appointment['start_time']
-                    message = f"Your {updated_appointment['type']} appointment (Job #{updated_appointment['job_number']}) has been rescheduled to {appointment_time}. Call 1-800-ZEN-CABLE to reschedule."
+                    message = f"Your {updated_appointment['type']} appointment (Job #{updated_appointment['job_number']}) has been rescheduled to {appointment_time}. Call {FROM_NUMBER} to reschedule."
                     payload = {
                         "From": FROM_NUMBER,
                         "To": customer['phone'],
@@ -603,7 +603,7 @@ def register_swaig_endpoints():
                 try:
                     compat_url = f"https://{SIGNALWIRE_SPACE}.signalwire.com/api/laml/2010-04-01/Accounts/{SIGNALWIRE_PROJECT_ID}/Messages.json"
                     appointment_time = updated_appointment['start_time']
-                    message = f"Your {updated_appointment['type']} appointment (Job #{updated_appointment['job_number']}) for {appointment_time} has been cancelled. Call 1-800-ZEN-CABLE to reschedule."
+                    message = f"Your {updated_appointment['type']} appointment (Job #{updated_appointment['job_number']}) for {appointment_time} has been cancelled. Call {FROM_NUMBER} to reschedule."
                     payload = {
                         "From": FROM_NUMBER,
                         "To": customer['phone'],
@@ -958,13 +958,23 @@ def get_appointments():
 
     if not start or not end:
         return jsonify({'error': 'Start and end dates required'}), 400
+
     try:
-        start_date = datetime.strptime(start, '%Y-%m-%d')
-        end_date = datetime.strptime(end, '%Y-%m-%d')
+        # Handle both YYYY-MM-DD and ISO datetime formats
+        if 'T' in start:
+            start_date = datetime.fromisoformat(start.replace('Z', '+00:00')).date()
+        else:
+            start_date = datetime.strptime(start, '%Y-%m-%d').date()
+
+        if 'T' in end:
+            end_date = datetime.fromisoformat(end.replace('Z', '+00:00')).date()
+        else:
+            end_date = datetime.strptime(end, '%Y-%m-%d').date()
+
         if start_date > end_date or (end_date - start_date).days > 365:
             return jsonify({'error': 'Invalid date range'}), 400
-    except ValueError:
-        return jsonify({'error': 'Invalid date format. Use YYYY-MM-DD'}), 400
+    except (ValueError, TypeError) as e:
+        return jsonify({'error': f'Invalid date format: {str(e)}'}), 400
 
     valid_statuses = ['scheduled', 'completed', 'cancelled', 'pending']
     valid_types = ['installation', 'repair', 'upgrade', 'modem_swap']
@@ -989,9 +999,9 @@ def get_appointments():
         FROM appointments a
         LEFT JOIN customers c ON a.customer_id = c.id
         LEFT JOIN technicians t ON a.technician_id = t.id
-        WHERE a.customer_id = ? AND a.start_time BETWEEN ? AND ?
+        WHERE a.customer_id = ? AND date(a.start_time) BETWEEN ? AND ?
     '''
-    params = [session['customer_id'], start, end]
+    params = [session['customer_id'], start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d')]
     if status:
         query += ' AND a.status = ?'
         params.append(status)
@@ -1010,6 +1020,11 @@ def get_appointments():
     params.extend([per_page, (page - 1) * per_page])
     appointments = db.execute(query, params).fetchall()
     result = [dict(appt) for appt in appointments]
+
+    # Debug logging
+    app.logger.info(f"Found {len(result)} appointments for customer {session['customer_id']}")
+    for appt in result:
+        app.logger.info(f"Appointment: {appt['id']} - {appt['type']} on {appt['start_time']}")
 
     if include_history:
         for appt in result:
@@ -1161,7 +1176,7 @@ def simulate_modem_reboot(customer_id):
         try:
             db.execute('UPDATE modems SET status = "rebooting", last_seen = CURRENT_TIMESTAMP WHERE customer_id = ?', (customer_id,))
             db.commit()
-            time.sleep(30)
+            time.sleep(15)
             db.execute('UPDATE modems SET status = "online", last_seen = CURRENT_TIMESTAMP WHERE customer_id = ?', (customer_id,))
             db.commit()
         except Exception as e:
@@ -1368,9 +1383,9 @@ def verify_mfa():
             print(f"[MFA VERIFY] Failure: {verify_data.get('message', 'Invalid code')}")
             return jsonify({'error': verify_data.get('message', 'Invalid code')}), 400
     except Exception as e:
-        print(f"[MFA VERIFY] Exception: {str(e)}")
-        app.logger.error(f"Error verifying MFA code: {str(e)}")
-        return jsonify({'error': 'Failed to verify code'}), 500
+            print(f"[MFA VERIFY] Exception: {str(e)}")
+            app.logger.error(f"Error verifying MFA code: {str(e)}")
+            return jsonify({'error': 'Failed to verify code'}), 500
 
 @app.route('/api/payments', methods=['POST'])
 def process_payment():
@@ -1516,12 +1531,12 @@ def create_appointment():
         if existing:
             return jsonify({'error': f'You already have an appointment on {request.json["date"]}'}), 400
 
-        # Set time slots
+        # Set time slots with 24-hour format for database storage
         time_slots = {
-            'morning': ('08:00 AM', '11:00 AM'),
-            'afternoon': ('02:00 PM', '04:00 PM'),
-            'evening': ('06:00 PM', '08:00 PM'),
-            'all_day': ('08:00 AM', '08:00 PM')
+            'morning': ('08:00:00', '11:00:00'),
+            'afternoon': ('14:00:00', '16:00:00'),
+            'evening': ('18:00:00', '20:00:00'),
+            'all_day': ('08:00:00', '20:00:00')
         }
         start_time, end_time = time_slots[request.json['time_slot']]
 
@@ -1579,7 +1594,7 @@ def create_appointment():
             try:
                 compat_url = f"https://{SIGNALWIRE_SPACE}.signalwire.com/api/laml/2010-04-01/Accounts/{SIGNALWIRE_PROJECT_ID}/Messages.json"
                 appointment_time = appointment['start_time']
-                message = f"Your {appointment['type']} appointment (Job #{appointment['job_number']}) is scheduled for {appointment_time}. Call 1-800-ZEN-CABLE to reschedule."
+                message = f"Your {appointment['type']} appointment (Job #{appointment['job_number']}) is scheduled for {appointment_time}. Call {FROM_NUMBER} to reschedule."
                 payload = {
                     "From": FROM_NUMBER,
                     "To": customer['phone'],
@@ -1633,9 +1648,12 @@ def cancel_appointment(appointment_id):
         ''', (appointment_id,))
 
         # Log the cancellation
-        if request.is_json and request.json:
-            reason = request.json.get('reason', 'Customer requested cancellation')
-        else:
+        try:
+            if request.is_json and request.get_json():
+                reason = request.get_json().get('reason', 'Customer requested cancellation')
+            else:
+                reason = 'Customer requested cancellation'
+        except:
             reason = 'Customer requested cancellation'
         db.execute('''
             INSERT INTO appointment_history (appointment_id, action, details, created_at)
@@ -1661,7 +1679,7 @@ def cancel_appointment(appointment_id):
             try:
                 compat_url = f"https://{SIGNALWIRE_SPACE}.signalwire.com/api/laml/2010-04-01/Accounts/{SIGNALWIRE_PROJECT_ID}/Messages.json"
                 appointment_time = updated_appointment['start_time']
-                message = f"Your {updated_appointment['type']} appointment (Job #{updated_appointment['job_number']}) for {appointment_time} has been cancelled. Call 1-800-ZEN-CABLE to reschedule."
+                message = f"Your {updated_appointment['type']} appointment (Job #{updated_appointment['job_number']}) for {appointment_time} has been cancelled. Call {FROM_NUMBER} to reschedule."
                 payload = {
                     "From": FROM_NUMBER,
                     "To": customer['phone'],
@@ -1685,6 +1703,47 @@ def cancel_appointment(appointment_id):
         db.rollback()
         app.logger.error(f"Error cancelling appointment: {str(e)}")
         return jsonify({'error': 'Failed to cancel appointment'}), 500
+    finally:
+        db.close()
+
+@app.route('/api/appointments/<int:appointment_id>/sms-reminder', methods=['PUT'])
+@login_required
+def update_sms_reminder(appointment_id):
+    if not request.json:
+        return jsonify({'error': 'No data provided'}), 400
+
+    if 'sms_reminder' not in request.json:
+        return jsonify({'error': 'Missing sms_reminder field'}), 400
+
+    db = get_db()
+    try:
+        # Check if appointment exists and belongs to customer
+        appointment = db.execute('''
+            SELECT * FROM appointments 
+            WHERE id = ? AND customer_id = ?
+        ''', (appointment_id, session['customer_id'])).fetchone()
+
+        if not appointment:
+            return jsonify({'error': 'Appointment not found'}), 404
+
+        # Update SMS reminder setting
+        sms_reminder = bool(request.json['sms_reminder'])
+        db.execute('''
+            UPDATE appointments 
+            SET sms_reminder = ?, updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+        ''', (sms_reminder, appointment_id))
+
+        db.commit()
+
+        return jsonify({
+            'success': True,
+            'sms_reminder': sms_reminder
+        })
+    except Exception as e:
+        db.rollback()
+        app.logger.error(f"Error updating SMS reminder: {str(e)}")
+        return jsonify({'error': 'Failed to update SMS reminder setting'}), 500
     finally:
         db.close()
 
@@ -1717,12 +1776,12 @@ def reschedule_appointment(appointment_id):
         ''', (appointment_id, session['customer_id'])).fetchone()
         if not appointment:
             return jsonify({'error': 'Appointment not found'}), 404
-        # Set time slots
+        # Set time slots with 24-hour format for database storage
         time_slots = {
-            'morning': ('08:00 AM', '11:00 AM'),
-            'afternoon': ('02:00 PM', '04:00 PM'),
-            'evening': ('06:00 PM', '08:00 PM'),
-            'all_day': ('08:00 AM', '08:00 PM')
+            'morning': ('08:00:00', '11:00:00'),
+            'afternoon': ('14:00:00', '16:00:00'),
+            'evening': ('18:00:00', '20:00:00'),
+            'all_day': ('08:00:00', '20:00:00')
         }
         start_time, end_time = time_slots[request.json['time_slot']]
         # Check for slot conflict
@@ -1775,7 +1834,7 @@ def reschedule_appointment(appointment_id):
             try:
                 compat_url = f"https://{SIGNALWIRE_SPACE}.signalwire.com/api/laml/2010-04-01/Accounts/{SIGNALWIRE_PROJECT_ID}/Messages.json"
                 appointment_time = updated_appointment['start_time']
-                message = f"Your {updated_appointment['type']} appointment (Job #{updated_appointment['job_number']}) has been rescheduled to {appointment_time}. Call 1-800-ZEN-CABLE to reschedule."
+                message = f"Your {updated_appointment['type']} appointment (Job #{updated_appointment['job_number']}) has been rescheduled to {appointment_time}. Call {FROM_NUMBER} to reschedule."
                 payload = {
                     "From": FROM_NUMBER,
                     "To": customer['phone'],

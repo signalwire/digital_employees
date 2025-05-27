@@ -118,15 +118,19 @@ def init_test_data():
     for desc, status, offset in [('installation', 'completed', -120),
                                  ('repair', 'scheduled', 7),
                                  ('upgrade', 'scheduled', 14)]:
-        start = (current_date + timedelta(days=offset)).strftime('%Y-%m-%d %H:00:00')
-        end = (current_date + timedelta(days=offset)).strftime('%Y-%m-%d %H:00:00')
+        start = (current_date + timedelta(days=offset)).strftime('%Y-%m-%d %H:%M:%S')
+        end = (current_date + timedelta(days=offset, hours=2)).strftime('%Y-%m-%d %H:%M:%S')
         job_number = str(random.randint(10000, 99999))  # Generate a unique 5-digit job number
         appointments.append(
             (customer_id, desc, status, start, end, f'{desc.capitalize()} service event', job_number)
         )
+    
+    # Delete existing appointments for this customer first
+    cursor.execute('DELETE FROM appointments WHERE customer_id = ?', (customer_id,))
+    
     cursor.executemany(
         '''
-        INSERT OR IGNORE INTO appointments 
+        INSERT INTO appointments 
             (customer_id, type, status, start_time, end_time, notes, job_number)
         VALUES (?, ?, ?, ?, ?, ?, ?)
         ''', appointments

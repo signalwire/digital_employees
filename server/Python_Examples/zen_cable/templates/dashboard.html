@@ -7,7 +7,7 @@
 
   <!-- Bootstrap & FullCalendar CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.10/index.global.min.css" rel="stylesheet" />
 
   <!-- Your custom styles -->
   <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
@@ -286,6 +286,18 @@
         </div>
       </div>
     </div>
+
+    <!-- Calendar Section -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card bg-white text-dark border-secondary">
+          <div class="card-body">
+            <h5 class="card-title">Upcoming Appointments</h5>
+            <div id="calendar" style="min-height: 400px; background-color: white; color: black; padding: 10px; border-radius: 5px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Payment Modal -->
@@ -301,11 +313,11 @@
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="mb-3">
               <label class="form-label">Amount</label>
-              <input type="number" class="form-control bg-dark text-light" value="{{ '%.2f' % billing.amount }}" step="0.01" required />
+              <input type="number" class="form-control bg-dark text-light" name="amount" value="{{ '%.2f' % billing.amount }}" step="0.01" required />
             </div>
             <div class="mb-3">
               <label class="form-label">Payment Method</label>
-              <select class="form-select bg-dark text-light" required>
+              <select class="form-select bg-dark text-light" name="payment_method" required>
                 <option value="credit_card">Credit Card</option>
                 <option value="debit_card">Debit Card</option>
                 <option value="bank_transfer">Bank Transfer</option>
@@ -331,6 +343,10 @@
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="hidden" id="appointmentStart" name="start">
             <input type="hidden" id="appointmentEnd" name="end">
+            <div class="mb-3">
+              <label class="form-label">Date</label>
+              <input type="date" class="form-control bg-dark text-light" name="date" required />
+            </div>
             <div class="mb-3">
               <label class="form-label">Appointment Type</label>
               <select class="form-select bg-dark text-light" name="type" required>
@@ -405,6 +421,10 @@
         </div>
         <div class="modal-body">
           <div class="mb-3">
+            <label class="form-label fw-bold">Job Number</label>
+            <p id="appointmentJobNumber" class="mb-2"></p>
+          </div>
+          <div class="mb-3">
             <label class="form-label fw-bold">Type</label>
             <p id="appointmentType" class="mb-2"></p>
           </div>
@@ -422,7 +442,10 @@
           </div>
           <div class="mb-3">
             <label class="form-label fw-bold">SMS Reminder</label>
-            <p id="appointmentSmsReminder" class="mb-2"></p>
+            <select id="appointmentSmsReminderSelect" class="form-select bg-dark text-light">
+              <option value="true">Enabled</option>
+              <option value="false">Disabled</option>
+            </select>
           </div>
           <div class="d-flex gap-2">
             <button id="rescheduleAppointment" class="btn btn-primary flex-grow-1">Reschedule</button>
@@ -433,367 +456,600 @@
     </div>
   </div>
 
+  <!-- Reschedule Appointment Modal -->
+  <div class="modal fade" id="rescheduleModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title">Reschedule Appointment</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="rescheduleForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" id="rescheduleAppointmentId" name="appointment_id">
+            <div class="mb-3">
+              <label class="form-label">Date</label>
+              <input type="date" class="form-control bg-dark text-light" name="date" id="rescheduleDate" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Time Slot</label>
+              <select class="form-select bg-dark text-light" name="time_slot" id="rescheduleTimeSlot" required>
+                <option value="morning">Morning (8AM-11AM)</option>
+                <option value="afternoon">Afternoon (2PM-4PM)</option>
+                <option value="evening">Evening (6PM-8PM)</option>
+                <option value="all_day">All Day (8AM-8PM)</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Notes</label>
+              <textarea class="form-control bg-dark text-light" name="notes" id="rescheduleNotes" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Reschedule Appointment</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+
   <script>
     const csrfToken = "{{ csrf_token() }}";
     const internalApiKey = "{{ INTERNAL_API_KEY }}";
+    let calendar;
+    let currentAppointmentId = null;
 
-    // Initialize FullCalendar
+    // Initialize calendar when DOM is ready
     document.addEventListener('DOMContentLoaded', function() {
-      var calendarEl = document.getElementById('calendar');
-      var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        events: '/api/appointments',
-        selectable: true,
-        select: function(info) {
-          document.getElementById('appointmentStart').value = info.startStr;
-          document.getElementById('appointmentEnd').value = info.endStr;
-          new bootstrap.Modal(document.getElementById('appointmentModal')).show();
-        },
-        eventClick: function(info) {
-          showAppointmentDetails(info.event);
-        },
-        eventTimeFormat: {
-          hour: 'numeric',
-          minute: '2-digit',
-          meridiem: 'short'
-        },
-        height: 'auto',
-        themeSystem: 'bootstrap5',
-        eventColor: '#0d6efd',
-        eventTextColor: '#ffffff',
-        dayMaxEvents: true,
-        nowIndicator: true,
-        businessHours: {
-          daysOfWeek: [1, 2, 3, 4, 5],
-          startTime: '08:00',
-          endTime: '20:00'
+      // Start checking modem status immediately
+      updateModemStatus();
+      updateBalance();
+      
+      const calendarEl = document.getElementById('calendar');
+
+      if (!calendarEl) {
+        console.error('Calendar element not found');
+        return;
+      }
+
+      let retryCount = 0;
+      const maxRetries = 10;
+
+      function initializeCalendar() {
+        if (typeof FullCalendar === 'undefined') {
+          console.log('FullCalendar library not loaded yet');
+          retryCount++;
+          if (retryCount < maxRetries) {
+            setTimeout(initializeCalendar, 500);
+          } else {
+            console.error('Failed to initialize calendar after', maxRetries, 'attempts');
+            // Hide calendar section if it fails to load
+            const calendarSection = document.querySelector('.row.mb-4:last-child');
+            if (calendarSection) {
+              calendarSection.style.display = 'none';
+            }
+          }
+          return;
         }
-      });
-      calendar.render();
+
+        calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth',
+          height: 'auto',
+          headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek'
+          },
+          eventTimeFormat: {
+            hour: 'numeric',
+            minute: '2-digit',
+            meridiem: 'short'
+          },
+          events: function(fetchInfo, successCallback, failureCallback) {
+            fetch(`/api/appointments?start=${fetchInfo.startStr}&end=${fetchInfo.endStr}`)
+              .then(response => response.json())
+              .then(data => {
+                if (data.appointments) {
+                  const events = data.appointments.map(appt => ({
+                    id: appt.id,
+                    title: `${appt.type} (Job #${appt.job_number}) - ${appt.status}`,
+                    start: appt.start_time,
+                    end: appt.end_time || appt.start_time,
+                    backgroundColor: getStatusColor(appt.status),
+                    textColor: 'white'
+                  }));
+                  successCallback(events);
+                } else {
+                  failureCallback('No appointments data');
+                }
+              })
+              .catch(error => {
+                console.error('Error fetching appointments:', error);
+                failureCallback(error);
+              });
+          },
+          eventClick: function(info) {
+            viewAppointment(info.event.id);
+          },
+          dateClick: function(info) {
+            // Set the date for new appointment
+            const form = document.getElementById('appointmentForm');
+            if (form) {
+              const dateInput = form.querySelector('input[name="date"]') || document.createElement('input');
+              dateInput.type = 'hidden';
+              dateInput.name = 'date';
+              dateInput.value = info.dateStr;
+              if (!form.contains(dateInput)) {
+                form.appendChild(dateInput);
+              }
+            }
+            showAppointmentModal();
+          }
+        });
+
+        calendar.render();
+        console.log('Calendar initialized successfully');
+      }
+
+      initializeCalendar();
     });
 
-    // Update Modem Status
-    function updateModemStatus(status) {
-      const statusBadge = document.getElementById('modemStatus');
-      const statusText = document.getElementById('modemStatusText');
-      const rebootBtn = document.getElementById('rebootModem');
-      const allStates = ['online', 'offline', 'rebooting', 'initializing'];
-
-      // Clear old classes
-      allStates.forEach(s => {
-        statusBadge.classList.remove(s);
-        statusText.classList.remove(s);
-      });
-
-      // Apply new classes and text
-      statusBadge.classList.add(status);
-      statusText.classList.add(status);
-      statusText.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-
-      if (status === 'rebooting') {
-        rebootBtn.disabled = true;
-        rebootBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Rebooting...';
-
-        // Poll until online
-        const poll = setInterval(() => {
-          fetch('/api/modem/status')
-            .then(res => res.json())
-            .then(data => {
-              if (data.status === 'online') {
-                clearInterval(poll);
-                updateModemStatus('online');
-                rebootBtn.disabled = false;
-                rebootBtn.textContent = 'Reboot Modem';
-              }
-            })
-            .catch(error => console.error('Error polling modem status:', error));
-        }, 5000);
-      } else {
-        rebootBtn.disabled = false;
-        rebootBtn.textContent = 'Reboot Modem';
-      }
+    function getStatusColor(status) {
+      const colors = {
+        'scheduled': '#0d6efd',
+        'completed': '#198754',
+        'cancelled': '#dc3545',
+        'pending': '#ffc107'
+      };
+      return colors[status] || '#6c757d';
     }
 
-    // Function to poll modem status dynamically
-    function pollModemStatus() {
-      fetch('/api/modem/status')
+    function updateModemStatus(newStatus) {
+      if (newStatus) {
+        fetch('/api/modem/status', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+          },
+          body: JSON.stringify({status: newStatus})
+        })
         .then(response => response.json())
         .then(data => {
           if (data.status) {
-            const statusBadge = document.getElementById('modemStatus');
-            const statusText = document.getElementById('modemStatusText');
-            const allStates = ['online', 'offline', 'rebooting', 'initializing'];
-
-            // Clear old classes
-            allStates.forEach(s => {
-              statusBadge.classList.remove(s);
-              statusText.classList.remove(s);
-            });
-
-            // Apply new classes and text
-            statusBadge.classList.add(data.status);
-            statusText.classList.add(data.status);
-            statusText.textContent = data.status.charAt(0).toUpperCase() + data.status.slice(1);
-
-            // Update MAC address
-            if (data.mac_address) {
-              document.getElementById('macAddress').textContent = 'MAC: ' + data.mac_address;
+            updateModemDisplay(data);
+            if (newStatus === 'rebooting') {
+              // Start checking status more frequently during reboot
+              startRebootStatusCheck();
             }
           }
         })
-        .catch(error => console.error('Error fetching modem status:', error));
+        .catch(error => {
+          console.error('Error updating modem status:', error);
+        });
+      } else {
+        // Just fetch current status
+        fetch('/api/modem/status')
+          .then(response => response.json())
+          .then(data => {
+            if (data.status) {
+              updateModemDisplay(data);
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching modem status:', error);
+          });
+      }
     }
 
-    // Function to poll balance dynamically
-    function pollBalance() {
-      fetch('/api/billing/balance')
+    function startRebootStatusCheck() {
+      let checkCount = 0;
+      const maxChecks = 20; // Check for up to 20 times (20 seconds at 1 second intervals)
+      
+      const rebootInterval = setInterval(() => {
+        checkCount++;
+        
+        fetch('/api/modem/status')
+          .then(response => response.json())
+          .then(data => {
+            if (data.status) {
+              updateModemDisplay(data);
+              
+              // If modem is back online or we've checked enough times, stop checking
+              if (data.status === 'online' || checkCount >= maxChecks) {
+                clearInterval(rebootInterval);
+              }
+            }
+          })
+          .catch(error => {
+            console.error('Error checking reboot status:', error);
+            if (checkCount >= maxChecks) {
+              clearInterval(rebootInterval);
+            }
+          });
+      }, 1000); // Check every 1 second during reboot
+    }
+
+    function updateModemDisplay(modemData) {
+      const statusElement = document.getElementById('modemStatus');
+      const statusTextElement = document.getElementById('modemStatusText');
+      const macElement = document.getElementById('macAddress');
+      
+      if (statusElement && modemData.status) {
+        statusElement.className = `status-indicator ${modemData.status}`;
+      }
+      if (statusTextElement && modemData.status) {
+        statusTextElement.textContent = modemData.status.charAt(0).toUpperCase() + modemData.status.slice(1);
+        statusTextElement.className = `mb-0 ${modemData.status}`;
+      }
+      if (macElement && modemData.mac_address) {
+        macElement.textContent = `MAC: ${modemData.mac_address}`;
+      }
+      
+      // Update reboot button state based on modem status
+      const rebootButton = document.getElementById('rebootModem');
+      if (rebootButton) {
+        if (modemData.status === 'rebooting') {
+          rebootButton.disabled = true;
+          rebootButton.textContent = 'Rebooting...';
+        } else {
+          rebootButton.disabled = false;
+          rebootButton.textContent = 'Reboot Modem';
+        }
+      }
+    }
+
+    function updateBalance() {
+      const balanceElement = document.getElementById('balance');
+      if (balanceElement) {
+        fetch('/api/billing/balance')
+          .then(response => response.json())
+          .then(data => {
+            if (data.balance !== undefined) {
+              balanceElement.textContent = `$${data.balance.toFixed(2)}`;
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching balance:', error);
+          });
+      }
+    }
+
+    // Auto-refresh data every 10 seconds for better responsiveness
+    setInterval(() => {
+      updateModemStatus();
+      updateBalance();
+      if (calendar && typeof calendar.refetchEvents === 'function') {
+        calendar.refetchEvents();
+      }
+    }, 10000);
+
+    // Function to trigger faster refresh for specific actions
+    function triggerFastRefresh() {
+      const fastRefreshInterval = setInterval(() => {
+        updateModemStatus();
+        updateBalance();
+        if (calendar && typeof calendar.refetchEvents === 'function') {
+          calendar.refetchEvents();
+        }
+      }, 4000);
+      
+      // Stop fast refresh after 40 seconds
+      setTimeout(() => {
+        clearInterval(fastRefreshInterval);
+      }, 40000);
+    }
+
+    function showPaymentModal() {
+      const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
+      modal.show();
+    }
+
+    function showAppointmentModal() {
+      const modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
+      modal.show();
+    }
+
+    function showSwapModal() {
+      const modal = new bootstrap.Modal(document.getElementById('swapModal'));
+      modal.show();
+    }
+
+    function viewAppointment(id) {
+      fetch('/api/appointments/' + id + '?include_history=true')
         .then(response => response.json())
         .then(data => {
-          if (data.balance !== undefined) {
-            const balanceElement = document.getElementById('balance');
-            balanceElement.textContent = `$${data.balance.toFixed(2)}`;
-            balanceElement.className = data.balance <= 0 ? 'text-success' : 'text-warning';
+          // Populate appointment details modal
+          document.getElementById('appointmentJobNumber').textContent = data.job_number || 'N/A';
+          document.getElementById('appointmentType').textContent = data.type || 'N/A';
+          document.getElementById('appointmentStatus').textContent = data.status || 'N/A';
+          
+          // Format date/time for 12-hour format
+          if (data.start_time) {
+            const startDate = new Date(data.start_time);
+            const formattedDateTime = startDate.toLocaleString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              hour: 'numeric',
+              minute: '2-digit',
+              hour12: true
+            });
+            document.getElementById('appointmentDateTime').textContent = formattedDateTime;
           }
+          
+          document.getElementById('appointmentNotes').textContent = data.notes || 'No notes';
+          
+          // Set SMS reminder dropdown
+          const smsSelect = document.getElementById('appointmentSmsReminderSelect');
+          if (smsSelect) {
+            smsSelect.value = data.sms_reminder ? 'true' : 'false';
+          }
+          
+          // Store current appointment ID
+          currentAppointmentId = id;
+          
+          // Set up event handlers for reschedule and cancel buttons
+          const rescheduleBtn = document.getElementById('rescheduleAppointment');
+          const cancelBtn = document.getElementById('cancelAppointment');
+          
+          if (rescheduleBtn) {
+            rescheduleBtn.onclick = () => rescheduleAppointment(id);
+          }
+          if (cancelBtn) {
+            cancelBtn.onclick = () => cancelAppointment(id);
+          }
+          
+          // Show appointment details modal
+          new bootstrap.Modal(document.getElementById('appointmentDetailsModal')).show();
         })
-        .catch(error => console.error('Error fetching balance:', error));
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Failed to load appointment details');
+        });
     }
 
-    // Poll every 5 seconds
-    setInterval(pollModemStatus, 5000);
-    setInterval(pollBalance, 5000);
+    function rescheduleAppointment(id) {
+      fetch('/api/appointments/' + id + '?include_history=true')
+        .then(response => response.json())
+        .then(data => {
+          // Pre-fill reschedule form
+          document.getElementById('rescheduleAppointmentId').value = id;
+          if (data.start_time) {
+            document.getElementById('rescheduleDate').value = data.start_time.slice(0, 10);
+          }
+          document.getElementById('rescheduleNotes').value = data.notes || '';
 
-    // Payment modal
-    function showPaymentModal() {
-      new bootstrap.Modal(document.getElementById('paymentModal')).show();
+          // Hide details modal and show reschedule modal
+          bootstrap.Modal.getInstance(document.getElementById('appointmentDetailsModal')).hide();
+          new bootstrap.Modal(document.getElementById('rescheduleModal')).show();
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Failed to load appointment details');
+        });
     }
 
-    document.getElementById('paymentForm').addEventListener('submit', e => {
-      e.preventDefault();
-      const amount = document.querySelector('#paymentForm input[type="number"]').value;
-      const data = {
-        amount: parseFloat(amount),
-        payment_method: 'credit_card'
-      };
-
-      fetch('/api/payments', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Internal-API-Key': internalApiKey,
-          'X-CSRFToken': csrfToken
-        },
-        body: JSON.stringify(data)
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.error) {
-          alert(data.error);
-        } else {
-          location.reload();
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('Failed to process payment');
-      });
-    });
-
-    // Update appointment form handler to include time_slot and credentials: 'include'
-    document.getElementById('appointmentForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const formData = new FormData(this);
-      const data = {
-        type: formData.get('type'),
-        date: new Date(formData.get('start')).toISOString().split('T')[0],
-        time_slot: formData.get('time_slot'),
-        notes: formData.get('notes')
-      };
-
-      fetch('/api/appointments', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Internal-API-Key': internalApiKey,
-          'X-CSRFToken': csrfToken
-        },
-        credentials: 'include',
-        body: JSON.stringify(data)
-      })
-      .then(response => {
-        if (!response.ok) {
-          return response.text().then(text => { throw new Error(text); });
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (data.error) {
-          alert(data.error);
-        } else {
-          calendar.refetchEvents();
-          bootstrap.Modal.getInstance(document.getElementById('appointmentModal')).hide();
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('Failed to schedule appointment: ' + error.message);
-      });
-    });
-
-    // Add these functions to your existing JavaScript
-    function showSwapModal() {
-      const swapModal = new bootstrap.Modal(document.getElementById('swapModal'));
-      swapModal.show();
-    }
-
-    document.getElementById('swapForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const formData = new FormData(this);
-      const data = {
-        make: formData.get('make'),
-        model: formData.get('model'),
-        mac_address: formData.get('mac_address')
-      };
-
-      try {
-        const response = await fetch('/api/modem/swap', {
+    function cancelAppointment(id) {
+      if (confirm('Are you sure you want to cancel this appointment?')) {
+        fetch('/api/appointments/' + id + '/cancel', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'X-Internal-API-Key': internalApiKey,
             'X-CSRFToken': csrfToken
           },
-          body: JSON.stringify(data)
+          credentials: 'include'
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            alert(data.error);
+          } else {
+            // Hide modal and refresh calendar
+            bootstrap.Modal.getInstance(document.getElementById('appointmentDetailsModal')).hide();
+            if (calendar) {
+              calendar.refetchEvents();
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Failed to cancel appointment');
         });
+      }
+    }
 
-        if (response.ok) {
-          const result = await response.json();
-          document.getElementById('macAddress').textContent = `MAC: ${result.mac_address}`;
-          bootstrap.Modal.getInstance(document.getElementById('swapModal')).hide();
-          showAlert('success', 'Modem information updated successfully!');
-        } else {
-          const error = await response.json();
-          showAlert('danger', error.error || 'Failed to update modem information');
-        }
-      } catch (error) {
-        showAlert('danger', 'An error occurred while updating modem information');
+    // Handle SMS reminder changes
+    document.addEventListener('DOMContentLoaded', function() {
+      const smsSelect = document.getElementById('appointmentSmsReminderSelect');
+      if (smsSelect) {
+        smsSelect.addEventListener('change', function() {
+          if (currentAppointmentId) {
+            const enabled = this.value === 'true';
+            fetch(`/api/appointments/${currentAppointmentId}/sms-reminder`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+              },
+              body: JSON.stringify({sms_reminder: enabled})
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.error) {
+                alert('Failed to update SMS reminder setting');
+                // Revert the change
+                this.value = !enabled ? 'true' : 'false';
+              }
+            })
+            .catch(error => {
+              console.error('Error updating SMS reminder:', error);
+              alert('Failed to update SMS reminder setting');
+              // Revert the change
+              this.value = !enabled ? 'true' : 'false';
+            });
+          }
+        });
       }
     });
 
-    function showAlert(type, message) {
-      const alertDiv = document.createElement('div');
-      alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3`;
-      alertDiv.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      `;
-      document.body.appendChild(alertDiv);
-      setTimeout(() => alertDiv.remove(), 5000);
-    }
+    // Handle form submissions
+    document.addEventListener('DOMContentLoaded', function() {
+      // Appointment form
+      const appointmentForm = document.getElementById('appointmentForm');
+      if (appointmentForm) {
+        appointmentForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const formData = new FormData(this);
+          const data = {
+            type: formData.get('type'),
+            date: formData.get('date'),
+            time_slot: formData.get('time_slot'),
+            notes: formData.get('notes')
+          };
 
-    // Function to show appointment details
-    function showAppointmentDetails(event) {
-      // Format the date and time
-      const startDate = new Date(event.start);
-      const endDate = new Date(event.end);
-      const dateTimeStr = `${startDate.toLocaleDateString()} ${startDate.toLocaleTimeString()} - ${endDate.toLocaleTimeString()}`;
-
-      // Update modal content
-      document.getElementById('appointmentType').textContent = event.extendedProps.type || 'N/A';
-      document.getElementById('appointmentStatus').textContent = event.extendedProps.status || 'Scheduled';
-      document.getElementById('appointmentDateTime').textContent = dateTimeStr;
-      document.getElementById('appointmentNotes').textContent = event.extendedProps.notes || 'No notes';
-      document.getElementById('appointmentSmsReminder').textContent = event.extendedProps.sms_reminder ? 'Enabled' : 'Disabled';
-
-      // Set up reschedule button
-      document.getElementById('rescheduleAppointment').onclick = function() {
-        // Close details modal
-        bootstrap.Modal.getInstance(document.getElementById('appointmentDetailsModal')).hide();
-        
-        // Open appointment modal with pre-filled data
-        document.getElementById('appointmentStart').value = event.start.toISOString();
-        document.getElementById('appointmentEnd').value = event.end.toISOString();
-        document.querySelector('#appointmentForm select[name="type"]').value = event.extendedProps.type || 'installation';
-        document.querySelector('#appointmentForm select[name="time_slot"]').value = event.extendedProps.time_slot || 'morning';
-        document.querySelector('#appointmentForm textarea[name="notes"]').value = event.extendedProps.notes || '';
-        
-        // Show appointment modal
-        new bootstrap.Modal(document.getElementById('appointmentModal')).show();
-      };
-
-      // Set up cancel button
-      document.getElementById('cancelAppointment').onclick = function() {
-        if (confirm('Are you sure you want to cancel this appointment?')) {
-          fetch(`/api/appointments/${event.id}/cancel`, {
+          fetch('/api/appointments', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'X-Internal-API-Key': internalApiKey,
               'X-CSRFToken': csrfToken
             },
-            credentials: 'include'
+            body: JSON.stringify(data)
           })
           .then(response => response.json())
           .then(data => {
             if (data.error) {
               alert(data.error);
             } else {
-              calendar.refetchEvents();
-              bootstrap.Modal.getInstance(document.getElementById('appointmentDetailsModal')).hide();
-              showAlert('success', 'Appointment cancelled successfully');
+              bootstrap.Modal.getInstance(document.getElementById('appointmentModal')).hide();
+              if (calendar) {
+                calendar.refetchEvents();
+              }
             }
           })
           .catch(error => {
             console.error('Error:', error);
-            showAlert('danger', 'Failed to cancel appointment');
+            alert('Failed to create appointment');
           });
-        }
-      };
+        });
+      }
 
-      // Show the modal
-      new bootstrap.Modal(document.getElementById('appointmentDetailsModal')).show();
-    }
+      // Reschedule form
+      const rescheduleForm = document.getElementById('rescheduleForm');
+      if (rescheduleForm) {
+        rescheduleForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const formData = new FormData(this);
+          const appointmentId = formData.get('appointment_id');
+          const data = {
+            date: formData.get('date'),
+            time_slot: formData.get('time_slot'),
+            notes: formData.get('notes')
+          };
 
-    document.getElementById('rescheduleForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const id = document.getElementById('rescheduleAppointmentId').value;
-      const data = {
-        date: document.getElementById('rescheduleDate').value,
-        time_slot: document.getElementById('rescheduleTimeSlot').value,
-        notes: document.getElementById('rescheduleNotes').value
-      };
-      fetch(`/api/appointments/${id}/reschedule`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': csrfToken,
-          'X-Internal-API-Key': internalApiKey
-        },
-        body: JSON.stringify(data)
-      })
-      .then(response => {
-        if (!response.ok) {
-          return response.text().then(text => { throw new Error(text); });
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (data.success) {
-          location.reload();
-        } else {
-          alert(data.error || 'Failed to reschedule appointment');
-        }
-      })
-      .catch(error => {
-        alert('Failed to reschedule appointment: ' + error.message);
-      });
+          fetch(`/api/appointments/${appointmentId}/reschedule`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify(data)
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.error) {
+              alert(data.error);
+            } else {
+              bootstrap.Modal.getInstance(document.getElementById('rescheduleModal')).hide();
+              if (calendar) {
+                calendar.refetchEvents();
+              }
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to reschedule appointment');
+          });
+        });
+      }
+
+      // Swap modem form
+      const swapForm = document.getElementById('swapForm');
+      if (swapForm) {
+        swapForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const formData = new FormData(this);
+          const data = {
+            make: formData.get('make'),
+            model: formData.get('model'),
+            mac_address: formData.get('mac_address')
+          };
+
+          fetch('/api/modem/swap', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify(data)
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.error) {
+              alert(data.error);
+            } else {
+              bootstrap.Modal.getInstance(document.getElementById('swapModal')).hide();
+              updateModemDisplay(data);
+              triggerFastRefresh();
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to swap modem');
+          });
+        });
+      }
+
+      // Payment form
+      const paymentForm = document.getElementById('paymentForm');
+      if (paymentForm) {
+        paymentForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const formData = new FormData(this);
+          const data = {
+            amount: parseFloat(formData.get('amount') || 0),
+            payment_method: 'credit_card'
+          };
+
+          fetch('/api/payments', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Internal-API-Key': internalApiKey,
+              'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify(data)
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.error) {
+              alert(data.error);
+            } else {
+              bootstrap.Modal.getInstance(document.getElementById('paymentModal')).hide();
+              updateBalance();
+              triggerFastRefresh();
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to process payment');
+          });
+        });
+      }
     });
   </script>
 </body>
