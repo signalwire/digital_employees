@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Zen Cable - Billing</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='css/sw_cable.png') }}">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
 
@@ -33,7 +34,10 @@
 <body class="bg-dark text-light">
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary">
     <div class="container">
-      <a class="navbar-brand" href="#">Zen Cable</a>
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="{{ url_for('static', filename='css/sw_cable.png') }}" alt="Zen Cable Logo" height="30" class="me-2">
+        Zen Cable
+      </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -213,6 +217,15 @@
       </div>
     </div>
   </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-center py-3 mt-5">
+    <div class="container">
+      <p class="mb-0 text-muted">
+        <small>Powered by <a href="https://signalwire.ai" target="_blank" class="text-decoration-none" style="color: var(--signalwire-blue);">SignalWire</a></small>
+      </p>
+    </div>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
