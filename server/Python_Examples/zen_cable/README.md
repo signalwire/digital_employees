@@ -19,7 +19,7 @@ A modern customer demo portal for cable service management, featuring real-time 
 
 - Python 3.10 or higher
 - SQLite3
-- ngrok (for local development with SignalWire)
+- ngrok (for local development with SignalWire) or replit
 - SignalWire account (for voice integration)
 
 ## Run on Replit
