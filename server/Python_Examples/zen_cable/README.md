@@ -193,14 +193,10 @@ The application uses SQLite with the following main tables:
 
 - Passwords are hashed using SHA-256 with salt
 - Session management with secure cookies
-- CSRF protection
+- CSRF protection (Off by default)
 - SQL injection prevention
 - XSS protection
 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Support
-
-For support, please open an issue in the repository or contact the development team. 
