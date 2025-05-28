@@ -1,6 +1,10 @@
 # Zen Cable Customer Portal
 
-A modern customer portal for cable service management, featuring real-time modem status monitoring, service management, and appointment scheduling.
+
+A modern customer demo portal for cable service management, featuring real-time modem status monitoring, service management, MFA password reset and appointment scheduling.
+
+<img src="https://github.com/user-attachments/assets/703f8245-0439-4009-9d7f-4020e595c2d6" alt="image" style="width:75%;">
+
 
 ## Features
 
@@ -15,7 +19,7 @@ A modern customer portal for cable service management, featuring real-time modem
 
 - Python 3.10 or higher
 - SQLite3
-- ngrok (for local development with SignalWire)
+- ngrok (for local development with SignalWire) or replit
 - SignalWire account (for voice integration)
 
 ## Run on Replit
@@ -189,14 +193,10 @@ The application uses SQLite with the following main tables:
 
 - Passwords are hashed using SHA-256 with salt
 - Session management with secure cookies
-- CSRF protection
+- CSRF protection (Off by default)
 - SQL injection prevention
 - XSS protection
 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Support
-
-For support, please open an issue in the repository or contact the development team. 
