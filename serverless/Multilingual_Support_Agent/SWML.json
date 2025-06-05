@@ -27,52 +27,52 @@
           },
           "languages": [
             {
-              "code": "en",
+              "code": "multi",
               "name": "English",
               "voice": "elevenlabs.adam"
             },
             {
-              "code": "es",
+              "code": "multi",
               "name": "Spanish",
               "voice": "elevenlabs.adam"
             },
             {
-              "code": "fr",
+              "code": "multi",
               "name": "French",
               "voice": "elevenlabs.adam"
             },
             {
-              "code": "de",
+              "code": "multi",
               "name": "German",
               "voice": "elevenlabs.adam"
             },
             {
-              "code": "hi",
+              "code": "multi",
               "name": "Hindi",
               "voice": "elevenlabs.adam"
             },
             {
-              "code": "ru",
+              "code": "multi",
               "name": "Russian",
               "voice": "elevenlabs.adam"
             },
             {
-              "code": "pt",
+              "code": "multi",
               "name": "Portuguese",
               "voice": "elevenlabs.adam"
             },
             {
-              "code": "ja",
+              "code": "multi",
               "name": "Japanese",
               "voice": "elevenlabs.adam"
             },
             {
-              "code": "it",
+              "code": "multi",
               "name": "Italian",
               "voice": "elevenlabs.adam"
             },
             {
-              "code": "nl",
+              "code": "multi",
               "name": "Dutch",
               "voice": "elevenlabs.adam"
             }
