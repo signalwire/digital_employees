@@ -80,7 +80,7 @@
           "params": {
             "ai_model": "gpt-4.1-nano",
             "debug_webhook_url": "https://subdomain.domain.tld/debugwebhook",
-            "elevn_labs_model": "eleven_multilingual_v2",
+            "eleven_labs_model": "eleven_multilingual_v2",
             "end_of_speech_timeout": "2500"
           },
           "post_prompt_auth_password": "replace",
