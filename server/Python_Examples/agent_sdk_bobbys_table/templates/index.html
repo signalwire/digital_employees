@@ -1,0 +1,397 @@
+{% extends 'base.html' %}
+
+{% block title %}Reservations - Bobby's Table{% endblock %}
+
+{% block header_title %}Reservations{% endblock %}
+{% block header_subtitle %}Manage your restaurant's reservations and bookings{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="card-title mb-0 fw-semibold heading-gradient">Current Reservations</h2>
+        <a href="{{ url_for('new_reservation') }}" class="btn btn-accent">Create New Reservation</a>
+    </div>
+    
+    <!-- Search Form -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <form method="GET" action="{{ url_for('index') }}" class="d-flex gap-2">
+                <input type="text" name="search" class="form-control" placeholder="Search by name, phone, or reservation number..." value="{{ request.args.get('search', '') }}">
+                <button type="submit" class="btn btn-outline-light">
+                    <i class="fas fa-search"></i> Search
+                </button>
+                {% if request.args.get('search') %}
+                <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-times"></i> Clear
+                </a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    {% if reservations %}
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Reservation #</th>
+                        <th>Name</th>
+                        <th>Party Size</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Phone</th>
+                        <th>Payment Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in reservations %}
+                        <tr>
+                            <td data-label="Reservation #">
+                                <span class="badge bg-primary">{{ r.reservation_number }}</span>
+                            </td>
+                            <td data-label="Name">{{ r.name }}</td>
+                            <td data-label="Party Size">
+                                <span class="badge bg-secondary">
+                                    <i class="fas fa-users me-1"></i>{{ r.party_size }} {{ r.party_size | person_plural }}
+                                </span>
+                            </td>
+                            <td data-label="Date">{{ r.date }}</td>
+                            <td data-label="Time">
+                                <span class="badge" style="background: linear-gradient(135deg, #4d7eff 0%, #c044ff 100%);">
+                                    {{ r.time | time12 }}
+                                </span>
+                            </td>
+                            <td data-label="Phone">{{ r.phone_number }}</td>
+                            <td data-label="Payment Status">
+                                {% if r.payment_status == 'paid' %}
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check-circle me-1"></i>Paid
+                                    </span>
+                                {% elif r.payment_status == 'refunded' %}
+                                    <span class="badge bg-info">
+                                        <i class="fas fa-undo me-1"></i>Refunded
+                                    </span>
+                                {% else %}
+                                    {% set total_bill = r.orders | sum(attribute='total_amount') | default(0) | float %}
+                                    <span class="badge bg-danger clickable-payment" 
+                                          style="cursor: pointer;" 
+                                          onclick="openPaymentModal({{ r.id }}, '{{ r.name }}', {{ total_bill or 0 }})">
+                                        <i class="fas fa-clock me-1"></i>Unpaid - Click to Pay
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td data-label="Actions" class="text-end">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-outline-light" onclick="openEditReservationModal({{ r.id }})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <form action="{{ url_for('delete_reservation', res_id=r.id) }}" method="post" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this reservation?');">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="text-center py-4">
+            <i class="fas fa-calendar-day fa-3x mb-3" style="color: #4d7eff;"></i>
+            <h5 class="text-muted">No reservations found. Create your first reservation!</h5>
+            <a href="{{ url_for('new_reservation') }}" class="btn btn-accent mt-3">Create New Reservation</a>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Include Payment Modal -->
+{% include 'modals/payment_modal.html' %}
+
+<!-- Include Edit Reservation Modal -->
+{% include 'modals/edit_reservation_modal.html' %}
+
+<!-- Scripts -->
+<script src="https://js.stripe.com/v3/"></script>
+<script src="{{ url_for('serve_static', filename='js/payment.js') }}"></script>
+<script src="{{ url_for('serve_static', filename='js/calendar.js') }}"></script>
+
+<script>
+// currentReservationId is declared in calendar.js, so we'll use window.currentReservationId
+
+function openPaymentModal(reservationId, customerName, totalAmount) {
+    window.currentReservationId = reservationId;
+    
+    // Set the total amount for payment.js
+    if (typeof window.setCurrentTotalAmount === 'function') {
+        window.setCurrentTotalAmount(totalAmount);
+    } else {
+        // Fallback: set it directly on the payment.js context
+        window.currentTotalAmount = totalAmount;
+    }
+    
+    // Populate payment details
+    const paymentDetails = document.getElementById('paymentDetails');
+    paymentDetails.innerHTML = `
+        <div class="alert alert-info">
+            <h6><i class="fas fa-info-circle me-2"></i>Payment Summary</h6>
+            <p class="mb-1"><strong>Customer:</strong> ${customerName}</p>
+            <p class="mb-1"><strong>Reservation ID:</strong> ${reservationId}</p>
+            <p class="mb-0"><strong>Total Amount:</strong> $${totalAmount.toFixed(2)}</p>
+        </div>
+    `;
+    
+    // Show the modal
+    const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+    paymentModal.show();
+}
+
+// Handle successful payment
+function handlePaymentSuccess(paymentIntentId, amount) {
+    // Update payment status in database
+    fetch('/api/reservations/payment', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            reservation_id: window.currentReservationId,
+            payment_intent_id: paymentIntentId,
+            amount: amount,
+            status: 'paid'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Close modal
+            const paymentModal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
+            paymentModal.hide();
+            
+            // Show success message
+            alert('Payment successful! The page will refresh to show the updated status.');
+            
+            // Refresh the page to show updated payment status
+            window.location.reload();
+        } else {
+            alert('Payment was successful but there was an error updating the status. Please contact support.');
+        }
+    })
+    .catch(error => {
+        console.error('Error updating payment status:', error);
+        alert('Payment was successful but there was an error updating the status. Please contact support.');
+    });
+}
+
+// Make handlePaymentSuccess available globally for payment.js
+window.handlePaymentSuccess = handlePaymentSuccess;
+
+// Edit Reservation Modal Functions
+function openEditReservationModal(reservationId) {
+    // Fetch reservation data
+    fetch(`/api/reservations/${reservationId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                populateEditModal(data.reservation);
+                const editModal = new bootstrap.Modal(document.getElementById('editReservationModal'));
+                editModal.show();
+            } else {
+                alert('Error loading reservation data: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error loading reservation data');
+        });
+}
+
+function populateEditModal(reservation) {
+    
+    
+    // Populate basic fields
+    document.getElementById('editReservationId').value = reservation.id;
+    document.getElementById('editReservationNumber').textContent = reservation.reservation_number;
+    document.getElementById('editName').value = reservation.name;
+    document.getElementById('editPartySize').value = reservation.party_size;
+    document.getElementById('editDate').value = reservation.date;
+    document.getElementById('editTime').value = reservation.time;
+    document.getElementById('editPhone').value = reservation.phone_number;
+    document.getElementById('editRequests').value = reservation.special_requests || '';
+    
+    // Set old school reservation checkbox
+    const hasOrders = reservation.orders && reservation.orders.length > 0;
+    document.getElementById('editOldSchoolReservation').checked = !hasOrders;
+    
+    
+    
+    // Store reservation data globally for the calendar.js functions to use
+    window.currentEditReservationData = reservation;
+    window.currentReservationId = reservation.id;
+    
+    // Initialize the party orders section using calendar.js functions
+    if (typeof renderEditPartyOrderForms === 'function') {
+        // Ensure menu data is loaded first
+        if (typeof menuData !== 'undefined' && menuData.length > 0) {
+            renderEditPartyOrderForms(reservation);
+        } else {
+            // Load menu data first
+            fetch('/api/menu_items')
+                .then(resp => resp.json())
+                .then(items => {
+                    // Group items by category
+                    const categories = {};
+                    items.forEach(item => {
+                        if (!categories[item.category]) {
+                            categories[item.category] = {
+                                name: item.category,
+                                items: []
+                            };
+                        }
+                        categories[item.category].items.push(item);
+                    });
+                    window.menuData = Object.values(categories);
+                    renderEditPartyOrderForms(reservation);
+                });
+        }
+    } else {
+        // Fallback: render basic party orders
+        renderEditPartyOrdersBasic(reservation);
+    }
+}
+
+function renderEditPartyOrdersBasic(reservation) {
+    const container = document.getElementById('editPartyOrders');
+    container.innerHTML = '';
+    
+    // Create party order forms based on existing orders or party size
+    const partySize = reservation.party_size;
+    const orders = reservation.orders || [];
+    
+    for (let i = 0; i < partySize; i++) {
+        const order = orders[i] || null;
+        const personName = order ? order.person_name : `Person ${i + 1}`;
+        
+        const orderDiv = document.createElement('div');
+        orderDiv.className = 'party-order mb-3 p-3 border rounded';
+        orderDiv.innerHTML = `
+            <h6 class="fw-bold">${personName}</h6>
+            <input type="hidden" name="person_names[]" value="${personName}">
+            <div class="order-items">
+                ${order && order.order_items ? order.order_items.map(item => `
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span>${item.menu_item.name} x${item.quantity}</span>
+                        <span>$${(item.price_at_time * item.quantity).toFixed(2)}</span>
+                    </div>
+                `).join('') : '<p class="text-muted">No items ordered</p>'}
+            </div>
+        `;
+        container.appendChild(orderDiv);
+    }
+}
+
+// Handle old school reservation toggle in edit modal
+document.getElementById('editOldSchoolReservation').addEventListener('change', function() {
+    const editOrderSection = document.getElementById('editOrderSection');
+    if (this.checked) {
+        editOrderSection.style.display = 'none';
+    } else {
+        editOrderSection.style.display = 'block';
+    }
+});
+
+// Note: Form submission is handled by calendar.js
+
+// Add periodic refresh for payment status updates
+let paymentStatusRefreshInterval = null;
+
+function startPaymentStatusRefresh() {
+    // Only start if not already running
+    if (paymentStatusRefreshInterval) {
+        return;
+    }
+    
+    console.log('🔍 Starting payment status refresh for index page');
+    
+    // Check for payment status updates every 10 seconds
+    paymentStatusRefreshInterval = setInterval(() => {
+        // Check if there are any unpaid reservations visible
+        const unpaidBadges = document.querySelectorAll('.badge.bg-danger.clickable-payment');
+        
+        if (unpaidBadges.length > 0) {
+            console.log(`🔍 Checking payment status for ${unpaidBadges.length} unpaid reservations`);
+            
+            // Refresh the page to get updated payment statuses
+            // We use a simple page refresh since the index page shows multiple reservations
+            // and it's more efficient than checking each one individually
+            fetch(window.location.href, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                // Parse the response to check if any payment statuses have changed
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newUnpaidBadges = doc.querySelectorAll('.badge.bg-danger.clickable-payment');
+                
+                // If the number of unpaid reservations has changed, refresh the page
+                if (newUnpaidBadges.length !== unpaidBadges.length) {
+                    console.log('✅ Payment status changed detected, refreshing page');
+                    window.location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Error checking payment status:', error);
+            });
+        } else {
+            // No unpaid reservations, stop monitoring
+            console.log('🛑 No unpaid reservations found, stopping payment status refresh');
+            stopPaymentStatusRefresh();
+        }
+    }, 10000); // Check every 10 seconds
+}
+
+function stopPaymentStatusRefresh() {
+    if (paymentStatusRefreshInterval) {
+        console.log('🛑 Stopping payment status refresh for index page');
+        clearInterval(paymentStatusRefreshInterval);
+        paymentStatusRefreshInterval = null;
+    }
+}
+
+// Start monitoring when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Start payment status monitoring if there are unpaid reservations
+    const unpaidBadges = document.querySelectorAll('.badge.bg-danger.clickable-payment');
+    if (unpaidBadges.length > 0) {
+        startPaymentStatusRefresh();
+    }
+});
+
+// Stop monitoring when page is about to unload
+window.addEventListener('beforeunload', function() {
+    stopPaymentStatusRefresh();
+});
+</script>
+
+<style>
+.clickable-payment {
+    transition: all 0.2s ease;
+}
+
+.clickable-payment:hover {
+    background-color: #dc3545 !important;
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4);
+}
+
+.clickable-payment:active {
+    transform: scale(0.98);
+}
+</style>
+{% endblock %} 

@@ -1,0 +1,32 @@
+<!-- Modal for Reservation Details (Event Click) -->
+<div class="modal fade" id="reservationModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-modal text-light rounded-4">
+            <div class="modal-header border-0" style="background: #232b3e;">
+                <h5 class="modal-title">Reservation Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="reservationDetails"></div>
+            </div>
+            <div class="modal-footer border-0" style="background: #232b3e;">
+                <button type="button" class="btn btn-success btn-lg" id="payBillBtn" onclick="openPaymentModal()" style="display: none;">
+                    <i class="fas fa-credit-card me-2"></i>Pay Bill
+                </button>
+                <button type="button" class="btn btn-secondary btn-lg" id="billPaidBtn" style="display: none;" disabled>
+                    <i class="fas fa-check me-2"></i>Bill Paid
+                </button>
+                <button type="button" class="btn btn-info btn-lg" id="editReservationBtn" onclick="editCurrentReservation()">
+                    <i class="fas fa-edit me-2"></i>Edit & Add Items
+                </button>
+                <button type="button" class="btn btn-accent btn-lg" id="rescheduleBtn" onclick="rescheduleReservation()">
+                    <i class="fas fa-calendar-alt me-2"></i>Reschedule
+                </button>
+                <button type="button" class="btn btn-outline-danger btn-lg" id="cancelReservationBtn" onclick="cancelReservation()">
+                    <i class="fas fa-times me-2"></i>Cancel Reservation
+                </button>
+                <button type="button" class="btn btn-cancel btn-lg" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div> 

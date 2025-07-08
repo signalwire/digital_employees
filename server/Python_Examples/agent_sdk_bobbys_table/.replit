@@ -1,0 +1,27 @@
+
+modules = ["python-3.12", "web", "bash"]
+
+[nix]
+channel = "stable-24_05"
+
+[gitHubImport]
+requiredFiles = [".replit", "replit.nix"]
+
+[deployment]
+run = ["bash", "start_replit.sh", "source .env", "--host", "0.0.0.0", "--port", "8080"]
+
+[[ports]]
+localPort = 8080
+externalPort = 80
+
+[workflows]
+runButton = "Start Restaurant App"
+
+[[workflows.workflow]]
+name = "Start Restaurant App"
+author = 42129097
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "bash start_replit.sh --host 0.0.0.0 --port 8080"

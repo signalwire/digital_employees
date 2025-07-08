@@ -1,0 +1,540 @@
+/* Calendar Responsive Design - No Scroll Bars */
+
+/* Reset and base container - Expanded for taller cells */
+.calendar-container {
+    background: var(--secondary-bg) !important;
+    border-radius: var(--border-radius) !important;
+    overflow: visible !important;
+    margin: -1rem !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    width: 100% !important;
+}
+
+/* Main calendar wrapper - Expanded for full month display */
+#calendar {
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    padding: 1.5rem !important;
+    width: 100% !important;
+    overflow: visible !important;
+}
+
+/* FullCalendar base - Expanded for full month display */
+.fc {
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    background: var(--secondary-bg) !important;
+    width: 100% !important;
+    overflow: visible !important;
+}
+
+/* View harness - main content area - Expanded for month view */
+.fc-view-harness {
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    width: 100% !important;
+}
+
+/* Day grid container - Expanded for month view */
+.fc-daygrid {
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+/* Individual day frames - Increased height for 5 reservations */
+.fc-daygrid-day-frame {
+    min-height: 80px !important;
+    height: auto !important;
+    max-height: 180px !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* Day events container - Increased height for 5 reservations */
+.fc-daygrid-day-events {
+    margin-bottom: 0 !important;
+    overflow: hidden !important;
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1px !important;
+    max-height: 150px !important;
+}
+
+/* Individual events - Enhanced for better visibility */
+.fc-daygrid-event {
+    margin-bottom: 1px !important;
+    font-size: 0.75rem !important;
+    padding: 2px 4px !important;
+    border-radius: 3px !important;
+    line-height: 1.3 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    min-height: 18px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Event harness */
+.fc-daygrid-event-harness {
+    margin-bottom: 1px !important;
+    overflow: hidden !important;
+}
+
+/* More link for overflow events */
+.fc-daygrid-more-link {
+    font-size: 0.65rem !important;
+    padding: 1px 3px !important;
+    margin-top: 1px !important;
+    background: rgba(77, 126, 255, 0.8) !important;
+    color: white !important;
+    border-radius: 2px !important;
+    text-decoration: none !important;
+    display: block !important;
+    text-align: center !important;
+}
+
+.fc-daygrid-more-link:hover {
+    background: rgba(77, 126, 255, 1) !important;
+    color: white !important;
+    text-decoration: none !important;
+}
+
+/* Override conflicting card rules - Expanded for full month */
+.card.calendar-card,
+.card:has(.calendar-container),
+.card .calendar-container {
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+/* Ensure calendar card can expand to show full month */
+.calendar-card .card-body {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding-bottom: 2rem !important;
+}
+
+.card .calendar-container {
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+}
+
+/* Toolbar adjustments */
+.fc-toolbar {
+    margin-bottom: 1rem !important;
+    flex-wrap: wrap !important;
+    gap: 0.5rem !important;
+}
+
+.fc-toolbar-chunk {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 0.25rem !important;
+}
+
+/* Scrollgrid adjustments - Expanded for month view */
+.fc-scrollgrid {
+    border: none !important;
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+}
+
+.fc-scrollgrid-section {
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+}
+
+/* Table adjustments - Controlled overflow */
+.fc-scrollgrid table {
+    width: 100% !important;
+    table-layout: fixed !important;
+}
+
+.fc-col-header-cell,
+.fc-daygrid-day {
+    overflow: hidden !important;
+    vertical-align: top !important;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .calendar-container {
+        margin: -0.5rem !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+    
+    #calendar {
+        padding: 1rem !important;
+    }
+    
+    .fc-daygrid-day-frame {
+        min-height: 70px !important;
+        max-height: 140px !important;
+    }
+    
+    .fc-daygrid-day-events {
+        max-height: 110px !important;
+    }
+    
+    .fc-daygrid-event {
+        font-size: 0.65rem !important;
+        padding: 1px 3px !important;
+        margin-bottom: 1px !important;
+        min-height: 16px !important;
+    }
+    
+    .fc-daygrid-more-link {
+        font-size: 0.55rem !important;
+        padding: 1px 2px !important;
+    }
+    
+    .fc-toolbar {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+    }
+    
+    .fc-toolbar-chunk {
+        justify-content: center !important;
+    }
+    
+    .fc-button-group {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 0.25rem !important;
+    }
+    
+    .fc-button {
+        font-size: 0.8rem !important;
+        padding: 0.25rem 0.5rem !important;
+    }
+    
+    /* Mobile day/week view adjustments */
+    .fc-timeGridWeek-view .fc-view-harness,
+    .fc-timeGridDay-view .fc-view-harness {
+        max-height: 60vh !important;
+    }
+    
+    .fc-timeGridWeek-view .fc-scroller,
+    .fc-timeGridDay-view .fc-scroller {
+        max-height: 50vh !important;
+    }
+    
+    .fc-timeGridWeek-view .fc-timegrid-body,
+    .fc-timeGridDay-view .fc-timegrid-body {
+        max-height: 45vh !important;
+    }
+}
+
+/* Small mobile adjustments */
+@media (max-width: 480px) {
+    #calendar {
+        padding: 0.5rem !important;
+    }
+    
+    .fc-daygrid-day-frame {
+        min-height: 60px !important;
+        max-height: 120px !important;
+    }
+    
+    .fc-daygrid-day-events {
+        max-height: 90px !important;
+    }
+    
+    .fc-daygrid-event {
+        font-size: 0.6rem !important;
+        padding: 1px 2px !important;
+        margin-bottom: 1px !important;
+        min-height: 14px !important;
+    }
+    
+    .fc-daygrid-more-link {
+        font-size: 0.5rem !important;
+        padding: 0px 2px !important;
+    }
+    
+    .fc-button {
+        font-size: 0.7rem !important;
+        padding: 0.2rem 0.4rem !important;
+    }
+    
+    .fc-toolbar-title {
+        font-size: 1.1rem !important;
+    }
+    
+    /* Small mobile day/week view adjustments */
+    .fc-timeGridWeek-view .fc-view-harness,
+    .fc-timeGridDay-view .fc-view-harness {
+        max-height: 50vh !important;
+    }
+    
+    .fc-timeGridWeek-view .fc-scroller,
+    .fc-timeGridDay-view .fc-scroller {
+        max-height: 40vh !important;
+    }
+    
+    .fc-timeGridWeek-view .fc-timegrid-body,
+    .fc-timeGridDay-view .fc-timegrid-body {
+        max-height: 35vh !important;
+    }
+    
+    .fc-timegrid-axis {
+        width: 50px !important;
+        font-size: 0.7rem !important;
+    }
+}
+
+/* Large screen adjustments */
+@media (min-width: 1200px) {
+    .fc-daygrid-day-frame {
+        min-height: 100px !important;
+        max-height: 200px !important;
+    }
+    
+    .fc-daygrid-day-events {
+        max-height: 170px !important;
+    }
+    
+    .fc-daygrid-event {
+        font-size: 0.8rem !important;
+        padding: 2px 4px !important;
+        margin-bottom: 2px !important;
+        min-height: 20px !important;
+    }
+    
+    .fc-daygrid-more-link {
+        font-size: 0.7rem !important;
+        padding: 2px 4px !important;
+    }
+    
+    /* Large screen day/week view adjustments */
+    .fc-timeGridWeek-view .fc-view-harness,
+    .fc-timeGridDay-view .fc-view-harness {
+        max-height: 75vh !important;
+    }
+    
+    .fc-timeGridWeek-view .fc-scroller,
+    .fc-timeGridDay-view .fc-scroller {
+        max-height: 65vh !important;
+    }
+    
+    .fc-timeGridWeek-view .fc-timegrid-body,
+    .fc-timeGridDay-view .fc-timegrid-body {
+        max-height: 60vh !important;
+    }
+}
+
+/* Extra large screen adjustments */
+@media (min-width: 1400px) {
+    .fc-daygrid-day-frame {
+        min-height: 120px !important;
+        max-height: 220px !important;
+    }
+    
+    .fc-daygrid-day-events {
+        max-height: 190px !important;
+    }
+    
+    .fc-daygrid-event {
+        font-size: 0.85rem !important;
+        padding: 3px 5px !important;
+        margin-bottom: 2px !important;
+        min-height: 22px !important;
+    }
+    
+    .fc-daygrid-more-link {
+        font-size: 0.75rem !important;
+        padding: 2px 5px !important;
+    }
+    
+    /* Extra large screen day/week view adjustments */
+    .fc-timeGridWeek-view .fc-view-harness,
+    .fc-timeGridDay-view .fc-view-harness {
+        max-height: 80vh !important;
+    }
+    
+    .fc-timeGridWeek-view .fc-scroller,
+    .fc-timeGridDay-view .fc-scroller {
+        max-height: 70vh !important;
+    }
+    
+    .fc-timeGridWeek-view .fc-timegrid-body,
+    .fc-timeGridDay-view .fc-timegrid-body {
+        max-height: 65vh !important;
+    }
+}
+
+/* Month view - Allow full expansion, override style.css constraints */
+.fc-dayGridMonth-view .fc-view-harness,
+.fc-dayGridMonth-view .fc-daygrid,
+.fc-dayGridMonth-view .fc-scrollgrid,
+.fc-dayGridMonth-view .fc-scrollgrid-section {
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: auto !important;
+}
+
+/* Override style.css height constraints for month view */
+.fc-dayGridMonth-view .fc {
+    max-height: none !important;
+    height: auto !important;
+}
+
+.fc-dayGridMonth-view .fc-view-harness {
+    max-height: none !important;
+    min-height: auto !important;
+    overflow-y: visible !important;
+}
+
+.fc-dayGridMonth-view .calendar-container {
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+.fc-dayGridMonth-view #calendar {
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+/* Hide scrollbars for month view */
+.fc-dayGridMonth-view .fc-view-harness::-webkit-scrollbar,
+.fc-dayGridMonth-view .fc-daygrid::-webkit-scrollbar,
+.fc-dayGridMonth-view .fc-scrollgrid::-webkit-scrollbar,
+.fc-dayGridMonth-view .fc-scrollgrid-section::-webkit-scrollbar {
+    display: none !important;
+}
+
+/* Allow scrolling in day and week views */
+.fc-timeGridWeek-view .fc-view-harness,
+.fc-timeGridDay-view .fc-view-harness {
+    overflow-y: auto !important;
+    max-height: 70vh !important;
+}
+
+.fc-timeGridWeek-view .fc-scrollgrid,
+.fc-timeGridDay-view .fc-scrollgrid {
+    overflow-y: auto !important;
+}
+
+.fc-timeGridWeek-view .fc-scroller,
+.fc-timeGridDay-view .fc-scroller {
+    overflow-y: auto !important;
+    max-height: 60vh !important;
+}
+
+/* Time grid specific adjustments */
+.fc-timeGridWeek-view,
+.fc-timeGridDay-view {
+    height: auto !important;
+}
+
+.fc-timeGridWeek-view .fc-timegrid-body,
+.fc-timeGridDay-view .fc-timegrid-body {
+    overflow-y: auto !important;
+    max-height: 55vh !important;
+}
+
+.fc-timeGridWeek-view .fc-timegrid-slots,
+.fc-timeGridDay-view .fc-timegrid-slots {
+    overflow-y: visible !important;
+}
+
+/* Ensure time slots are visible */
+.fc-timegrid-slot {
+    min-height: 2rem !important;
+}
+
+.fc-timegrid-axis {
+    width: 60px !important;
+}
+
+/* Hide scrollbars for general calendar elements */
+.calendar-container::-webkit-scrollbar,
+#calendar::-webkit-scrollbar {
+    display: none !important;
+}
+
+/* Custom scrollbars for day/week views */
+.fc-timeGridWeek-view .fc-view-harness::-webkit-scrollbar,
+.fc-timeGridDay-view .fc-view-harness::-webkit-scrollbar,
+.fc-timeGridWeek-view .fc-scroller::-webkit-scrollbar,
+.fc-timeGridDay-view .fc-scroller::-webkit-scrollbar,
+.fc-timeGridWeek-view .fc-timegrid-body::-webkit-scrollbar,
+.fc-timeGridDay-view .fc-timegrid-body::-webkit-scrollbar {
+    width: 8px !important;
+    display: block !important;
+}
+
+.fc-timeGridWeek-view .fc-view-harness::-webkit-scrollbar-track,
+.fc-timeGridDay-view .fc-view-harness::-webkit-scrollbar-track,
+.fc-timeGridWeek-view .fc-scroller::-webkit-scrollbar-track,
+.fc-timeGridDay-view .fc-scroller::-webkit-scrollbar-track,
+.fc-timeGridWeek-view .fc-timegrid-body::-webkit-scrollbar-track,
+.fc-timeGridDay-view .fc-timegrid-body::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 4px !important;
+}
+
+.fc-timeGridWeek-view .fc-view-harness::-webkit-scrollbar-thumb,
+.fc-timeGridDay-view .fc-view-harness::-webkit-scrollbar-thumb,
+.fc-timeGridWeek-view .fc-scroller::-webkit-scrollbar-thumb,
+.fc-timeGridDay-view .fc-scroller::-webkit-scrollbar-thumb,
+.fc-timeGridWeek-view .fc-timegrid-body::-webkit-scrollbar-thumb,
+.fc-timeGridDay-view .fc-timegrid-body::-webkit-scrollbar-thumb {
+    background: rgba(77, 126, 255, 0.6) !important;
+    border-radius: 4px !important;
+}
+
+.fc-timeGridWeek-view .fc-view-harness::-webkit-scrollbar-thumb:hover,
+.fc-timeGridDay-view .fc-view-harness::-webkit-scrollbar-thumb:hover,
+.fc-timeGridWeek-view .fc-scroller::-webkit-scrollbar-thumb:hover,
+.fc-timeGridDay-view .fc-scroller::-webkit-scrollbar-thumb:hover,
+.fc-timeGridWeek-view .fc-timegrid-body::-webkit-scrollbar-thumb:hover,
+.fc-timeGridDay-view .fc-timegrid-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(77, 126, 255, 0.8) !important;
+}
+
+/* Popover adjustments for more events */
+.fc-popover {
+    max-height: 300px !important;
+    overflow-y: auto !important;
+    z-index: 1050 !important;
+    background: var(--secondary-bg) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: var(--border-radius) !important;
+    box-shadow: var(--shadow) !important;
+}
+
+.fc-popover-body {
+    max-height: 250px !important;
+    overflow-y: auto !important;
+    padding: 0.5rem !important;
+}
+
+.fc-popover-header {
+    background: var(--bg-tertiary) !important;
+    color: var(--text-primary) !important;
+    padding: 0.5rem !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+} 

@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+
+{% block title %}Menu - Bobby's Table{% endblock %}
+
+{% block header_title %}Restaurant Menu{% endblock %}
+{% block header_subtitle %}Explore our delicious offerings and culinary specialties{% endblock %}
+
+{% block content %}
+<!-- Category Quick Links -->
+<div id="menu-top" class="card mb-4">
+    <div class="card-body">
+        <h4 class="card-title mb-3 fw-semibold">
+            <i class="fas fa-list me-2"></i>Menu Categories
+        </h4>
+        <div class="row g-2 menu-category-links">
+            {% set breakfast_items = menu.get('breakfast', []) + menu.get('Breakfast', []) %}
+            {% if breakfast_items %}
+            <div class="col-6 col-md-3 col-lg-2">
+                <a href="#breakfast-section" class="btn btn-outline-primary w-100 text-decoration-none">
+                    <i class="fas fa-sun me-1"></i>Breakfast
+                </a>
+            </div>
+            {% endif %}
+            
+            {% set lunch_items = menu.get('lunch', []) + menu.get('Lunch', []) + menu.get('appetizers', []) + menu.get('Starter', []) %}
+            {% if lunch_items %}
+            <div class="col-6 col-md-3 col-lg-2">
+                <a href="#appetizers-section" class="btn btn-outline-primary w-100 text-decoration-none">
+                    <i class="fas fa-utensils me-1"></i>Appetizers
+                </a>
+            </div>
+            {% endif %}
+            
+            {% set dinner_items = menu.get('dinner', []) + menu.get('Dinner', []) + menu.get('main-courses', []) + menu.get('Main', []) + menu.get('Main Course', []) %}
+            {% if dinner_items %}
+            <div class="col-6 col-md-3 col-lg-2">
+                <a href="#main-courses-section" class="btn btn-outline-primary w-100 text-decoration-none">
+                    <i class="fas fa-drumstick-bite me-1"></i>Main Courses
+                </a>
+            </div>
+            {% endif %}
+            
+            {% set dessert_items = menu.get('desserts', []) + menu.get('Desserts', []) + menu.get('Dessert', []) %}
+            {% if dessert_items %}
+            <div class="col-6 col-md-3 col-lg-2">
+                <a href="#desserts-section" class="btn btn-outline-primary w-100 text-decoration-none">
+                    <i class="fas fa-ice-cream me-1"></i>Desserts
+                </a>
+            </div>
+            {% endif %}
+            
+            {% set drink_items = menu.get('drinks', []) + menu.get('Drinks', []) + menu.get('Cocktail', []) + menu.get('Wine', []) + menu.get('Non-Alcoholic', []) %}
+            {% if drink_items %}
+            <div class="col-6 col-md-3 col-lg-2">
+                <a href="#beverages-section" class="btn btn-outline-primary w-100 text-decoration-none">
+                    <i class="fas fa-cocktail me-1"></i>Beverages
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Menu Categories as Cards -->
+<div class="row g-4">
+    <!-- Breakfast Section -->
+    {% set breakfast_items = menu.get('breakfast', []) + menu.get('Breakfast', []) %}
+    {% if breakfast_items %}
+    <div class="col-12" id="breakfast-section">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-start">
+                <div>
+                    <h3 class="card-title mb-0 fw-semibold">
+                        <i class="fas fa-sun me-2"></i>Breakfast
+                    </h3>
+                    <p class="mb-0 text-muted">Start your day right with our morning favorites</p>
+                </div>
+                <a href="#menu-top" class="btn btn-sm btn-outline-secondary text-decoration-none back-to-top-link">
+                    <i class="fas fa-arrow-up me-1"></i>Back to Top
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    {% for item in breakfast_items %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="menu-item-card h-100">
+                            <div class="menu-item-content">
+                                <h5 class="card-title mb-2 fw-semibold">{{ item.name }}</h5>
+                                <p class="card-text text-muted mb-3">{{ item.description }}</p>
+                                <div class="menu-item-footer">
+                                    <span class="menu-item-price fw-bold">${{ "%.2f"|format(item.price) }}</span>
+                                    <button class="btn btn-sm btn-accent">Add to Order</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Lunch Section -->
+    {% set lunch_items = menu.get('lunch', []) + menu.get('Lunch', []) + menu.get('appetizers', []) + menu.get('Starter', []) %}
+    {% if lunch_items %}
+    <div class="col-12" id="appetizers-section">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-start">
+                <div>
+                    <h3 class="card-title mb-0 fw-semibold">
+                        <i class="fas fa-utensils me-2"></i>Lunch & Appetizers
+                    </h3>
+                    <p class="mb-0 text-muted">Light meals and starters to satisfy your midday cravings</p>
+                </div>
+                <a href="#menu-top" class="btn btn-sm btn-outline-secondary text-decoration-none back-to-top-link">
+                    <i class="fas fa-arrow-up me-1"></i>Back to Top
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    {% for item in lunch_items %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="menu-item-card h-100">
+                            <div class="menu-item-content">
+                                <h5 class="card-title mb-2 fw-semibold">{{ item.name }}</h5>
+                                <p class="card-text text-muted mb-3">{{ item.description }}</p>
+                                <div class="menu-item-footer">
+                                    <span class="menu-item-price fw-bold">${{ "%.2f"|format(item.price) }}</span>
+                                    <button class="btn btn-sm btn-accent">Add to Order</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Dinner Section -->
+    {% set dinner_items = menu.get('dinner', []) + menu.get('Dinner', []) + menu.get('main-courses', []) + menu.get('Main', []) + menu.get('Main Course', []) %}
+    {% if dinner_items %}
+    <div class="col-12" id="main-courses-section">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-start">
+                <div>
+                    <h3 class="card-title mb-0 fw-semibold">
+                        <i class="fas fa-drumstick-bite me-2"></i>Dinner & Main Courses
+                    </h3>
+                    <p class="mb-0 text-muted">Hearty main dishes for a satisfying dinner experience</p>
+                </div>
+                <a href="#menu-top" class="btn btn-sm btn-outline-secondary text-decoration-none back-to-top-link">
+                    <i class="fas fa-arrow-up me-1"></i>Back to Top
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    {% for item in dinner_items %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="menu-item-card h-100">
+                            <div class="menu-item-content">
+                                <h5 class="card-title mb-2 fw-semibold">{{ item.name }}</h5>
+                                <p class="card-text text-muted mb-3">{{ item.description }}</p>
+                                <div class="menu-item-footer">
+                                    <span class="menu-item-price fw-bold">${{ "%.2f"|format(item.price) }}</span>
+                                    <button class="btn btn-sm btn-accent">Add to Order</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Desserts Section -->
+    {% set dessert_items = menu.get('desserts', []) + menu.get('Desserts', []) + menu.get('Dessert', []) %}
+    {% if dessert_items %}
+    <div class="col-12" id="desserts-section">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-start">
+                <div>
+                    <h3 class="card-title mb-0 fw-semibold">
+                        <i class="fas fa-ice-cream me-2"></i>Desserts
+                    </h3>
+                    <p class="mb-0 text-muted">Sweet treats to end your meal on a perfect note</p>
+                </div>
+                <a href="#menu-top" class="btn btn-sm btn-outline-secondary text-decoration-none back-to-top-link">
+                    <i class="fas fa-arrow-up me-1"></i>Back to Top
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    {% for item in dessert_items %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="menu-item-card h-100">
+                            <div class="menu-item-content">
+                                <h5 class="card-title mb-2 fw-semibold">{{ item.name }}</h5>
+                                <p class="card-text text-muted mb-3">{{ item.description }}</p>
+                                <div class="menu-item-footer">
+                                    <span class="menu-item-price fw-bold">${{ "%.2f"|format(item.price) }}</span>
+                                    <button class="btn btn-sm btn-accent">Add to Order</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Drinks Section -->
+    {% set drink_items = menu.get('drinks', []) + menu.get('Drinks', []) + menu.get('Cocktail', []) + menu.get('Wine', []) + menu.get('Non-Alcoholic', []) %}
+    {% if drink_items %}
+    <div class="col-12" id="beverages-section">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-start">
+                <div>
+                    <h3 class="card-title mb-0 fw-semibold">
+                        <i class="fas fa-cocktail me-2"></i>Beverages
+                    </h3>
+                    <p class="mb-0 text-muted">Refreshing drinks, cocktails, and beverages to complement your meal</p>
+                </div>
+                <a href="#menu-top" class="btn btn-sm btn-outline-secondary text-decoration-none back-to-top-link">
+                    <i class="fas fa-arrow-up me-1"></i>Back to Top
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    {% for item in drink_items %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="menu-item-card h-100">
+                            <div class="menu-item-content">
+                                <h5 class="card-title mb-2 fw-semibold">{{ item.name }}</h5>
+                                <p class="card-text text-muted mb-3">{{ item.description }}</p>
+                                <div class="menu-item-footer">
+                                    <span class="menu-item-price fw-bold">${{ "%.2f"|format(item.price) }}</span>
+                                    <button class="btn btn-sm btn-accent">Add to Order</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Floating Cart Button -->
+<div class="floating-cart" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+    <button id="cart-button" class="btn btn-accent btn-lg rounded-circle shadow-lg" onclick="window.cleanupModalBackdrops(); window.cart && window.cart.showCart()" style="display: none; width: 60px; height: 60px;">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cart-badge" class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill" style="display: none;">0</span>
+    </button>
+</div>
+
+<!-- Include Payment Modal -->
+{% include 'modals/payment_modal.html' %}
+
+{% endblock %}
+
+{% block scripts %}
+<!-- Stripe JavaScript Library -->
+<script src="https://js.stripe.com/v3/"></script>
+<script src="{{ url_for('serve_static', filename='js/cart.js') }}"></script>
+<script src="{{ url_for('serve_static', filename='js/menu.js') }}"></script>
+<script src="{{ url_for('serve_static', filename='js/payment.js') }}"></script>
+{% endblock %} 

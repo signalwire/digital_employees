@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Bobby's Table{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('serve_static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('serve_static', filename='fontawesome/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('serve_static', filename='css/style.css') }}">
+    {% block styles %}{% endblock %}
+</head>
+<body class="bg-dark text-light">
+    <div class="navbar-background">
+        <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+            <div class="container-fluid">
+                <a class="navbar-brand d-flex align-items-center" href="/">
+                    <i class="fas fa-utensils me-2"></i>
+                    <span class="heading-gradient">Bobby's Table</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">
+                                <i class="fas fa-home me-2"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/calendar">
+                                <i class="fas fa-calendar me-2"></i>
+                                <span>Calendar</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/menu">
+                                <i class="fas fa-book-open me-2"></i>
+                                <span>Menu</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/kitchen">
+                                <i class="fas fa-fire me-2"></i>
+                                <span>Kitchen</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                    <!-- <div class="d-flex align-items-center">
+                        <span class="me-3" style="color: var(--text-secondary);">Welcome, Guest</span>
+                        <a href="/logout" class="btn btn-sm btn-outline-light">Logout</a>
+                    </div> -->
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <main class="container-fluid py-4">
+        <div class="dashboard-header p-4 mb-4 rounded shadow-lg">
+            <h1 class="mb-0 fw-bold heading-gradient">{% block header_title %}Bobby's Table{% endblock %}</h1>
+            <p class="mb-0" style="color: var(--text-secondary);">{% block header_subtitle %}Welcome to our restaurant management system{% endblock %}</p>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="mb-3">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} bg-modal text-light border-0" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+        <footer class="text-center p-4 mt-4 rounded shadow-lg">
+            <p class="mb-0" style="color: var(--text-secondary);">
+                &copy; 2025 Bobby's Table Restaurant
+                <span class="mx-2">|</span>
+                <a href="https://signalwire.ai" target="_blank" rel="noopener" style="color: #8e7cff; text-decoration: none; font-weight: 500;">
+                    Powered by SignalWire
+                </a>
+            </p>
+        </footer>
+    </main>
+    <script src="{{ url_for('serve_static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html> 

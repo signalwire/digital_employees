@@ -1,0 +1,69 @@
+<!-- Payment Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1" style="z-index: 1070;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-modal text-light rounded-4">
+            <div class="modal-header border-0" style="background: #232b3e;">
+                <h5 class="modal-title">
+                    <i class="fas fa-credit-card me-2"></i>Pay Bill
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="paymentDetails">
+                    <!-- Payment summary will be populated here -->
+                </div>
+                
+                <div class="card bg-dark border-secondary mt-4">
+                    <div class="card-header bg-secondary">
+                        <h6 class="mb-0">Payment Information</h6>
+                    </div>
+                    <div class="card-body">
+                        <form id="payment-form">
+                            <div class="mb-3">
+                                <label for="card-element" class="form-label">Card Details</label>
+                                <div id="card-element" class="form-control bg-dark text-light border-secondary" style="padding: 12px;">
+                                    <!-- Stripe Elements will create form elements here -->
+                                </div>
+                                <div id="card-errors" role="alert" class="text-danger mt-2"></div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="billing-name" class="form-label">Cardholder Name</label>
+                                <input type="text" class="form-control bg-dark text-light border-secondary" 
+                                       id="billing-name" placeholder="John Doe" required>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="billing-sms" class="form-label">SMS Number (for receipt)</label>
+                                    <input type="tel" class="form-control bg-dark text-light border-secondary" 
+                                           id="billing-sms" placeholder="+1 (555) 123-4567" required>
+                                    <div class="form-text text-muted">Receipt will be sent via SMS</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="billing-email" class="form-label">Email (optional)</label>
+                                    <input type="email" class="form-control bg-dark text-light border-secondary" 
+                                           id="billing-email" placeholder="john@example.com">
+                                    <div class="form-text text-muted">Optional email receipt</div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div id="payment-processing" class="text-center mt-4" style="display: none;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Processing...</span>
+                    </div>
+                    <p class="mt-2">Processing your payment...</p>
+                </div>
+            </div>
+            <div class="modal-footer border-0" style="background: #232b3e;">
+                <button type="button" class="btn btn-cancel btn-lg" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success btn-lg" id="submit-payment">
+                    <i class="fas fa-lock me-2"></i>Pay Now
+                </button>
+            </div>
+        </div>
+    </div>
+</div> 
