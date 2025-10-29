@@ -8,7 +8,7 @@
 
 - [Core Functionality](#core-functionality)
 - [Using tap](#using-tap)
-- [Using web tap](#using-web-tap)
+- [Using web tap](#using-web-rtp-tap)
 - [Utilizing the `tap` Method in SWML](#utilizing-the-tap-method-in-swml)
 - [WSS WEB TAP](wss_tap/)
 
@@ -47,7 +47,7 @@ The `tap` script handles the following tasks:
 
 ---
 
-## Using web tap
+## Using web RTP tap
 
 - **Run the Script**: Execute it in a Windows command prompt or terminal.
 - **View Webpage**:  
