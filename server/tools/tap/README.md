@@ -10,6 +10,7 @@
 - [Using tap](#using-tap)
 - [Using web tap](#using-web-tap)
 - [Utilizing the `tap` Method in SWML](#utilizing-the-tap-method-in-swml)
+- [WSS WEB TAP](#wss-tap/readme.md)
 
 ---
 
