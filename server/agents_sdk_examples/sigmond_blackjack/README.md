@@ -16,7 +16,7 @@ Play online: https://blackjack.signalwire.me
 
 The full source code is maintained in a separate repository:
 
-**[github.com/signalwire/sigmond-blackjack](https://github.com/signalwire/sigmond-blackjack)**
+**[github.com/signalwire-demos/blackjack](https://github.com/signalwire-demos/blackjack)**
 
 ## Features
 
@@ -39,4 +39,4 @@ The application uses a **single-service architecture** where the AI agent simult
 
 ## Getting Started
 
-See the [main repository](https://github.com/signalwire/sigmond-blackjack) for setup and deployment instructions.
+See the [main repository](https://github.com/signalwire-demos/blackjack) for setup and deployment instructions.

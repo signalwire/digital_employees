@@ -12,7 +12,7 @@ A production-ready voice-controlled drive-thru ordering system demonstrating a *
 
 The full source code is maintained in a separate repository:
 
-**[github.com/signalwire/sigmond-holyguacamole](https://github.com/signalwire/sigmond-holyguacamole)**
+**[github.com/signalwire-demos/holy-guacamole](https://github.com/signalwire-demos/holy-guacamole)**
 
 ## Features
 
@@ -38,4 +38,4 @@ This project showcases how to build conversational AI that's reliable, maintaina
 
 ## Getting Started
 
-See the [main repository](https://github.com/signalwire/sigmond-holyguacamole) for setup and deployment instructions.
+See the [main repository](https://github.com/signalwire-demos/holy-guacamole) for setup and deployment instructions.

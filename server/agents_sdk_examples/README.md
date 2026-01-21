@@ -18,8 +18,8 @@ The SignalWire Agents SDK provides a high-level, skills-based architecture for b
 |---------|-------------|
 | [bobbys_table](bobbys_table/) | Restaurant reservation system with Stripe payments and kitchen dashboard |
 | [fresh_valley_market](fresh_valley_market/) | Grocery store digital employee |
-| [sigmond_blackjack](sigmond_blackjack/) | Video blackjack game with AI dealer ([external repo](https://github.com/signalwire/sigmond-blackjack)) |
-| [sigmond_holyguacamole](sigmond_holyguacamole/) | Voice-controlled drive-thru ordering system ([external repo](https://github.com/signalwire/sigmond-holyguacamole)) |
+| [sigmond_blackjack](sigmond_blackjack/) | Video blackjack game with AI dealer ([external repo](https://github.com/signalwire-demos/blackjack)) |
+| [sigmond_holyguacamole](sigmond_holyguacamole/) | Voice-controlled drive-thru ordering system ([external repo](https://github.com/signalwire-demos/holy-guacamole)) |
 
 ## Getting Started
 
