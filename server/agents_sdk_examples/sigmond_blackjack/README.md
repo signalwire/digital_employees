@@ -2,6 +2,12 @@
 
 A fully functional blackjack game demonstrating how to build sophisticated SignalWire AI agents. Players connect via video call to an AI dealer, place bets, and play hands of blackjack with real-time UI updates.
 
+<p align="center">
+    <img src="https://github.com/user-attachments/assets/e6aefdf4-6ede-4c60-8eb6-48f68edd665f" alt="image" width="50%" />
+  </p>
+
+
+
 ## Live Demo
 
 Play online: https://blackjack.signalwire.me
