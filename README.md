@@ -45,6 +45,9 @@ Examples using the [SignalWire Agents SDK](https://github.com/signalwire/signalw
 #### 🛒  [Fresh Valley Market](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/fresh_valley_market)
   * A grocery store digital employee built with the SignalWire Agents SDK.
 
+#### 🃏  [Sigmond Blackjack](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/sigmond_blackjack)
+  * A video blackjack game with an AI dealer. Players connect via WebRTC video call to play blackjack with real-time UI updates. ([Live Demo](https://blackjack.signalwire.me) | [Source Repo](https://github.com/signalwire/sigmond-blackjack))
+
 ### SWAIG Examples
 
 Examples using SWAIG (SignalWire AI Gateway) with various backend languages.

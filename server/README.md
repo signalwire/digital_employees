@@ -12,6 +12,7 @@ Examples using the [SignalWire Agents SDK](https://github.com/signalwire/signalw
 |---------|-------------|
 | [bobbys_table](agents_sdk_examples/bobbys_table/) | Restaurant reservation system with Stripe payments and kitchen dashboard |
 | [fresh_valley_market](agents_sdk_examples/fresh_valley_market/) | Grocery store digital employee |
+| [sigmond_blackjack](agents_sdk_examples/sigmond_blackjack/) | Video blackjack game with AI dealer ([external repo](https://github.com/signalwire/sigmond-blackjack)) |
 
 ### SWAIG Examples
 
