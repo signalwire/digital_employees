@@ -4,7 +4,7 @@ A starter template for building AI agents with WebRTC capabilities using SignalW
 
 ## Live Demo
 
-Try it online: https://example.signalwire.io
+[![Try it](https://img.shields.io/badge/🎮_Try_Now-example.signalwire.io-green?style=for-the-badge)](https://example.signalwire.io)
 
 ## Source Repository
 

@@ -1,5 +1,7 @@
 # Sigmond Holy Guacamole
 
+[![Try it](https://img.shields.io/badge/🎮_Try_Now-holyguacamole.signalwire.io-green?style=for-the-badge)](https://holyguacamole.signalwire.io)
+
 A production-ready voice-controlled drive-thru ordering system demonstrating a **code-driven LLM architecture** where application logic controls the AI agent rather than the reverse.
 
 

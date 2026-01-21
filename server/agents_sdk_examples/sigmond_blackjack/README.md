@@ -11,7 +11,7 @@ A fully functional blackjack game demonstrating how to build sophisticated Signa
 
 ## Live Demo
 
-Play online: https://blackjack.signalwire.me
+[![Try it](https://img.shields.io/badge/🎮_Play_Now-blackjack.signalwire.me-green?style=for-the-badge)](https://blackjack.signalwire.me)
 
 ## Source Repository
 
