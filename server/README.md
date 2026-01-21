@@ -14,6 +14,10 @@ Examples using the [SignalWire Agents SDK](https://github.com/signalwire/signalw
 | [fresh_valley_market](agents_sdk_examples/fresh_valley_market/) | Grocery store digital employee |
 | [sigmond_blackjack](agents_sdk_examples/sigmond_blackjack/) | Video blackjack game with AI dealer ([external repo](https://github.com/signalwire-demos/blackjack)) |
 | [sigmond_holyguacamole](agents_sdk_examples/sigmond_holyguacamole/) | Voice-controlled drive-thru ordering system ([external repo](https://github.com/signalwire-demos/holy-guacamole)) |
+| [cinebot](agents_sdk_examples/cinebot/) | AI-powered movie discovery assistant ([external repo](https://github.com/signalwire-demos/cinebot)) |
+| [santa](agents_sdk_examples/santa/) | AI Santa with video conversations ([external repo](https://github.com/signalwire-demos/santa)) |
+| [afterhours](agents_sdk_examples/afterhours/) | After-hours HVAC emergency service ([external repo](https://github.com/signalwire-demos/afterhours)) |
+| [example](agents_sdk_examples/example/) | Starter template for AI agents ([external repo](https://github.com/signalwire-demos/example)) |
 
 ### SWAIG Examples
 

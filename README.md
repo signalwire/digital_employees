@@ -51,6 +51,18 @@ Examples using the [SignalWire Agents SDK](https://github.com/signalwire/signalw
 #### 🌮  [Sigmond Holy Guacamole](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/sigmond_holyguacamole)
   * A voice-controlled drive-thru ordering system with real-time order visualization, intelligent menu matching, and code-driven LLM architecture. ([Source Repo](https://github.com/signalwire-demos/holy-guacamole))
 
+#### 🎬  [CineBot](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/cinebot)
+  * An AI-powered movie discovery assistant with voice conversations, movie search, genre browsing, and streaming availability. ([Source Repo](https://github.com/signalwire-demos/cinebot))
+
+#### 🎅  [Santa](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/santa)
+  * An AI Santa character with WebRTC video conversations and gift search capabilities. ([Source Repo](https://github.com/signalwire-demos/santa))
+
+#### 🔧  [Afterhours](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/afterhours)
+  * An after-hours HVAC emergency service system with AI call handling and real-time dashboard. ([Source Repo](https://github.com/signalwire-demos/afterhours))
+
+#### 📋  [Example (Starter Template)](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/example)
+  * A starter template for building AI agents with WebRTC capabilities. ([Live Demo](https://example.signalwire.io) | [Source Repo](https://github.com/signalwire-demos/example))
+
 ### SWAIG Examples
 
 Examples using SWAIG (SignalWire AI Gateway) with various backend languages.

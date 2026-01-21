@@ -20,6 +20,10 @@ The SignalWire Agents SDK provides a high-level, skills-based architecture for b
 | [fresh_valley_market](fresh_valley_market/) | Grocery store digital employee |
 | [sigmond_blackjack](sigmond_blackjack/) | Video blackjack game with AI dealer ([external repo](https://github.com/signalwire-demos/blackjack)) |
 | [sigmond_holyguacamole](sigmond_holyguacamole/) | Voice-controlled drive-thru ordering system ([external repo](https://github.com/signalwire-demos/holy-guacamole)) |
+| [cinebot](cinebot/) | AI-powered movie discovery assistant ([external repo](https://github.com/signalwire-demos/cinebot)) |
+| [santa](santa/) | AI Santa with video conversations and gift search ([external repo](https://github.com/signalwire-demos/santa)) |
+| [afterhours](afterhours/) | After-hours HVAC emergency service system ([external repo](https://github.com/signalwire-demos/afterhours)) |
+| [example](example/) | Starter template for building AI agents ([external repo](https://github.com/signalwire-demos/example)) |
 
 ## Getting Started
 
