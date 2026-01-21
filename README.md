@@ -35,6 +35,20 @@ Try out the following serverless examples in the dashboard of your SignalWire Sp
 
 ## Server
 
+### Agents SDK Examples
+
+Examples using the [SignalWire Agents SDK](https://github.com/signalwire/signalwire-agents) for building AI-powered digital employees.
+
+#### 🍽️  [Bobby's Table (Agents SDK)](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/bobbys_table)
+  * Bobby - A comprehensive restaurant reservation system built with the SignalWire Agents SDK. Features skills-based architecture, menu management, Stripe payment integration, and a kitchen dashboard.
+
+#### 🛒  [Fresh Valley Market](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/fresh_valley_market)
+  * A grocery store digital employee built with the SignalWire Agents SDK.
+
+### SWAIG Examples
+
+Examples using SWAIG (SignalWire AI Gateway) with various backend languages.
+
 #### 📽️ [Movie Bot](https://github.com/signalwire/digital_employees/tree/main/server/python_examples/moviebot)
   * Movie Expert AI Agent with SignalWire AI Gateway.
 
