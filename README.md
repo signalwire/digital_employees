@@ -48,6 +48,9 @@ Examples using the [SignalWire Agents SDK](https://github.com/signalwire/signalw
 #### 🃏  [Sigmond Blackjack](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/sigmond_blackjack)
   * A video blackjack game with an AI dealer. Players connect via WebRTC video call to play blackjack with real-time UI updates. ([Live Demo](https://blackjack.signalwire.me) | [Source Repo](https://github.com/signalwire/sigmond-blackjack))
 
+#### 🌮  [Sigmond Holy Guacamole](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/sigmond_holyguacamole)
+  * A voice-controlled drive-thru ordering system with real-time order visualization, intelligent menu matching, and code-driven LLM architecture. ([Source Repo](https://github.com/signalwire/sigmond-holyguacamole))
+
 ### SWAIG Examples
 
 Examples using SWAIG (SignalWire AI Gateway) with various backend languages.
