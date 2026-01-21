@@ -2,6 +2,12 @@
 
 A production-ready voice-controlled drive-thru ordering system demonstrating a **code-driven LLM architecture** where application logic controls the AI agent rather than the reverse.
 
+
+<p align="center">
+    <img src="https://github.com/user-attachments/assets/6b201001-6c10-4a84-a884-e7e0f56a36bc" alt="image" width="50%" />
+
+</p>
+
 ## Source Repository
 
 The full source code is maintained in a separate repository:
