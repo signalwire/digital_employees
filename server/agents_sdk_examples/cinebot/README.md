@@ -1,5 +1,7 @@
 # CineBot
 
+[![Try it](https://img.shields.io/badge/🎮_Try_Now-cinebot.signalwire.io-green?style=for-the-badge)](https://cinebot.signalwire.io)
+
 An AI-powered movie discovery assistant that enables natural voice conversations about films. Users can search for movies, explore actors and directors, browse by genre, get recommendations, and access streaming availability.
 
 ## Source Repository

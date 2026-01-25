@@ -1,5 +1,7 @@
 # Santa
 
+[![Try it](https://img.shields.io/badge/🎅_Try_Now-santa.signalwire.io-green?style=for-the-badge)](https://santa.signalwire.io)
+
 An AI-powered Santa character that users can interact with through WebRTC video conversations. Features gift search capabilities and automated deployment infrastructure.
 
 ## Source Repository
