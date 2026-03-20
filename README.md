@@ -46,22 +46,46 @@ Examples using the [SignalWire Agents SDK](https://github.com/signalwire/signalw
   * A grocery store digital employee built with the SignalWire Agents SDK.
 
 #### 🃏  [Sigmond Blackjack](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/sigmond_blackjack)
-  * A video blackjack game with an AI dealer. Players connect via WebRTC video call to play blackjack with real-time UI updates. ([Live Demo](https://blackjack.signalwire.me) | [Source Repo](https://github.com/signalwire-demos/blackjack))
+  * A video blackjack game with an AI dealer. Players connect via WebRTC video call to play blackjack with real-time UI updates. ([Live Demo](https://blackjack.signalwire.io) | [Source Repo](https://github.com/signalwire-demos/blackjack))
 
 #### 🌮  [Sigmond Holy Guacamole](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/sigmond_holyguacamole)
-  * A voice-controlled drive-thru ordering system with real-time order visualization, intelligent menu matching, and code-driven LLM architecture. ([Source Repo](https://github.com/signalwire-demos/holy-guacamole))
+  * A voice-controlled drive-thru ordering system with real-time order visualization, intelligent menu matching, and code-driven LLM architecture. ([Source Repo](https://github.com/signalwire-demos/holyguacamole))
 
 #### 🎬  [CineBot](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/cinebot)
-  * An AI-powered movie discovery assistant with voice conversations, movie search, genre browsing, and streaming availability. ([Source Repo](https://github.com/signalwire-demos/cinebot))
+  * An AI-powered movie discovery assistant with voice conversations, movie search, genre browsing, and streaming availability. ([Live Demo](https://cinebot.signalwire.io) | [Source Repo](https://github.com/signalwire-demos/cinebot))
 
 #### 🎅  [Santa](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/santa)
-  * An AI Santa character with WebRTC video conversations and gift search capabilities. ([Source Repo](https://github.com/signalwire-demos/santa))
+  * An AI Santa character with WebRTC video conversations and gift search capabilities. ([Live Demo](https://santa.signalwire.io) | [Source Repo](https://github.com/signalwire-demos/santa))
 
 #### 🔧  [Afterhours](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/afterhours)
   * An after-hours HVAC emergency service system with AI call handling and real-time dashboard. ([Source Repo](https://github.com/signalwire-demos/afterhours))
 
 #### 📋  [Example (Starter Template)](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/example)
   * A starter template for building AI agents with WebRTC capabilities. ([Live Demo](https://example.signalwire.io) | [Source Repo](https://github.com/signalwire-demos/example))
+
+#### 🦷  [Dental Office](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/dental)
+  * A voice-powered dental office receptionist that handles inbound patient calls and proactive outbound calls using the OpenDental API. Features appointment booking, insurance management, and outbound recall reminders. ([Source Repo](https://github.com/signalwire-demos/dental))
+
+#### 🍕  [Gino's Pizza](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/ginospizza)
+  * An AI-powered pizza ordering system with voice interaction and a real-time visual pizza builder that stacks transparent PNG layers as customers make selections. ([Source Repo](https://github.com/signalwire-demos/ginospizza))
+
+#### 🏠  [HouseCall](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/housecall)
+  * A real estate AI voice agent that manages inbound inquiries with lead capture, property searches, appointment scheduling, and agent transfers. ([Source Repo](https://github.com/signalwire-demos/housecall))
+
+#### ✈️  [GoAir](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/goair)
+  * A voice-powered flight booking system where an AI agent enables callers to search flights, compare options, book trips, and receive SMS confirmations. ([Source Repo](https://github.com/signalwire-demos/goair))
+
+#### 🔍  [Veronica](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/veronica)
+  * A voice AI agent that collects and validates email addresses and physical addresses from inbound callers using deterministic state-machine routing. ([Source Repo](https://github.com/signalwire-demos/veronica))
+
+#### 🚕  [Cabby](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/cabby)
+  * A voice-powered AI taxi booking system with ride bookings, fare calculation via Google Routes, rebooking, and SMS confirmations. ([Source Repo](https://github.com/signalwire-demos/cabby))
+
+#### ⚡  [Utility](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/utility)
+  * A voice-powered customer service system for electric utilities featuring bill payment, outage reporting, service requests, and proactive outbound notifications. ([Source Repo](https://github.com/signalwire-demos/utility))
+
+#### 📞  [Personal Assistant](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/personal-assistant)
+  * A comprehensive voice AI assistant that handles inbound business calls with appointment scheduling, email/calendar integration, FAQ search, and message taking. ([Source Repo](https://github.com/signalwire-demos/personal-assistant))
 
 ### SWAIG Examples
 
