@@ -29,7 +29,7 @@ Try out the following serverless examples in the dashboard of your SignalWire Sp
 #### 🌡️  [ESP8266 Temperature & Humidity Sensor Bot](https://github.com/signalwire/digital_employees/tree/main/serverless/esp8266_sensor_bot)
   * Ziggy - A digital employee that can interact with a ESP8266 and DHT11 temperature sensor to give the temperature and humidity values from the [ThingSpeak API](https://www.mathworks.com/help/thingspeak/channels-and-charts-api.html).
 
-#### 🍹  [AI Bartender](https://github.com/signalwire/digital_employees/blob/main/serverless/bartender)
+#### 🍹  [AI Bartender](https://github.com/signalwire/digital_employees/tree/main/serverless/bartender)
   * Kevin - The AI Bartender is a digital employee designed to serve as your personal bartender. Kevin uses a vectorized PDF of drink recipes instead of imagining them.
 
 
