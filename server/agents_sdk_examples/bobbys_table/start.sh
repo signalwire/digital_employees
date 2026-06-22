@@ -20,4 +20,4 @@ pip install --no-cache-dir -r requirements.txt
 
 # Run the application
 echo "Starting the application..."
-python reservation_agent.py 
+python start_agents.py

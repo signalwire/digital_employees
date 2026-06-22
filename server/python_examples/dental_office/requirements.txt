@@ -1,8 +1,8 @@
 flask
 python-dotenv
-signalwire
-signalwire_swaig==2.7
-signalwire_pom==2.7
+signalwire==2.1.1
+signalwire_swaig==2.7.2
+signalwire_pom==2.7.2
 signalwire_swml==2.7
 requests
 psutil

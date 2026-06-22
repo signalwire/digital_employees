@@ -1,5 +1,5 @@
 Flask
 Flask_HTTPAuth
 python-dotenv
-signalwire_swaig
+signalwire_swaig==2.7.2
 gunicorn

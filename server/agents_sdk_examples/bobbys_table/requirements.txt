@@ -2,7 +2,7 @@ Flask
 Flask_SQLAlchemy
 Flask_HTTPAuth
 python-dotenv
-signalwire-agents
+signalwire-agents==1.1.0
 gunicorn
 requests
 stripe
