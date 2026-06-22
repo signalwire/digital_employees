@@ -1,8 +1,8 @@
 modules = ["python-3.11", "bash"]
 
 # setup_all_with_replit.sh is the single source of truth: it generates the app
-# into dental_app/, builds a venv, installs deps, and seeds the DB. We gate it
-# on the venv so it only runs on first boot; later boots start the app directly.
+# into dental_app/, builds a venv, installs deps, and seeds the DB. Gated on the
+# venv so it only runs on first boot; later boots start the app directly.
 run = "if [ ! -d dental_app/venv ]; then bash setup_all_with_replit.sh; fi && cd dental_app && source venv/bin/activate && python app.py"
 
 [nix]
@@ -14,3 +14,18 @@ run = ["sh", "-c", "if [ ! -d dental_app/venv ]; then bash setup_all_with_replit
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+# Replit drives the Run button through a workflow. This one runs the first-boot
+# setup (only when no venv exists yet), then launches the app and waits for
+# port 5000 so the webview opens. Mirrors the `run`/`deployment` commands above.
+[workflows]
+runButton = "Start Dental Office"
+
+[[workflows.workflow]]
+name = "Start Dental Office"
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "if [ ! -d dental_app/venv ]; then bash setup_all_with_replit.sh; fi && cd dental_app && source venv/bin/activate && python app.py"
+waitForPort = 5000
