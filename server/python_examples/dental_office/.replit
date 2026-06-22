@@ -1,8 +1,7 @@
 modules = ["bash", "c-clang14", "python-3.12", "nodejs-20"]
 
 run = """
-cd server/Python_Examples/dental_office \
-&& bash setup_all_with_replit.sh \
+bash setup_all_with_replit.sh \
 && cd dental_app \
 && source venv/bin/activate \
 && python app.py --host=0.0.0.0 --port=8080
@@ -13,4 +12,4 @@ channel = "stable-24_05"
 packages = ["nano"]
 
 [deployment]
-run = ["sh", "-c", "cd server/Python_Examples/dental_office && bash setup_all_with_replit.sh && cd dental_app && source venv/bin/activate && python app.py --host=0.0.0.0 --port=8080"]
+run = ["sh", "-c", "bash setup_all_with_replit.sh && cd dental_app && source venv/bin/activate && python app.py --host=0.0.0.0 --port=8080"]

@@ -8,7 +8,7 @@ channel = "stable-24_05"
 requiredFiles = [".replit", "replit.nix"]
 
 [deployment]
-run = ["bash", "start_replit.sh", "source .env", "--host", "0.0.0.0", "--port", "8080"]
+run = ["bash", "start_replit.sh"]
 
 [[ports]]
 localPort = 8080
@@ -24,4 +24,4 @@ mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "bash start_replit.sh --host 0.0.0.0 --port 8080"
+args = "bash start_replit.sh"
