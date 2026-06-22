@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Generated at runtime by setup_all_with_replit.sh (the script is the source of
+# truth; the generated app, venv, and DB are derived artifacts).
+dental_app/
+
+# Environment files
+.env

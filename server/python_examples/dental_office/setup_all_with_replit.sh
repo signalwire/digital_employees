@@ -2323,16 +2323,16 @@ if __name__ == '__main__':
     if not os.path.exists(app.config['DATABASE']):
         logging.info("Creating new database")
         init_db()
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=5000)
 EOF
 
 # Install required Python packages
 cat > dental_app/requirements.txt << 'EOF'
 flask
 python-dotenv
-signalwire
-signalwire_swaig==2.7
-signalwire_pom==2.7
+signalwire==2.1.1
+signalwire_swaig==2.7.2
+signalwire_pom==2.7.2
 signalwire_swml==2.7
 requests
 psutil
@@ -2343,11 +2343,12 @@ EOF
 
 
 # Make script executable and run setup
-apt-get update && apt-get install python3-venv -y
+# apt is unavailable on Replit; python3-venv ships with the Replit Python module
 chmod +x $0
 echo "Setting up environment..."
 python3 -m venv dental_app/venv
 source dental_app/venv/bin/activate
+export PIP_USER=0  # Replit sets PIP_USER=1 globally; it breaks pip installs inside a venv
 pip install --upgrade pip
 pip install -r dental_app/requirements.txt
 echo "Initializing database..."
