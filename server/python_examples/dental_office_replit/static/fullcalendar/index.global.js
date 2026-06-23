@@ -73,7 +73,7 @@ var FullCalendar = (function (exports) {
         return queriedNonceValue;
     }
     /*
-    TODO: discourage meta tag and instead put nonce attribute on placeholder <style> tag
+     TODO: discourage meta tag and instead put nonce attribute on placeholder <style> tag
     */
     function queryNonceValue() {
         const metaWithNonce = document.querySelector('meta[name="csp-nonce"]');
