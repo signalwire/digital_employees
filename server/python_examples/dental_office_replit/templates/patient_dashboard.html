@@ -1,0 +1,728 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Dental Office{% endblock %}
+
+{% block content %}
+<!-- Professional Dashboard with Enhanced Design -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-9 col-lg-10 main-content">
+            <!-- Professional Welcome Banner -->
+            <div class="welcome-banner">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="text-gradient mb-2">Welcome back, {{ session.name }}</h2>
+                    </div>
+                    <div class="d-flex gap-3">
+                        {% if patient_id %}
+                            <span class="badge bg-light text-dark px-3 py-2" style="font-size: 0.9rem;">
+                                <i class="bi bi-person-badge me-2"></i>ID: {{ patient_id }}
+                            </span>
+                        {% endif %}
+                        <button class="btn btn-light btn-lg shadow-soft" onclick="openCallWindow()">
+                            <i class="bi bi-telephone me-2"></i>Click to Call
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Overview Cards -->
+            <div class="data-grid mb-5">
+                <div class="stat-card">
+                    <div class="stat-value">${{ "%.2f"|format(balance) }}</div>
+                    <div class="stat-label">Current Balance</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ recent_treatments|length }}</div>
+                    <div class="stat-label">Recent Treatments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ 1 if next_appointment else 0 }}</div>
+                    <div class="stat-label">Upcoming Appointments</div>
+                </div>
+            </div>
+
+            <!-- Enhanced Calendar Card -->
+            <div class="card card-elevated mb-5">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0 font-semibold">
+                            <i class="bi bi-calendar3 me-2 text-primary"></i>Appointment Calendar
+                        </h4>
+                        <button class="btn btn-primary shadow-soft" onclick="showAppointmentModal()">
+                            <i class="bi bi-plus-circle me-2"></i>Schedule Appointment
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="calendar" style="min-height: 400px; padding: 20px; border-radius: var(--radius-lg); background-color: var(--gray-50);"></div>
+                </div>
+            </div>
+
+            <!-- Next Appointment Card -->
+            <div class="card card-outlined mb-5">
+                <div class="card-header">
+                    <h4 class="mb-0 font-semibold">
+                        <i class="bi bi-clock me-2 text-primary"></i>Next Appointment
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% if next_appointment %}
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <div class="space-y-3">
+                                    <div>
+                                        <h5 class="font-semibold text-gray-900 mb-2">{{ next_appointment.service_name }}</h5>
+                                        <p class="text-gray-600 mb-2">
+                                            <i class="bi bi-calendar-event me-2"></i>
+                                            <span class="font-medium">{{ next_appointment.start_time[:10] }}</span>
+                                        </p>
+                                        <p class="text-gray-600 mb-0">
+                                            <i class="bi bi-clock me-2"></i>
+                                            <span class="font-medium">
+                                                {% set start_hour = next_appointment.start_time[11:13]|int %}
+                                                {% set start_min = next_appointment.start_time[14:16] %}
+                                                {% set end_hour = next_appointment.end_time[11:13]|int %}
+                                                {% set end_min = next_appointment.end_time[14:16] %}
+                                                {% if start_hour == 0 %}
+                                                    12:{{ start_min }} AM
+                                                {% elif start_hour < 12 %}
+                                                    {{ start_hour }}:{{ start_min }} AM
+                                                {% elif start_hour == 12 %}
+                                                    12:{{ start_min }} PM
+                                                {% else %}
+                                                    {{ start_hour - 12 }}:{{ start_min }} PM
+                                                {% endif %}
+                                                - 
+                                                {% if end_hour == 0 %}
+                                                    12:{{ end_min }} AM
+                                                {% elif end_hour < 12 %}
+                                                    {{ end_hour }}:{{ end_min }} AM
+                                                {% elif end_hour == 12 %}
+                                                    12:{{ end_min }} PM
+                                                {% else %}
+                                                    {{ end_hour - 12 }}:{{ end_min }} PM
+                                                {% endif %}
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="space-y-2">
+                                    <span class="badge status-pending mb-3 px-3 py-2 font-medium">Upcoming</span>
+                                    <br>
+                                    <button class="btn btn-outline-primary shadow-soft" type="button" onclick="viewAppointment({{ next_appointment.id }})">
+                                        <i class="bi bi-eye me-2"></i>View Details
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-calendar-x text-gray-400" style="font-size: 3rem;"></i>
+                            <h5 class="text-gray-600 mt-3 mb-3">No upcoming appointments</h5>
+                            <p class="text-gray-500 mb-4">Schedule your next dental visit today</p>
+                            <button class="btn btn-primary btn-lg" onclick="showAppointmentModal()">
+                                <i class="bi bi-calendar-plus me-2"></i>Schedule Appointment
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Recent Treatments Card -->
+            <div class="card card-outlined mb-5">
+                <div class="card-header">
+                    <h4 class="mb-0 font-semibold">
+                        <i class="bi bi-clipboard2-pulse me-2 text-success"></i>Recent Treatments
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% if recent_treatments %}
+                        <div class="row g-4">
+                            {% for treatment in recent_treatments %}
+                                <div class="col-md-6">
+                                    <div class="service-card">
+                                        <div class="d-flex justify-content-between align-items-start mb-3">
+                                            <div class="d-flex align-items-center">
+                                                <h5 class="font-semibold text-gray-900 mb-0 me-3">{{ treatment.service_name }}</h5>
+                                                <span class="service-label {{ treatment.service_name|service_class }}">{{ treatment.service_name }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="space-y-2">
+                                            <p class="text-gray-600 mb-2">
+                                                <i class="bi bi-calendar3 me-2"></i>
+                                                <span class="font-medium">{{ treatment.treatment_date|format_date('long') }}</span>
+                                            </p>
+                                            <p class="text-gray-600 mb-0">
+                                                <i class="bi bi-person-heart me-2"></i>
+                                                <span class="font-medium">Dr. {{ treatment.dentist_first_name }} {{ treatment.dentist_last_name }}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-clipboard2-pulse text-gray-400" style="font-size: 3rem;"></i>
+                            <h5 class="text-gray-600 mt-3 mb-2">No recent treatments</h5>
+                            <p class="text-gray-500">Your treatment history will appear here</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modals and other content here -->
+<!-- Schedule Appointment Modal -->
+<div class="modal fade" id="appointmentModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Schedule Appointment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="appointmentForm">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" id="appointmentStart" name="start">
+          <input type="hidden" id="appointmentEnd" name="end">
+          <input type="hidden" id="appointmentType" name="type" value="checkup">
+          <div class="mb-3">
+            <label class="form-label">Appointment Type</label>
+            <select class="form-select" name="service_id" id="serviceTypeSelect" required>
+              <option value="">Select a service</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Dentist</label>
+            <select class="form-select" name="dentist_id" id="dentistSelect" required>
+              <option value="">Select a dentist</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Date</label>
+            <input type="date" class="form-control" name="date" id="appointmentDateInput" required min="{{ (today or '') }}" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Time Slot</label>
+            <select class="form-select" name="time_slot" required>
+              <option value="morning">Morning (8AM-11AM)</option>
+              <option value="afternoon">Afternoon (2PM-4PM)</option>
+              <option value="evening">Evening (6PM-8PM)</option>
+              <option value="all_day">All Day (8AM-8PM)</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Notes</label>
+            <textarea class="form-control" name="notes" rows="3"></textarea>
+          </div>
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="smsReminder" name="sms_reminder" checked>
+            <label class="form-check-label" for="smsReminder">Send SMS Reminder</label>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Schedule Appointment</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Appointment Details Modal (with reschedule/cancel) -->
+<div class="modal fade" id="appointmentDetailsModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Appointment Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label fw-bold">Appointment ID:</label>
+          <span id="appointmentId"></span>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">Date:</label>
+          <span id="appointmentDate"></span>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">Time Slot:</label>
+          <span id="appointmentTimeSlot"></span>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">Type:</label>
+          <span id="appointmentType"></span>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">Dentist:</label>
+          <span id="appointmentDentist"></span>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">Notes:</label>
+          <p id="appointmentNotes" class="mb-0"></p>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">SMS Reminder:</label>
+          <select class="form-select" id="appointmentSmsReminderSelect">
+            <option value="true">Enabled</option>
+            <option value="false">Disabled</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-warning" id="rescheduleAppointment">Reschedule</button>
+        <button type="button" class="btn btn-danger" id="cancelAppointment">Cancel Appointment</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Reschedule Modal -->
+<div class="modal fade" id="rescheduleModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Reschedule Appointment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="rescheduleForm">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" id="rescheduleAppointmentId" name="appointment_id">
+          <div class="mb-3">
+            <label class="form-label">New Date</label>
+            <input type="date" class="form-control" id="rescheduleDate" name="date" required min="{{ (today or '') }}" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">New Time Slot</label>
+            <select class="form-select" id="rescheduleTimeSlot" name="time_slot" required>
+              <option value="morning">Morning (8AM-11AM)</option>
+              <option value="afternoon">Afternoon (2PM-4PM)</option>
+              <option value="evening">Evening (6PM-8PM)</option>
+              <option value="all_day">All Day (8AM-8PM)</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Notes</label>
+            <textarea class="form-control" id="rescheduleNotes" name="notes" rows="3"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Reschedule Appointment</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('serve_static', filename='fullcalendar/index.global.min.js') }}"></script>
+<script src="{{ url_for('serve_static', filename='js/service-colors.js') }}"></script>
+<script>
+const csrfToken = "{{ csrf_token() }}";
+let appointmentSubmitting = false;
+let currentAppointmentId = null;
+let serviceTypeMap = {};
+
+function showAppointmentModal(dateStr) {
+  // Fetch dental services and populate the dropdown
+  fetchWithCSRF('/api/services')
+    .then(response => response.json())
+    .then(services => {
+      const select = document.getElementById('serviceTypeSelect');
+      select.innerHTML = '<option value="">Select a service</option>';
+      serviceTypeMap = {};
+      window.serviceNameMap = {};
+      services.forEach(service => {
+        const option = document.createElement('option');
+        option.value = service.id;
+        option.textContent = service.name;
+        // Add service type data for color coordination
+        option.setAttribute('data-service-type', service.type);
+        option.setAttribute('data-service-name', service.name);
+        select.appendChild(option);
+        serviceTypeMap[service.id] = service.type;
+        window.serviceNameMap[service.id] = service.name;
+      });
+      
+      // Apply service colors to dropdown options after populating
+      if (window.ServiceColors) {
+        window.ServiceColors.applyServiceColors();
+        window.ServiceColors.updateServiceDropdownStyling();
+      }
+    });
+
+  // Fetch dentists and populate the dropdown
+  fetchWithCSRF('/api/dentists')
+    .then(response => response.json())
+    .then(dentists => {
+      const select = document.getElementById('dentistSelect');
+      select.innerHTML = '<option value="">Select a dentist</option>';
+      dentists.forEach(dentist => {
+        const option = document.createElement('option');
+        option.value = dentist.id;
+        option.textContent = dentist.first_name + ' ' + dentist.last_name;
+        select.appendChild(option);
+      });
+    });
+
+  // Pre-fill the date if provided
+  if (dateStr) {
+    document.getElementById('appointmentDateInput').value = dateStr;
+  }
+
+  const modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
+  modal.show();
+}
+
+function rescheduleAppointment(id) {
+  fetchWithCSRF('/api/appointments/' + id)
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+      document.getElementById('rescheduleAppointmentId').value = id;
+      document.getElementById('rescheduleDate').value = data.start_time ? data.start_time.slice(0, 10) : '';
+      let slot = 'all_day';
+      if (data.start_time && data.end_time) {
+        const start = data.start_time.slice(11, 16);
+        const end = data.end_time.slice(11, 16);
+        if (start === '08:00' && end === '11:00') slot = 'morning';
+        else if (start === '14:00' && end === '16:00') slot = 'afternoon';
+        else if (start === '18:00' && end === '20:00') slot = 'evening';
+        else if (start === '08:00' && end === '20:00') slot = 'all_day';
+      }
+      document.getElementById('rescheduleTimeSlot').value = slot;
+      document.getElementById('rescheduleNotes').value = data.notes || '';
+      // Hide the Appointment Details modal
+      bootstrap.Modal.getInstance(document.getElementById('appointmentDetailsModal')).hide();
+      // Show the Reschedule modal
+      new bootstrap.Modal(document.getElementById('rescheduleModal')).show();
+    })
+    .catch(function(error) {
+      alert('Failed to load appointment details for rescheduling');
+    });
+}
+
+function cancelAppointment(id) {
+  if (confirm('Are you sure you want to cancel this appointment?')) {
+    fetchWithCSRF('/api/appointments/' + id + '/cancel', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        alert(data.error);
+      } else {
+        location.reload();
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Failed to cancel appointment');
+    });
+  }
+}
+
+function viewAppointment(id) {
+  fetchWithCSRF('/api/appointments/' + id)
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('appointmentId').textContent = data.id || data.appointment_id || 'N/A';
+      document.getElementById('appointmentDentist').textContent = data.dentist_name || 'N/A';
+      let appointmentType = data.service_name;
+      document.getElementById('appointmentType').textContent = appointmentType || 'Unknown';
+      if (data.start_time) {
+        const startDate = new Date(data.start_time.replace(' ', 'T'));
+        document.getElementById('appointmentDate').textContent = startDate.toLocaleDateString('en-US', {
+          year: 'numeric', month: 'long', day: 'numeric'
+        });
+        const start = data.start_time.slice(11, 16);
+        const end = data.end_time ? data.end_time.slice(11, 16) : '';
+        let slot = 'All Day';
+        if (start === '08:00' && end === '11:00') slot = 'Morning (8AM-11AM)';
+        else if (start === '14:00' && end === '16:00') slot = 'Afternoon (2PM-4PM)';
+        else if (start === '18:00' && end === '20:00') slot = 'Evening (6PM-8PM)';
+        else if (start === '08:00' && end === '20:00') slot = 'All Day (8AM-8PM)';
+        else if (start && end) slot = start + ' - ' + end;
+        document.getElementById('appointmentTimeSlot').textContent = slot;
+      } else {
+        document.getElementById('appointmentDate').textContent = 'N/A';
+        document.getElementById('appointmentTimeSlot').textContent = 'N/A';
+      }
+      document.getElementById('appointmentNotes').textContent = data.notes || 'No notes';
+      const smsSelect = document.getElementById('appointmentSmsReminderSelect');
+      if (smsSelect) {
+        smsSelect.value = data.sms_reminder ? 'true' : 'false';
+      }
+      currentAppointmentId = id;
+      const rescheduleBtn = document.getElementById('rescheduleAppointment');
+      const cancelBtn = document.getElementById('cancelAppointment');
+      if (rescheduleBtn) {
+        rescheduleBtn.onclick = () => rescheduleAppointment(id);
+      }
+      if (cancelBtn) {
+        cancelBtn.onclick = () => cancelAppointment(id);
+      }
+      new bootstrap.Modal(document.getElementById('appointmentDetailsModal')).show();
+    })
+    .catch(error => {
+      console.error('Error loading appointment details:', {
+        error,
+        id
+      });
+      alert('Failed to load appointment details');
+    });
+}
+
+// Handle appointment form submission
+// ... existing code ...
+
+document.addEventListener('DOMContentLoaded', function() {
+  const calendarEl = document.getElementById('calendar');
+  if (!calendarEl) {
+    console.error('Calendar element not found');
+    return;
+  }
+
+  let retryCount = 0;
+  const maxRetries = 10;
+
+  function initializeCalendar() {
+    if (typeof FullCalendar === 'undefined') {
+      console.log('FullCalendar library not loaded yet');
+      retryCount++;
+      if (retryCount < maxRetries) {
+        setTimeout(initializeCalendar, 500);
+      } else {
+        console.error('Failed to initialize calendar after', maxRetries, 'attempts');
+        calendarEl.innerHTML = '<div class="alert alert-warning">Calendar failed to load. Please refresh the page.</div>';
+      }
+      return;
+    }
+
+    function capitalize(str) {
+      if (!str) return '';
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      height: 'auto',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek'
+      },
+      eventTimeFormat: {
+        hour: 'numeric',
+        minute: '2-digit',
+        meridiem: 'short'
+      },
+      events: function(fetchInfo, successCallback, failureCallback) {
+        console.log('Fetching appointments for range:', fetchInfo.startStr, 'to', fetchInfo.endStr);
+        fetchWithCSRF(`/api/appointments?start=${fetchInfo.startStr}&end=${fetchInfo.endStr}`)
+          .then(response => {
+            console.log('Appointments API response status:', response.status);
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log('Received appointments data:', data);
+            // Map the API data directly
+            const events = data.map(appt => {
+              console.log('Processing appointment:', appt);
+              return {
+                id: appt.id,
+                title: appt.service_name || `${capitalize(appt.type)} (${capitalize(appt.status)})`,
+                start: appt.start_time,
+                end: appt.end_time || appt.start_time,
+                backgroundColor: getStatusColor(appt.status),
+                textColor: 'white'
+              };
+            });
+            console.log('Processed events:', events);
+            successCallback(events);
+          })
+          .catch(error => {
+            console.error('Error fetching appointments for calendar:', {
+              error,
+              url: `/api/appointments?start=${fetchInfo.startStr}&end=${fetchInfo.endStr}`
+            });
+            failureCallback(error);
+          });
+      },
+      eventClick: function(info) {
+        viewAppointment(info.event.id);
+      },
+      dateClick: function(info) {
+        // Set the date for new appointment
+        const form = document.getElementById('appointmentForm');
+        if (form) {
+          const dateInput = form.querySelector('input[name="date"]') || document.createElement('input');
+          dateInput.type = 'hidden';
+          dateInput.name = 'date';
+          dateInput.value = info.dateStr;
+          if (!form.contains(dateInput)) {
+            form.appendChild(dateInput);
+          }
+        }
+        showAppointmentModal();
+      }
+    });
+
+    calendar.render();
+    console.log('Calendar initialized successfully');
+  }
+
+  function getStatusColor(status) {
+    const colors = {
+      'scheduled': '#0d6efd',
+      'completed': '#198754',
+      'cancelled': '#dc3545',
+      'pending': '#ffc107'
+    };
+    return colors[status] || '#6c757d';
+  }
+
+  // Initialize calendar
+  initializeCalendar();
+
+  // Handle appointment form submission
+  const appointmentForm = document.getElementById('appointmentForm');
+  if (appointmentForm) {
+    appointmentForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (appointmentSubmitting) return;
+      appointmentSubmitting = true;
+
+      const formData = new FormData(appointmentForm);
+      const data = {
+        service_id: formData.get('service_id'),
+        dentist_id: formData.get('dentist_id'),
+        date: formData.get('date'),
+        time_slot: formData.get('time_slot'),
+        notes: formData.get('notes'),
+        sms_reminder: formData.get('sms_reminder') === 'on'
+      };
+
+      // Convert time slot to actual times
+      let start_time = null;
+      let end_time = null;
+      if (data.time_slot === 'morning') {
+        start_time = `${data.date}T08:00:00`;
+        end_time = `${data.date}T11:00:00`;
+      } else if (data.time_slot === 'afternoon') {
+        start_time = `${data.date}T14:00:00`;
+        end_time = `${data.date}T16:00:00`;
+      } else if (data.time_slot === 'evening') {
+        start_time = `${data.date}T18:00:00`;
+        end_time = `${data.date}T20:00:00`;
+      } else if (data.time_slot === 'all_day') {
+        start_time = `${data.date}T08:00:00`;
+        end_time = `${data.date}T20:00:00`;
+      }
+
+      data.start_time = start_time;
+      data.end_time = end_time;
+
+      fetchWithCSRF('/api/appointments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          alert(data.error);
+        } else {
+          bootstrap.Modal.getInstance(document.getElementById('appointmentModal')).hide();
+          location.reload();
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to schedule appointment');
+      })
+      .finally(() => {
+        appointmentSubmitting = false;
+      });
+    });
+  }
+
+  // Reschedule form handler
+  const rescheduleForm = document.getElementById('rescheduleForm');
+  if (rescheduleForm) {
+    rescheduleForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const appointmentId = document.getElementById('rescheduleAppointmentId').value;
+      const data = {
+        date: document.getElementById('rescheduleDate').value,
+        time_slot: document.getElementById('rescheduleTimeSlot').value,
+        notes: document.getElementById('rescheduleNotes').value,
+        sms_reminder: document.getElementById('appointmentSmsReminderSelect').value === 'true'
+      };
+      fetchWithCSRF(`/api/appointments/${appointmentId}/reschedule`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          alert(data.error);
+        } else {
+          bootstrap.Modal.getInstance(document.getElementById('rescheduleModal')).hide();
+          location.reload();
+        }
+      })
+      .catch(error => {
+        alert('Failed to reschedule appointment');
+      });
+    });
+  }
+});
+
+// Add error handling for any AJAX requests
+function handleAjaxError(error) {
+  console.error('AJAX Error:', error);
+  alert('An error occurred. Please try again later.');
+}
+
+// Add CSRF token to all AJAX requests if enabled
+{% if csrf_token %}
+$.ajaxSetup({
+  beforeSend: function(xhr, settings) {
+    if (settings.type === 'POST') {
+      xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+    }
+  }
+});
+{% endif %}
+
+// Add error handling for form submissions
+document.querySelectorAll('form').forEach(form => {
+  form.addEventListener('submit', function(e) {
+    if (!this.checkValidity()) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    this.classList.add('was-validated');
+  });
+});
+
+function openCallWindow() {
+  window.open('/call_popup', 'callWindow', 'width=360,height=650');
+}
+</script>
+{% endblock %}

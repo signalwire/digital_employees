@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignalWire Dental Office System - Environment Setup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h1 class="text-2xl font-bold mb-6 text-center">Dental Office Environment Setup</h1>
+        <form action="/generate" method="POST" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div>
+                <label for="httpUsername" class="block text-sm font-medium text-gray-700">HTTP Username</label>
+                <input type="text" id="httpUsername" name="httpUsername" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div>
+                <label for="httpPassword" class="block text-sm font-medium text-gray-700">HTTP Password</label>
+                <input type="password" id="httpPassword" name="httpPassword" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div>
+                <label for="signalwireProjectId" class="block text-sm font-medium text-gray-700">SignalWire Project ID</label>
+                <input type="text" id="signalwireProjectId" name="signalwireProjectId" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div>
+                <label for="signalwireToken" class="block text-sm font-medium text-gray-700">SignalWire Token</label>
+                <input type="text" id="signalwireToken" name="signalwireToken" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div>
+                <label for="signalwireSpace" class="block text-sm font-medium text-gray-700">SignalWire Space URL</label>
+                <input type="text" id="signalwireSpace" name="signalwireSpace" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div>
+                <label for="fromNumber" class="block text-sm font-medium text-gray-700">From Number (E.164 format)</label>
+                <input type="text" id="fromNumber" name="fromNumber" required placeholder="+1800DENTAL"
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div>
+                <button type="submit"
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Generate Environment
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

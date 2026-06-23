@@ -1,0 +1,322 @@
+{% extends "base.html" %}
+
+{% block title %}Dentist Patients - Dental Office{% endblock %}
+
+{% block content %}
+<div class="page-container-fluid">
+    <div class="card card-elevated">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="card-title text-primary mb-0 font-semibold">
+                    <i class="bi bi-people me-2"></i>My Patients
+                </h2>
+                <button class="btn btn-primary shadow-soft" data-bs-toggle="modal" data-bs-target="#newPatientModal">
+                    <i class="bi bi-plus-circle me-2"></i>Add New Patient
+                </button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="font-semibold">Name</th>
+                            <th class="font-semibold">Email</th>
+                            <th class="font-semibold">Phone</th>
+                            <th class="font-semibold">Date of Birth</th>
+                            <th class="font-semibold">Patient ID</th>
+                            <th class="font-semibold">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for patient in patients %}
+                        <tr>
+                            <td class="font-medium">{{ patient.first_name }} {{ patient.last_name }}</td>
+                            <td>{{ patient.email }}</td>
+                            <td>{{ patient.phone }}</td>
+                            <td>{{ patient.date_of_birth }}</td>
+                            <td><span class="badge bg-secondary">{{ patient.patient_id }}</span></td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-outline-primary" onclick="editPatient({{ patient.id }})">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-info" onclick="viewHistory({{ patient.id }})">
+                                        <i class="bi bi-clock-history"></i> History
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-warning" onclick="showChangePasswordModal({{ patient.id }})">
+                                        <i class="bi bi-key"></i> Password
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- New Patient Modal -->
+<div class="modal fade" id="newPatientModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Patient</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="newPatientForm">
+                    <div class="mb-3">
+                        <label for="firstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstName" name="first_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" name="last_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone</label>
+                        <input type="tel" class="form-control" id="phone" name="phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dateOfBirth" class="form-label">Date of Birth</label>
+                        <input type="date" class="form-control" id="dateOfBirth" name="date_of_birth" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <textarea class="form-control" id="address" name="address" rows="2" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="medicalHistory" class="form-label">Medical History</label>
+                        <textarea class="form-control" id="medicalHistory" name="medical_history" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="insuranceInfo" class="form-label">Insurance Information</label>
+                        <textarea class="form-control" id="insuranceInfo" name="insurance_info" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitNewPatient()">Add Patient</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Patient Modal -->
+<div class="modal fade" id="editPatientModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Patient</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editPatientForm">
+                    <input type="hidden" id="editPatientId" name="id">
+                    <div class="mb-3">
+                        <label for="editFirstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="editFirstName" name="first_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editLastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="editLastName" name="last_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editEmail" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPhone" class="form-label">Phone</label>
+                        <input type="tel" class="form-control" id="editPhone" name="phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editDateOfBirth" class="form-label">Date of Birth</label>
+                        <input type="date" class="form-control" id="editDateOfBirth" name="date_of_birth" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editAddress" class="form-label">Address</label>
+                        <textarea class="form-control" id="editAddress" name="address" rows="2" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editMedicalHistory" class="form-label">Medical History</label>
+                        <textarea class="form-control" id="editMedicalHistory" name="medical_history" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editInsuranceInfo" class="form-label">Insurance Information</label>
+                        <textarea class="form-control" id="editInsuranceInfo" name="insurance_info" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPatientId" class="form-label">Patient ID</label>
+                        <input type="text" class="form-control" id="editPatientId" name="patient_id" readonly>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitEditPatient()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for changing password -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Change Patient Password</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="changePasswordPatientId">
+        <div class="mb-3">
+          <label class="form-label">New Password</label>
+          <input type="password" class="form-control" id="newPatientPassword">
+        </div>
+        <button class="btn btn-primary" onclick="submitChangePatientPassword()">Change Password</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    async function submitNewPatient() {
+        const form = document.getElementById('newPatientForm');
+        const formData = new FormData(form);
+        
+        try {
+            const response = await fetchWithCSRF('/api/patients', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(Object.fromEntries(formData))
+            });
+            
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                const error = await response.json();
+                alert(error.message || 'Failed to add patient');
+            }
+        } catch (error) {
+            console.error('Error adding patient:', error);
+            alert('Failed to add patient');
+        }
+    }
+
+    async function editPatient(patientId) {
+        try {
+            const response = await fetch(`/api/patients/${patientId}`);
+            const patient = await response.json();
+            
+            // Populate the edit form
+            document.getElementById('editPatientId').value = patient.patient_id;
+            document.getElementById('editFirstName').value = patient.first_name;
+            document.getElementById('editLastName').value = patient.last_name;
+            document.getElementById('editEmail').value = patient.email;
+            document.getElementById('editPhone').value = patient.phone;
+            document.getElementById('editDateOfBirth').value = patient.date_of_birth;
+            document.getElementById('editAddress').value = patient.address;
+            document.getElementById('editMedicalHistory').value = patient.medical_history || '';
+            document.getElementById('editInsuranceInfo').value = patient.insurance_info || '';
+            
+            // Show the modal
+            new bootstrap.Modal(document.getElementById('editPatientModal')).show();
+        } catch (error) {
+            console.error('Error fetching patient:', {
+                error,
+                patientId
+            });
+            alert('Failed to load patient data');
+        }
+    }
+
+    async function submitEditPatient() {
+        const form = document.getElementById('editPatientForm');
+        const formData = new FormData(form);
+        const patientId = formData.get('id');
+        
+        try {
+            const response = await fetchWithCSRF(`/api/patients/${patientId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(Object.fromEntries(formData))
+            });
+            
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                const error = await response.json();
+                alert(error.message || 'Failed to update patient');
+            }
+        } catch (error) {
+            console.error('Error updating patient:', {
+                error,
+                patientId
+            });
+            alert('Failed to update patient');
+        }
+    }
+
+    function viewHistory(patientId) {
+        window.location.href = `/patient/${patientId}/history`;
+    }
+
+    function showChangePasswordModal(patientId) {
+        document.getElementById('changePasswordPatientId').value = patientId;
+        new bootstrap.Modal(document.getElementById('changePasswordModal')).show();
+    }
+
+    function submitChangePatientPassword() {
+        const patientId = document.getElementById('changePasswordPatientId').value;
+        const newPassword = document.getElementById('newPatientPassword').value;
+        
+        // Validate password length
+        if (!newPassword || newPassword.length < 6) {
+            alert('Password must be at least 6 characters long');
+            return;
+        }
+        
+        fetchWithCSRF(`/api/patients/${patientId}/password`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ new_password: newPassword })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Clear the password field
+                document.getElementById('newPatientPassword').value = '';
+                // Show success message with green styling
+                alert('✅ Password changed successfully!');
+                // Hide the modal
+                bootstrap.Modal.getInstance(document.getElementById('changePasswordModal')).hide();
+            } else {
+                // Show error message with red styling
+                alert('❌ ' + (data.message || data.error || 'Failed to change password'));
+            }
+        })
+        .catch(error => {
+            console.error('Error changing password:', error);
+            alert('❌ Network error: Failed to change password');
+        });
+    }
+</script>
+{% endblock %} 

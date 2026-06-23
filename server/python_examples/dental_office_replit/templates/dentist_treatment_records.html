@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Treatment Records - Dental Office{% endblock %}
+
+{% block content %}
+<div class="page-container-fluid">
+    <div class="card card-elevated">
+        <div class="card-header">
+            <h2 class="mb-0 font-semibold">
+                <i class="bi bi-clipboard2-pulse me-2 text-primary"></i>Treatment Records
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="font-semibold">Patient</th>
+                            <th class="font-semibold">Service</th>
+                            <th class="font-semibold">Date</th>
+                            <th class="font-semibold">Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for t in treatments %}
+                        <tr>
+                            <td class="font-medium">{{ t.patient_first_name }} {{ t.patient_last_name }}</td>
+                            <td>
+                                <span class="service-label {{ t.service_name|service_class }}">{{ t.service_name }}</span>
+                            </td>
+                            <td>{{ t.treatment_date|format_date('long') }}</td>
+                            <td>{{ t.treatment_notes }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

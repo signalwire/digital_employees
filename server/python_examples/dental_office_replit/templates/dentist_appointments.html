@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Appointments - Dental Office{% endblock %}
+
+{% block content %}
+<div class="page-container-fluid">
+    <div class="card card-elevated">
+        <div class="card-header">
+            <h2 class="mb-0 font-semibold">
+                <i class="bi bi-calendar-week me-2 text-primary"></i>Appointments
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="font-semibold">Patient</th>
+                            <th class="font-semibold">Service</th>
+                            <th class="font-semibold">Start Time</th>
+                            <th class="font-semibold">End Time</th>
+                            <th class="font-semibold">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appt in appointments %}
+                        <tr>
+                            <td class="font-medium">{{ appt.patient_first_name }} {{ appt.patient_last_name }}</td>
+                            <td>
+                                <span class="service-label {{ appt.service_name|service_class }}">{{ appt.service_name }}</span>
+                            </td>
+                            <td>{{ appt.start_time|format_date('datetime') }}</td>
+                            <td>{{ appt.end_time|format_date('time') }}</td>
+                            <td>
+                                <span class="badge status-{{ appt.status }} px-3 py-2">{{ appt.status|title }}</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

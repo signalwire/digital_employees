@@ -1,0 +1,896 @@
+{% extends "base.html" %}
+{% block title %}My Billing - Dental Office{% endblock %}
+{% block content %}
+<div class="page-container">
+  <!-- Page Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <h2 class="mb-1">
+        <i class="bi bi-credit-card me-2 text-primary"></i>Billing & Insurance
+      </h2>
+      <p class="text-muted mb-0">Manage your billing, payments, and insurance information</p>
+    </div>
+  </div>
+  
+  <!-- Current Balance Card -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card card-elevated mb-4">
+        <div class="card-header">
+          <h5 class="mb-0 font-semibold">
+            <i class="bi bi-wallet2 me-2 text-success"></i>Current Balance
+          </h5>
+        </div>
+        <div class="card-body text-center">
+          <h2 class="text-primary mb-0">${{ "%.2f"|format(current_balance) }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Payment Methods Card -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card card-outlined mb-4">
+        <div class="card-header">
+          <h5 class="mb-0 font-semibold">
+            <i class="bi bi-credit-card-2-front me-2 text-info"></i>Payment Methods
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="list-group list-group-flush">
+            {% for method in payment_methods %}
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong>{{ method.type|title }}</strong><br>
+                <small class="text-muted">{{ method.details }}</small>
+              </div>
+              <button class="btn btn-outline-danger btn-sm" onclick="removePaymentMethod({{ method.id }})">Remove</button>
+            </div>
+            {% endfor %}
+          </div>
+          <button class="btn btn-outline-primary mt-3" onclick="showAddPaymentMethodModal()">Add Payment Method</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Payment History Card -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card card-outlined mb-4">
+        <div class="card-header">
+          <h5 class="mb-0 font-semibold">
+            <i class="bi bi-clock-history me-2 text-warning"></i>Payment History
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>Method</th>
+                  <th>Status</th>
+                  <th>Transaction ID</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for payment in payment_history %}
+                <tr>
+                  <td>{{ payment.payment_date[:10] }}</td>
+                  <td>${{ "%.2f"|format(payment.amount) }}</td>
+                  <td>{{ payment.payment_method|title }}</td>
+                  <td><span class="badge bg-{{ payment.status|status_color }}">{{ payment.status|title }}</span></td>
+                  <td><small>{{ payment.transaction_id }}</small></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Your Bills Card -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card card-outlined mb-4">
+        <div class="card-header">
+          <h5 class="mb-0 font-semibold">
+            <i class="bi bi-receipt me-2 text-danger"></i>Your Bills
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Service</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Due Date</th>
+                  <th>Balance</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for b in bills %}
+                <tr style="cursor: pointer;" onclick="showBillDetails({{ b.id }})">
+                  <td>
+                    <div>{{ b.created_at[:10] if b.created_at else '' }}</div>
+                    {% if b.treatment_date %}
+                      <small class="text-muted">Treatment: {{ b.treatment_date[:10] }}</small>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <div><span class="service-label {{ b.service_name|service_class }}">{{ b.service_name }}</span></div>
+                    {% if b.diagnosis %}
+                      <small class="text-muted d-block">{{ b.diagnosis }}</small>
+                    {% endif %}
+                    {% if b.reference_number %}
+                      <small class="text-muted d-block">Ref: {{ b.reference_number }}</small>
+                    {% endif %}
+                  </td>
+                  <td><strong>${{ b.amount }}</strong></td>
+                  <td>
+                    {% if b.status == 'paid' %}
+                      <span class="badge bg-success">Paid</span>
+                    {% elif b.status == 'pending' %}
+                      <span class="badge bg-warning">Pending</span>
+                    {% elif b.status == 'overdue' %}
+                      <span class="badge bg-danger">Overdue</span>
+                    {% else %}
+                      <span class="badge bg-secondary">{{ b.status|title }}</span>
+                    {% endif %}
+                  </td>
+                  <td>{{ b.due_date[:10] if b.due_date else '' }}</td>
+                  <td><strong>${{ '%.2f'|format(b.patient_portion) }}</strong></td>
+                  <td onclick="event.stopPropagation();">
+                    <div class="btn-group-vertical btn-group-sm" role="group">
+                      {% if b.status != 'paid' %}
+                        <button class="btn btn-outline-primary btn-sm mb-1" onclick="makeBillPayment({{ b.id }}, {{ b.patient_portion }})">
+                          <i class="bi bi-credit-card me-1"></i>Pay
+                        </button>
+                      {% endif %}
+                      <button class="btn btn-outline-info btn-sm" onclick="showPaymentHistory({{ b.id }})">
+                        <i class="bi bi-clock-history me-1"></i>History
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Payment Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="paymentModalLabel">Make Payment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="paymentForm">
+          <div class="mb-3">
+            <label for="paymentAmount" class="form-label">Amount</label>
+            <input type="number" class="form-control" id="paymentAmount" step="0.01" required>
+          </div>
+          <div class="mb-3">
+            <label for="paymentMethod" class="form-label">Payment Method</label>
+            <select class="form-select" id="paymentMethod" required>
+              <option value="">Select Payment Method</option>
+              {% for method in payment_methods %}
+              <option value="{{ method.id }}">{{ method.method_type|title }} - {{ method.details }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="paymentNotes" class="form-label">Notes (Optional)</label>
+            <textarea class="form-control" id="paymentNotes" rows="2"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="submitPayment()">Submit Payment</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Payment Method Modal -->
+<div class="modal fade" id="addPaymentMethodModal" tabindex="-1" aria-labelledby="addPaymentMethodModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addPaymentMethodModalLabel">Add Payment Method</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addPaymentMethodForm">
+          <div class="mb-3">
+            <label class="form-label">Payment Type</label>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="methodType" id="creditCard" value="credit_card" checked>
+              <label class="form-check-label" for="creditCard">Credit Card</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="methodType" id="banking" value="banking">
+              <label class="form-check-label" for="banking">Bank Account</label>
+            </div>
+          </div>
+          
+          <!-- Credit Card Fields -->
+          <div id="creditCardFields">
+            <div class="mb-3">
+              <label for="cardNumber" class="form-label">Card Number</label>
+              <input type="text" class="form-control" id="cardNumber" maxlength="16" required>
+            </div>
+            <div class="mb-3">
+              <label for="expiryDate" class="form-label">Expiry Date</label>
+              <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY" maxlength="5" required>
+            </div>
+            <div class="mb-3">
+              <label for="cardHolder" class="form-label">Card Holder Name</label>
+              <input type="text" class="form-control" id="cardHolder" required>
+            </div>
+          </div>
+          
+          <!-- Banking Fields -->
+          <div id="bankingFields" style="display: none;">
+            <div class="mb-3">
+              <label for="bankName" class="form-label">Bank Name</label>
+              <input type="text" class="form-control" id="bankName" required>
+            </div>
+            <div class="mb-3">
+              <label for="accountNumber" class="form-label">Account Number</label>
+              <input type="text" class="form-control" id="accountNumber" required>
+            </div>
+            <div class="mb-3">
+              <label for="routingNumber" class="form-label">Routing Number</label>
+              <input type="text" class="form-control" id="routingNumber" maxlength="9" required>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="submitPaymentMethod()">Add Payment Method</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Payment History Modal -->
+<div class="modal fade" id="paymentHistoryModal" tabindex="-1" aria-labelledby="paymentHistoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-light text-dark" id="paymentHistoryModalContent">
+      <div class="modal-header">
+        <h5 class="modal-title" id="paymentHistoryModalLabel">Payment History</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table" id="paymentHistoryTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Amount</th>
+              <th>Balance After</th>
+            </tr>
+          </thead>
+          <tbody id="paymentHistoryTableBody">
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bill Details Modal -->
+<div class="modal fade" id="billDetailsModal" tabindex="-1" aria-labelledby="billDetailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="billDetailsModalLabel">
+          <i class="bi bi-receipt me-2"></i>Bill Details
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <!-- Left Column -->
+          <div class="col-md-6">
+            <div class="card card-outlined h-100">
+              <div class="card-header">
+                <h6 class="mb-0 font-semibold">
+                  <i class="bi bi-info-circle me-2"></i>Bill Information
+                </h6>
+              </div>
+              <div class="card-body">
+                <dl class="row">
+                  <dt class="col-5">Bill #:</dt>
+                  <dd class="col-7" id="billNumber">-</dd>
+                  
+                  <dt class="col-5">Reference #:</dt>
+                  <dd class="col-7" id="billReference">-</dd>
+                  
+                  <dt class="col-5">Bill Date:</dt>
+                  <dd class="col-7" id="billDate">-</dd>
+                  
+                  <dt class="col-5">Due Date:</dt>
+                  <dd class="col-7" id="billDueDate">-</dd>
+                  
+                  <dt class="col-5">Status:</dt>
+                  <dd class="col-7" id="billStatus">-</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Right Column -->
+          <div class="col-md-6">
+            <div class="card card-outlined h-100">
+              <div class="card-header">
+                <h6 class="mb-0 font-semibold">
+                  <i class="bi bi-currency-dollar me-2"></i>Amount Breakdown
+                </h6>
+              </div>
+              <div class="card-body">
+                <dl class="row">
+                  <dt class="col-6">Total Amount:</dt>
+                  <dd class="col-6" id="billTotalAmount">-</dd>
+                  
+                  <dt class="col-6">Insurance Portion:</dt>
+                  <dd class="col-6" id="billInsurancePortion">-</dd>
+                  
+                  <dt class="col-6">Your Portion:</dt>
+                  <dd class="col-6 fw-bold text-primary" id="billPatientPortion">-</dd>
+                  
+                  <dt class="col-6">Amount Paid:</dt>
+                  <dd class="col-6" id="billAmountPaid">-</dd>
+                  
+                  <dt class="col-6">Remaining Balance:</dt>
+                  <dd class="col-6 fw-bold" id="billRemainingBalance">-</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Service Details -->
+        <div class="row mt-4">
+          <div class="col-12">
+            <div class="card card-outlined">
+              <div class="card-header">
+                <h6 class="mb-0 font-semibold">
+                  <i class="bi bi-medical-bag me-2"></i>Service Details
+                </h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <dl class="row">
+                      <dt class="col-5">Service:</dt>
+                      <dd class="col-7" id="billServiceName">-</dd>
+                      
+                      <dt class="col-5">Treatment Date:</dt>
+                      <dd class="col-7" id="billTreatmentDate">-</dd>
+                      
+                      <dt class="col-5">Dentist:</dt>
+                      <dd class="col-7" id="billDentist">-</dd>
+                    </dl>
+                  </div>
+                  <div class="col-md-6">
+                    <dl class="row">
+                      <dt class="col-4">Diagnosis:</dt>
+                      <dd class="col-8" id="billDiagnosis">-</dd>
+                      
+                      <dt class="col-4">Notes:</dt>
+                      <dd class="col-8" id="billTreatmentNotes">-</dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Payment History -->
+        <div class="row mt-4">
+          <div class="col-12">
+            <div class="card card-outlined">
+              <div class="card-header">
+                <h6 class="mb-0 font-semibold">
+                  <i class="bi bi-clock-history me-2"></i>Payment History
+                </h6>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover" id="billPaymentHistoryTable">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Balance After</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="billPaymentHistoryTableBody">
+                      <tr>
+                        <td colspan="4" class="text-center text-muted">Loading payment history...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div id="noPaymentHistory" class="text-center text-muted py-3" style="display: none;">
+                  <i class="bi bi-info-circle me-2"></i>No payments have been made for this bill yet.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-info" id="sendBillSms">
+          <i class="bi bi-envelope me-2"></i>Send SMS Summary
+        </button>
+        <button type="button" class="btn btn-outline-primary" id="sendBillMms">
+          <i class="bi bi-image me-2"></i>Send MMS Image
+        </button>
+        <button type="button" class="btn btn-outline-success" id="downloadBillPdf">
+          <i class="bi bi-download me-2"></i>Download PDF
+        </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Show payment modal
+function showPaymentModal() {
+  const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
+  document.getElementById('paymentAmount').value = '{{ current_balance }}';
+  modal.show();
+}
+
+// Show add payment method modal
+function showAddPaymentMethodModal() {
+  const modal = new bootstrap.Modal(document.getElementById('addPaymentMethodModal'));
+  modal.show();
+}
+
+// Toggle between credit card and banking fields
+document.querySelectorAll('input[name="methodType"]').forEach(radio => {
+  radio.addEventListener('change', function() {
+    const creditCardFields = document.getElementById('creditCardFields');
+    const bankingFields = document.getElementById('bankingFields');
+    if (this.value === 'credit_card') {
+      creditCardFields.style.display = 'block';
+      bankingFields.style.display = 'none';
+    } else {
+      creditCardFields.style.display = 'none';
+      bankingFields.style.display = 'block';
+    }
+  });
+});
+
+// Submit payment
+async function submitPayment() {
+  const amount = document.getElementById('paymentAmount').value;
+  const methodId = document.getElementById('paymentMethod').value;
+  const notes = document.getElementById('paymentNotes').value;
+  const billId = document.getElementById('paymentForm').dataset.billId;
+  
+  if (!methodId) {
+    alert('Please select a payment method');
+    return;
+  }
+  
+  try {
+    const response = await fetchWithCSRF('/api/make-payment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        amount: parseFloat(amount),
+        payment_method_id: parseInt(methodId),
+        notes: notes,
+        billing_id: parseInt(billId)
+      })
+    });
+    
+    const data = await response.json();
+    if (data.success) {
+      alert('Payment submitted successfully');
+      window.location.reload();
+    } else {
+      alert(data.error || 'Failed to submit payment');
+    }
+  } catch (error) {
+    console.error('Error submitting payment:', error);
+    alert('An error occurred while submitting payment');
+  }
+}
+
+// Submit new payment method
+async function submitPaymentMethod() {
+  const methodType = document.querySelector('input[name="methodType"]:checked').value;
+  let paymentData = {
+    method_type: methodType
+  };
+  
+  if (methodType === 'credit_card') {
+    paymentData.card_number = document.getElementById('cardNumber').value;
+    paymentData.expiry_date = document.getElementById('expiryDate').value;
+    paymentData.card_holder = document.getElementById('cardHolder').value;
+  } else {
+    paymentData.bank_name = document.getElementById('bankName').value;
+    paymentData.account_number = document.getElementById('accountNumber').value;
+    paymentData.routing_number = document.getElementById('routingNumber').value;
+  }
+  
+  try {
+    const response = await fetchWithCSRF('/api/add-payment-method', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(paymentData)
+    });
+    
+    const data = await response.json();
+    if (data.success) {
+      alert('Payment method added successfully');
+      window.location.reload();
+    } else {
+      alert(data.error || 'Failed to add payment method');
+    }
+  } catch (error) {
+    console.error('Error adding payment method:', error);
+    alert('An error occurred while adding payment method');
+  }
+}
+
+// Remove payment method
+async function removePaymentMethod(methodId) {
+  if (!confirm('Are you sure you want to remove this payment method?')) {
+    return;
+  }
+  
+  try {
+    const response = await fetchWithCSRF('/api/remove-payment-method', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        method_id: methodId
+      })
+    });
+    
+    const data = await response.json();
+    if (data.success) {
+      alert('Payment method removed successfully');
+      window.location.reload();
+    } else {
+      alert(data.error || 'Failed to remove payment method');
+    }
+  } catch (error) {
+    console.error('Error removing payment method:', error);
+    alert('An error occurred while removing payment method');
+  }
+}
+
+// Make payment for specific bill
+function makeBillPayment(billId, amount) {
+  const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
+  document.getElementById('paymentAmount').value = amount;
+  document.getElementById('paymentForm').dataset.billId = billId;
+  modal.show();
+}
+
+// Show bill details modal
+async function showBillDetails(billId) {
+  try {
+    const response = await fetch(`/api/bill-details/${billId}`);
+    const bill = await response.json();
+    
+    if (!bill || bill.error) {
+      alert('Failed to load bill details');
+      return;
+    }
+    
+    // Populate bill information
+    document.getElementById('billNumber').textContent = bill.bill_number || '-';
+    document.getElementById('billReference').textContent = bill.reference_number || '-';
+    document.getElementById('billDate').textContent = bill.created_at ? bill.created_at.substring(0, 10) : '-';
+    document.getElementById('billDueDate').textContent = bill.due_date ? bill.due_date.substring(0, 10) : '-';
+    
+    // Status with badge styling
+    const statusElement = document.getElementById('billStatus');
+    let statusBadge = '';
+    if (bill.status === 'paid') {
+      statusBadge = '<span class="badge bg-success">Paid</span>';
+    } else if (bill.status === 'pending') {
+      statusBadge = '<span class="badge bg-warning">Pending</span>';
+    } else if (bill.status === 'overdue') {
+      statusBadge = '<span class="badge bg-danger">Overdue</span>';
+    } else {
+      statusBadge = `<span class="badge bg-secondary">${bill.status ? bill.status.charAt(0).toUpperCase() + bill.status.slice(1) : 'Unknown'}</span>`;
+    }
+    statusElement.innerHTML = statusBadge;
+    
+    // Amount breakdown
+    const totalAmount = parseFloat(bill.amount) || 0;
+    const patientPortion = parseFloat(bill.patient_portion) || 0;
+    const insurancePortion = totalAmount - patientPortion;
+    const amountPaid = parseFloat(bill.amount_paid) || 0;
+    const remainingBalance = patientPortion - amountPaid;
+    
+    document.getElementById('billTotalAmount').textContent = `$${totalAmount.toFixed(2)}`;
+    document.getElementById('billInsurancePortion').textContent = `$${insurancePortion.toFixed(2)}`;
+    document.getElementById('billPatientPortion').textContent = `$${patientPortion.toFixed(2)}`;
+    document.getElementById('billAmountPaid').textContent = `$${amountPaid.toFixed(2)}`;
+    document.getElementById('billRemainingBalance').textContent = `$${remainingBalance.toFixed(2)}`;
+    
+    // Service details
+    document.getElementById('billServiceName').innerHTML = bill.service_name ? 
+      `<span class="service-label ${getServiceClass(bill.service_name)}">${bill.service_name}</span>` : '-';
+    document.getElementById('billTreatmentDate').textContent = bill.treatment_date ? bill.treatment_date.substring(0, 10) : '-';
+    document.getElementById('billDentist').textContent = bill.dentist_name || '-';
+    document.getElementById('billDiagnosis').textContent = bill.diagnosis || '-';
+    document.getElementById('billTreatmentNotes').textContent = bill.treatment_notes || '-';
+    
+    // Load payment history
+    await loadPaymentHistoryForBill(billId);
+    
+    // Set up SMS sending
+    const smsBtn = document.getElementById('sendBillSms');
+    smsBtn.onclick = () => sendBillSms(billId, bill);
+    
+    // Set up MMS sending
+    const mmsBtn = document.getElementById('sendBillMms');
+    mmsBtn.onclick = () => sendBillMms(billId, bill);
+    
+    // Set up PDF download
+    const downloadBtn = document.getElementById('downloadBillPdf');
+    downloadBtn.onclick = () => downloadBillPdf(billId);
+    
+    // Show the modal
+    const modal = new bootstrap.Modal(document.getElementById('billDetailsModal'));
+    modal.show();
+    
+  } catch (error) {
+    console.error('Error loading bill details:', error);
+    alert('Failed to load bill details');
+  }
+}
+
+// Load payment history for the bill details modal
+async function loadPaymentHistoryForBill(billId) {
+  try {
+    const response = await fetch(`/api/bill-payments/${billId}`);
+    const payments = await response.json();
+    
+    const tbody = document.getElementById('billPaymentHistoryTableBody');
+    const noPaymentDiv = document.getElementById('noPaymentHistory');
+    
+    if (!payments || payments.length === 0) {
+      tbody.innerHTML = '';
+      noPaymentDiv.style.display = 'block';
+    } else {
+      noPaymentDiv.style.display = 'none';
+      tbody.innerHTML = '';
+      
+      payments.forEach(payment => {
+        const row = document.createElement('tr');
+        const paymentDate = payment.payment_date ? new Date(payment.payment_date).toLocaleDateString() : 'N/A';
+        const balanceAfter = payment.balance_after || 0;
+        
+        let statusBadge = '<span class="badge bg-success">Completed</span>';
+        if (balanceAfter > 0) {
+          statusBadge = '<span class="badge bg-info">Partial</span>';
+        }
+        
+        row.innerHTML = `
+          <td>${paymentDate}</td>
+          <td><strong>$${payment.amount ? payment.amount.toFixed(2) : '0.00'}</strong></td>
+          <td>$${balanceAfter.toFixed(2)}</td>
+          <td>${statusBadge}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+  } catch (error) {
+    console.error('Error loading payment history:', error);
+    const tbody = document.getElementById('billPaymentHistoryTableBody');
+    tbody.innerHTML = '<tr><td colspan="4" class="text-center text-danger">Failed to load payment history</td></tr>';
+  }
+}
+
+// Modified to open bill details modal instead of separate payment history modal
+function showPaymentHistory(billId) {
+  // Open the comprehensive bill details modal which includes payment history
+  showBillDetails(billId);
+}
+
+// Download bill PDF
+function downloadBillPdf(billId) {
+  // Create a temporary link to trigger download
+  const link = document.createElement('a');
+  link.href = `/api/bill-pdf/${billId}`;
+  link.download = `bill_${billId}.pdf`;
+  link.target = '_blank';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+// Send bill summary via SMS
+async function sendBillSms(billId, billData) {
+  try {
+    // Show loading state
+    const smsBtn = document.getElementById('sendBillSms');
+    const originalText = smsBtn.innerHTML;
+    smsBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Sending...';
+    smsBtn.disabled = true;
+    
+    const response = await fetchWithCSRF('/api/send-bill-sms', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        bill_id: billId
+      })
+    });
+    
+    const data = await response.json();
+    
+    // Restore button state
+    smsBtn.innerHTML = originalText;
+    smsBtn.disabled = false;
+    
+    if (data.success) {
+      // Show success feedback
+      smsBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>SMS Sent!';
+      smsBtn.classList.remove('btn-outline-info');
+      smsBtn.classList.add('btn-success');
+      
+      // Reset after 3 seconds
+      setTimeout(() => {
+        smsBtn.innerHTML = '<i class="bi bi-envelope me-2"></i>Send SMS Summary';
+        smsBtn.classList.remove('btn-success');
+        smsBtn.classList.add('btn-outline-info');
+      }, 3000);
+      
+      alert('Bill summary sent via SMS successfully!');
+    } else {
+      alert(data.error || 'Failed to send SMS');
+    }
+  } catch (error) {
+    console.error('Error sending bill SMS:', error);
+    alert('An error occurred while sending SMS');
+    
+    // Restore button state
+    const smsBtn = document.getElementById('sendBillSms');
+    smsBtn.innerHTML = '<i class="bi bi-envelope me-2"></i>Send SMS Summary';
+    smsBtn.disabled = false;
+  }
+}
+
+// Send bill image via MMS
+async function sendBillMms(billId, billData) {
+  try {
+    // Show loading state
+    const mmsBtn = document.getElementById('sendBillMms');
+    const originalText = mmsBtn.innerHTML;
+    mmsBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Generating...';
+    mmsBtn.disabled = true;
+    
+    const response = await fetchWithCSRF('/api/send-bill-mms', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        bill_id: billId
+      })
+    });
+    
+    const data = await response.json();
+    
+    // Restore button state
+    mmsBtn.innerHTML = originalText;
+    mmsBtn.disabled = false;
+    
+    if (data.success) {
+      // Show success feedback
+      mmsBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>MMS Sent!';
+      mmsBtn.classList.remove('btn-outline-primary');
+      mmsBtn.classList.add('btn-success');
+      
+      // Reset after 3 seconds
+      setTimeout(() => {
+        mmsBtn.innerHTML = '<i class="bi bi-image me-2"></i>Send MMS Image';
+        mmsBtn.classList.remove('btn-success');
+        mmsBtn.classList.add('btn-outline-primary');
+      }, 3000);
+      
+      alert(`Bill image sent via MMS successfully! (${data.image_size || 'Unknown'} size)`);
+    } else {
+      alert(data.error || 'Failed to send MMS');
+    }
+  } catch (error) {
+    console.error('Error sending bill MMS:', error);
+    alert('An error occurred while sending MMS');
+    
+    // Restore button state
+    const mmsBtn = document.getElementById('sendBillMms');
+    mmsBtn.innerHTML = '<i class="bi bi-image me-2"></i>Send MMS Image';
+    mmsBtn.disabled = false;
+  }
+}
+
+// Helper function to get service class for styling
+function getServiceClass(serviceName) {
+  if (!serviceName) return '';
+  const name = serviceName.toLowerCase();
+  if (name.includes('cleaning')) return 'cleaning';
+  if (name.includes('filling')) return 'filling';
+  if (name.includes('whitening')) return 'whitening';
+  if (name.includes('root canal')) return 'root_canal';
+  if (name.includes('extraction')) return 'extraction';
+  if (name.includes('orthodontics') || name.includes('braces')) return 'orthodontics';
+  if (name.includes('checkup') || name.includes('exam')) return 'checkup';
+  return 'other';
+}
+
+function applyThemeToPaymentHistoryModal() {
+  const isDark = document.body.classList.contains('dark-mode') || (localStorage.getItem('theme') === 'dark');
+  const modalContent = document.getElementById('paymentHistoryModalContent');
+  const table = document.getElementById('paymentHistoryTable');
+  if (isDark) {
+    modalContent.classList.remove('bg-light', 'text-dark');
+    modalContent.classList.add('bg-dark', 'text-light');
+    table.classList.remove('table');
+    table.classList.add('table-dark');
+  } else {
+    modalContent.classList.remove('bg-dark', 'text-light');
+    modalContent.classList.add('bg-light', 'text-dark');
+    table.classList.remove('table-dark');
+    table.classList.add('table');
+  }
+}
+
+document.getElementById('paymentHistoryModal').addEventListener('show.bs.modal', applyThemeToPaymentHistoryModal);
+
+// If you have a global theme toggle, also call applyThemeToPaymentHistoryModal() when the theme changes
+if (window.localStorage) {
+  window.addEventListener('storage', function(e) {
+    if (e.key === 'theme') {
+      applyThemeToPaymentHistoryModal();
+    }
+  });
+}
+</script>
+{% endblock %} 

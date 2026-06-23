@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Click to Call</title>
+    <meta name="viewport" content="width=340, initial-scale=1">
+    <style>
+        /* Mobile Phone Modal Styles */
+        body {
+            background: #222;
+            margin: 0;
+            padding: 0;
+        }
+        .modal-dialog {
+            max-width: 340px;
+            margin: 1.75rem auto;
+        }
+        .modal-content {
+            background-color: #000;
+            border: 10px solid #1a1a1a;
+            border-radius: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            height: 600px;
+            position: relative;
+        }
+        .modal-body {
+            background-color: #fff;
+            height: 100%;
+            padding: 0;
+            overflow: auto;
+        }
+        /* Simulate phone status bar */
+        .phone-status-bar {
+            height: 20px;
+            background-color: #000;
+            color: #fff;
+            text-align: right;
+            padding: 0 10px;
+            line-height: 20px;
+            font-size: 12px;
+        }
+        /* Ensure call widget fits within modal */
+        #call {
+            width: 100%;
+            height: calc(100% - 20px);
+        }
+    </style>
+</head>
+<body>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="phone-status-bar">
+                <span id="status-time"></span>
+            </div>
+            <div class="modal-body">
+                <div id="click2call"></div>
+                <div id="call"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Show current time in status bar
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('status-time').textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+        
+        // Debug: Log the template variables
+        console.log('Debug C2C Configuration:');
+        console.log('SignalWire Space:', '{{ signalwire_space }}');
+        console.log('C2C API Key:', '{{ c2c_api_key }}');
+        console.log('C2C Address:', '{{ c2c_address }}');
+        console.log('Auth Endpoint:', `https://{{ signalwire_space }}.signalwire.com/api/fabric/embeds/tokens`);
+    </script>
+    <script>
+        // SignalWire C2C API Initialization
+        (function(a) {
+            var i, s, k, n = "Signalwire C2C API", o = "sw", c = "spawn", x = "Loaded", h = "authenticate", y = a["apiKey"],
+                r = document, k = window;
+            k = k[o] || (k[o] = {});
+            var w = k.c2c || (k.c2c = {}), l = function(p) {
+                return new Promise(function(u, v) {
+                    s = r.createElement("script");
+                    s.src = k.codeRepository + '/' + p + '.js';
+                    w[p + x] = function() {
+                        delete w[p + x];
+                        if (!w[h]) {
+                            w[c](h, y).then(u);
+                        } else {
+                            u();
+                        }
+                    };
+                    s.onerror = function() { i = v(Error(n + " could not load.")); };
+                    var nonceElem = r.querySelector("script[nonce]");
+                    s.nonce = nonceElem ? nonceElem.nonce : "";
+                    r.head.appendChild(s);
+                });
+            };
+            k.relayHost = "puc.signalwire.com";
+            k.codeRepository = "https://app.signalwire.com";
+            k.authEndpoint = `https://{{ signalwire_space }}.signalwire.com/api/fabric/embeds/tokens`;
+            w[c] ? k[h](y) : w[c] = (f, ...n) => new Promise((g,) => {w[f] ? g(w[f](...n)) : l(f).then(() => g(w[f](...n)))})
+        })({ apiKey: "{{ c2c_api_key }}", v: "0.0.1" });
+    </script>
+    <script>
+        // SignalWire Widget Spawn
+        function spawnC2C() {
+            if (window.sw && window.sw.c2c && window.sw.c2c.spawn) {
+                window.sw.c2c.spawn('C2CButton', {
+                    destination: '/private/{{ c2c_address }}',
+                    buttonParentSelector: '#click2call',
+                    innerHTML: null,
+                    callParentSelector: '#call',
+                    beforeCallStartFn: function() { console.log('attempting to start new call...'); return true; },
+                    afterCallStartFn: function() { console.log('call started.'); },
+                    beforeCallLeaveFn: function() { console.log('attempting to hangup call...'); return true; },
+                    afterCallLeaveFn: function() { console.log('call ended.'); },
+                    onCallError: function(error) { console.error(error); }
+                });
+                // Automatically click the call button after it renders
+                setTimeout(function() {
+                    var btn = document.querySelector('#click2call button');
+                    if (btn) btn.click();
+                }, 800);
+            } else {
+                setTimeout(spawnC2C, 200);
+            }
+        }
+        spawnC2C();
+    </script>
+</body>
+</html> 

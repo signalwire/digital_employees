@@ -1,0 +1,337 @@
+{% extends "base.html" %}
+
+{% block title %}Treatment History - Dental Office{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-9 col-lg-10 main-content">
+      <!-- Page Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1">
+                <i class="bi bi-clipboard2-pulse me-2 text-primary"></i>Treatment History
+            </h2>
+            <p class="text-muted mb-0">
+                {% if patient %}
+                    {{ patient.first_name }} {{ patient.last_name }} ({{ patient.patient_id }})
+                {% else %}
+                    Your complete treatment history and medical records
+                {% endif %}
+            </p>
+        </div>
+        {% if patient %}
+        <div>
+            <button class="btn btn-outline-primary" onclick="window.history.back()">
+                <i class="bi bi-arrow-left me-2"></i>Back
+            </button>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Appointments Section -->
+      <div class="card mb-5">
+        <div class="card-header d-flex align-items-center">
+            <i class="bi bi-calendar-check me-2 text-primary"></i>
+            <h5 class="mb-0">Appointments</h5>
+            {% if appointments %}
+            <span class="badge bg-primary ms-auto">{{ appointments|length }}</span>
+            {% endif %}
+        </div>
+        <div class="card-body p-0">
+            {% if appointments %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Dentist</th>
+                            <th>Service</th>
+                            <th>Status</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appt in appointments %}
+                        <tr>
+                            <td>
+                                <div class="d-flex flex-column">
+                                    <span class="fw-medium">{{ appt.start_time[:10] }}</span>
+                                    <small class="text-muted">{{ appt.start_time[11:16] }} - {{ appt.end_time[11:16] }}</small>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-person-circle me-2 text-muted"></i>
+                                    Dr. {{ appt.dentist_first_name }} {{ appt.dentist_last_name }}
+                                </div>
+                            </td>
+                            <td>
+                                <span class="service-label {{ appt.service_name|service_class }}">{{ appt.service_name }}</span>
+                            </td>
+                            <td>
+                                {% set status_class = 'secondary' %}
+                                {% if appt.status == 'completed' %}
+                                    {% set status_class = 'success' %}
+                                {% elif appt.status == 'confirmed' %}
+                                    {% set status_class = 'primary' %}
+                                {% elif appt.status == 'cancelled' %}
+                                    {% set status_class = 'danger' %}
+                                {% elif appt.status == 'pending' %}
+                                    {% set status_class = 'warning' %}
+                                {% endif %}
+                                <span class="badge bg-{{ status_class }}">{{ appt.status|title }}</span>
+                            </td>
+                            <td>
+                                {% if appt.notes %}
+                                    <small class="text-muted">{{ appt.notes }}</small>
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-calendar-x display-1 text-muted mb-3"></i>
+                <h5 class="text-muted">No appointments found</h5>
+                <p class="text-muted">Your appointment history will appear here</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Treatments Section -->
+    <div class="card mb-5">
+        <div class="card-header d-flex align-items-center">
+            <i class="bi bi-clipboard2-pulse me-2 text-success"></i>
+            <h5 class="mb-0">Treatment Records</h5>
+            {% if treatments %}
+            <span class="badge bg-success ms-auto">{{ treatments|length }}</span>
+            {% endif %}
+        </div>
+        <div class="card-body p-0">
+            {% if treatments %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Dentist</th>
+                            <th>Service</th>
+                            <th>Diagnosis</th>
+                            <th>Treatment Notes</th>
+                            <th>Reference #</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for t in treatments %}
+                        <tr>
+                            <td>
+                                <span class="fw-medium">{{ t.treatment_date[:10] }}</span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-person-badge me-2 text-muted"></i>
+                                    Dr. {{ t.dentist_first_name }} {{ t.dentist_last_name }}
+                                </div>
+                            </td>
+                            <td>
+                                <span class="service-label {{ t.service_name|service_class }}">{{ t.service_name }}</span>
+                            </td>
+                            <td>
+                                {% if t.diagnosis %}
+                                    <span class="fw-medium">{{ t.diagnosis }}</span>
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if t.treatment_notes %}
+                                    <small class="text-muted">{{ t.treatment_notes }}</small>
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if t.reference_number %}
+                                    <code class="small">{{ t.reference_number }}</code>
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if t.bill_amount %}
+                                    <span class="fw-medium text-success">${{ t.bill_amount }}</span>
+                                {% else %}
+                                    <span class="text-muted">$0.00</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-clipboard-x display-1 text-muted mb-3"></i>
+                <h5 class="text-muted">No treatment records found</h5>
+                <p class="text-muted">Your treatment history will appear here</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Bills Section -->
+    <div class="card mb-5">
+        <div class="card-header d-flex align-items-center">
+            <i class="bi bi-credit-card me-2 text-warning"></i>
+            <h5 class="mb-0">Billing History</h5>
+            {% if bills %}
+            <span class="badge bg-warning ms-auto">{{ bills|length }}</span>
+            {% endif %}
+        </div>
+        <div class="card-body p-0">
+            {% if bills %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Service</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Due Date</th>
+                            <th>Reference #</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for b in bills %}
+                        <tr>
+                            <td>
+                                {% if b.created_at %}
+                                    <span class="fw-medium">{{ b.created_at[:10] }}</span>
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="service-label {{ b.service_name|service_class }}">{{ b.service_name }}</span>
+                            </td>
+                            <td>
+                                <span class="fw-medium">${{ b.amount }}</span>
+                            </td>
+                            <td>
+                                {% set status_class = 'secondary' %}
+                                {% if b.status == 'paid' %}
+                                    {% set status_class = 'success' %}
+                                {% elif b.status == 'pending' %}
+                                    {% set status_class = 'warning' %}
+                                {% elif b.status == 'overdue' %}
+                                    {% set status_class = 'danger' %}
+                                {% elif b.status == 'partial' %}
+                                    {% set status_class = 'info' %}
+                                {% endif %}
+                                <span class="badge bg-{{ status_class }}">{{ b.status|title }}</span>
+                            </td>
+                            <td>
+                                {% if b.due_date %}
+                                    <span class="fw-medium">{{ b.due_date[:10] }}</span>
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if b.reference_number %}
+                                    <code class="small">{{ b.reference_number }}</code>
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-receipt display-1 text-muted mb-3"></i>
+                <h5 class="text-muted">No billing records found</h5>
+                <p class="text-muted">Your billing history will appear here</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for changing password -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePasswordModalLabel">
+                    <i class="bi bi-shield-lock me-2"></i>Change Patient Password
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="changePasswordPatientId">
+                <div class="mb-3">
+                    <label for="newPatientPassword" class="form-label">New Password</label>
+                    <input type="password" class="form-control" id="newPatientPassword" placeholder="Enter new password">
+                </div>
+                <div class="d-grid">
+                    <button class="btn btn-primary" onclick="submitChangePatientPassword()">
+                        <i class="bi bi-check-circle me-2"></i>Change Password
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showChangePasswordModal(patientId) {
+    document.getElementById('changePasswordPatientId').value = patientId;
+    new bootstrap.Modal(document.getElementById('changePasswordModal')).show();
+}
+
+function submitChangePatientPassword() {
+    const patientId = document.getElementById('changePasswordPatientId').value;
+    const newPassword = document.getElementById('newPatientPassword').value;
+    
+    if (!newPassword.trim()) {
+        alert('Please enter a new password');
+        return;
+    }
+    
+    fetch(`/api/patients/${patientId}/password`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ new_password: newPassword })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Password changed successfully!');
+            bootstrap.Modal.getInstance(document.getElementById('changePasswordModal')).hide();
+            document.getElementById('newPatientPassword').value = '';
+        } else {
+            alert(data.error || 'Failed to change password');
+        }
+    })
+    .catch(error => {
+        console.error('Error changing password:', error);
+        alert('An error occurred while changing the password');
+    });
+}
+</script>
+{% endblock %} 

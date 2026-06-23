@@ -1,0 +1,50 @@
+{% set detail_pages = ['patient_details', 'appointment_details', 'billing_details', 'treatment_details'] %}
+{% if request.endpoint in detail_pages or (request.view_args and (request.view_args.get('patient_id') or request.view_args.get('appointment_id') or request.view_args.get('billing_id'))) %}
+<nav class="breadcrumb-nav py-2 px-4 border-bottom" aria-label="Breadcrumb navigation">
+    <ol class="breadcrumb mb-0" role="list">
+        <li class="breadcrumb-item" role="listitem">
+            <a href="{{ url_for('dentist_dashboard' if session.user_type == 'dentist' else 'patient_dashboard') }}" 
+               class="breadcrumb-link">
+                <i class="bi bi-house-door me-1" aria-hidden="true"></i>
+                Dashboard
+            </a>
+        </li>
+        
+        {% if request.view_args and request.view_args.get('patient_id') %}
+            <li class="breadcrumb-item" role="listitem">
+                <a href="{{ url_for('dentist_patients' if session.user_type == 'dentist' else 'patient_profile') }}" 
+                   class="breadcrumb-link">
+                    {{ 'Patients' if session.user_type == 'dentist' else 'My Profile' }}
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page" role="listitem">
+                Patient Details
+            </li>
+        {% endif %}
+        
+        {% if request.view_args and request.view_args.get('appointment_id') %}
+            <li class="breadcrumb-item" role="listitem">
+                <a href="{{ url_for('dentist_appointments' if session.user_type == 'dentist' else 'patient_appointments') }}" 
+                   class="breadcrumb-link">
+                    Appointments
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page" role="listitem">
+                Appointment Details
+            </li>
+        {% endif %}
+        
+        {% if request.view_args and request.view_args.get('billing_id') %}
+            <li class="breadcrumb-item" role="listitem">
+                <a href="{{ url_for('dentist_billing' if session.user_type == 'dentist' else 'patient_billing') }}" 
+                   class="breadcrumb-link">
+                    Billing
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page" role="listitem">
+                Billing Details
+            </li>
+        {% endif %}
+    </ol>
+</nav>
+{% endif %} 

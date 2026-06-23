@@ -1,0 +1,452 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+/* Override problematic MFA styles to prevent shaking */
+#mfaModal {
+  z-index: 1055 !important;
+}
+
+#mfaModal .modal-dialog {
+  max-width: 400px !important;
+  width: 90% !important;
+  margin: 1.75rem auto !important;
+  z-index: 1056 !important;
+  position: relative !important;
+}
+
+#mfaModal .modal-content {
+  z-index: 1057 !important;
+  position: relative !important;
+}
+
+#mfaModal .modal-body {
+  z-index: 1058 !important;
+  position: relative !important;
+}
+
+.mfa-input {
+  font-family: 'Courier New', monospace !important;
+  font-size: 1.2rem !important;
+  letter-spacing: 0.15em !important;
+  text-align: center !important;
+  padding: 0.75rem !important;
+  border: 2px solid var(--gray-300) !important;
+  border-radius: 0.5rem !important;
+  background-color: white !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+  z-index: 1059 !important;
+  position: relative !important;
+  pointer-events: auto !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+}
+
+body.dark-mode .mfa-input {
+  background-color: var(--dark-bg-secondary) !important;
+  border-color: var(--dark-border) !important;
+  color: var(--dark-text-primary) !important;
+}
+
+.mfa-input:focus {
+  border-color: var(--primary-500) !important;
+  box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25) !important;
+  outline: none !important;
+  z-index: 1060 !important;
+  position: relative !important;
+}
+
+body.dark-mode .mfa-input:focus {
+  border-color: var(--primary-400) !important;
+  box-shadow: 0 0 0 0.25rem rgba(96, 165, 250, 0.25) !important;
+}
+
+/* Force form to be interactive */
+#mfaForm {
+  z-index: 1058 !important;
+  position: relative !important;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  #mfaModal .modal-dialog {
+    max-width: 320px !important;
+    width: 95% !important;
+    margin: 1rem auto !important;
+  }
+  
+  .mfa-input {
+    font-size: 1.1rem !important;
+    padding: 0.6rem !important;
+  }
+}
+</style>
+
+<div class="page-container">
+    <div class="row">
+        <div class="col-md-10 col-lg-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="bi bi-person me-2 text-primary"></i>My Profile
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <!-- Theme and Navigation Toggles -->
+                    <div class="mb-4">
+                        <h5>Display Settings</h5>
+                        <div class="d-flex gap-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="themeToggle">
+                                <label class="form-check-label" for="themeToggle">Dark Mode</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="menuPositionToggle">
+                                <label class="form-check-label" for="menuPositionToggle">Side Menu</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Settings -->
+                    <div class="mb-4">
+                        <h5>Profile Information</h5>
+                        <form id="profileForm" method="POST" action="{{ url_for('update_patient_profile') }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <div class="mb-3">
+                                <label for="firstName" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="firstName" name="first_name" value="{{ patient.first_name }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" name="last_name" value="{{ patient.last_name }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" value="{{ patient.email }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Phone</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" value="{{ patient.phone }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dateOfBirth" class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control" id="dateOfBirth" name="date_of_birth" value="{{ patient.date_of_birth }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Address</label>
+                                <textarea class="form-control" id="address" name="address" rows="3" required>{{ patient.address }}</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="patientId" class="form-label">Patient ID</label>
+                                <input type="text" class="form-control" id="patientId" value="{{ patient.patient_id }}" readonly>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Profile</button>
+                        </form>
+                    </div>
+
+                    <!-- Password Change -->
+                    <div class="mb-4">
+                        <h5>Change Password</h5>
+                        <form id="passwordForm">
+                            <div class="mb-3">
+                                <label for="currentPassword" class="form-label">Current Password</label>
+                                <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="newPassword" class="form-label">New Password</label>
+                                <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Change Password</button>
+                        </form>
+                    </div>
+
+                    <!-- Communication Test -->
+                    <div class="mb-4">
+                        <h5>Communication Test</h5>
+                        <button id="sendTestSMS" class="btn btn-outline-secondary me-2">Send Test SMS</button>
+                        <button id="sendTestMFA" class="btn btn-outline-primary">Send Test MFA</button>
+                    </div>
+
+                    <!-- MFA Verification Modal -->
+                    <div class="modal fade" id="mfaModal" tabindex="-1" aria-labelledby="mfaModalLabel" aria-hidden="true" data-bs-backdrop="false" data-bs-keyboard="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="mfaModalLabel">Verify MFA Code</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="mfaForm">
+                                        <input type="hidden" id="mfaIdInput" name="mfa_id">
+                                        <div class="mb-3">
+                                            <label for="mfaCodeInput" class="form-label">Enter the 6-digit code you received</label>
+                                            <input type="text" class="form-control form-control-lg text-center mfa-input" id="mfaCodeInput" name="code" maxlength="6" pattern="[0-9]{6}" autocomplete="one-time-code" placeholder="000000" inputmode="numeric" autofocus required>
+                                            <div class="form-text">Check your SMS for the verification code</div>
+                                        </div>
+                                        <div id="mfaResult" class="mb-2"></div>
+                                        <button type="submit" class="btn btn-primary w-100">Verify Code</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Wait for both DOM and stylesheets to be fully loaded
+function waitForStylesLoaded() {
+    return new Promise((resolve) => {
+        if (document.readyState === 'complete') {
+            resolve();
+        } else {
+            window.addEventListener('load', resolve);
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', async function() {
+    // Wait for stylesheets to load before doing layout operations
+    await waitForStylesLoaded();
+    
+    // Theme toggle handler
+    const themeToggle = document.getElementById('themeToggle');
+    const menuPositionToggle = document.getElementById('menuPositionToggle');
+
+    // Initialize theme toggle state
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    themeToggle.checked = savedTheme === 'dark';
+    themeToggle.nextElementSibling.textContent = savedTheme === 'dark' ? 'Dark Mode' : 'Light Mode';
+
+    // Initialize menu position toggle state
+    const savedMenuPosition = localStorage.getItem('menuPosition') || 'side';
+    menuPositionToggle.checked = savedMenuPosition === 'side';
+    menuPositionToggle.nextElementSibling.textContent = savedMenuPosition === 'side' ? 'Side Menu' : 'Top Menu';
+
+    // Theme toggle event listener
+    themeToggle.addEventListener('change', function() {
+        const newTheme = this.checked ? 'dark' : 'light';
+        localStorage.setItem('theme', newTheme);
+        this.nextElementSibling.textContent = this.checked ? 'Dark Mode' : 'Light Mode';
+        
+        if (newTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.body.classList.remove('light-mode');
+        } else {
+            document.body.classList.add('light-mode');
+            document.body.classList.remove('dark-mode');
+        }
+    });
+
+    // Menu position toggle event listener
+    menuPositionToggle.addEventListener('change', function() {
+        const newPosition = this.checked ? 'side' : 'top';
+        localStorage.setItem('menuPosition', newPosition);
+        this.nextElementSibling.textContent = this.checked ? 'Side Menu' : 'Top Menu';
+        
+        // Use our new CSS classes instead of manual manipulation
+        if (newPosition === 'top') {
+            document.body.classList.add('top-menu');
+            document.body.classList.remove('side-menu');
+        } else {
+            document.body.classList.add('side-menu');
+            document.body.classList.remove('top-menu');
+        }
+        
+        console.log('Menu position changed to:', newPosition);
+    });
+
+    // Profile form handler
+    document.getElementById('profileForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        try {
+            const formData = new FormData(this);
+            const response = await fetch("{{ url_for('update_patient_profile') }}", {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            if (data.success) {
+                alert('Profile updated successfully');
+                window.location.reload();
+            } else {
+                alert(data.message || 'Failed to update profile');
+            }
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            alert('An error occurred while updating profile');
+        }
+    });
+
+    // Password form handler
+    document.getElementById('passwordForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        if (newPassword !== confirmPassword) {
+            alert('New passwords do not match');
+            return;
+        }
+        
+        try {
+            const response = await fetchWithCSRF('/api/password/change', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    current_password: document.getElementById('currentPassword').value,
+                    new_password: newPassword
+                })
+            });
+            
+            if (response.ok) {
+                alert('Password changed successfully');
+                document.getElementById('passwordForm').reset();
+            } else {
+                const data = await response.json();
+                alert(data.error || 'Failed to change password');
+            }
+        } catch (error) {
+            console.error('Error changing password:', error);
+            alert('An error occurred while changing password');
+        }
+    });
+
+    // Test SMS handler
+    document.getElementById('sendTestSMS').addEventListener('click', async function() {
+        try {
+            const response = await fetchWithCSRF('/api/test-sms', {
+                method: 'POST'
+            });
+            const data = await response.json();
+            if (data.success) {
+                alert('Test SMS sent successfully');
+            } else {
+                alert(data.error || 'Failed to send test SMS');
+            }
+        } catch (error) {
+            console.error('Error sending test SMS:', error);
+            alert('An error occurred while sending test SMS');
+        }
+    });
+
+    // Test MFA handler
+    document.getElementById('sendTestMFA').addEventListener('click', async function() {
+        try {
+            const response = await fetchWithCSRF('/api/test-mfa', {
+                method: 'POST'
+            });
+            const data = await response.json();
+            if (data.success) {
+                document.getElementById('mfaIdInput').value = data.mfa_id;
+                const mfaModal = new bootstrap.Modal(document.getElementById('mfaModal'));
+                mfaModal.show();
+            } else {
+                alert(data.error || 'Failed to send test MFA');
+            }
+        } catch (error) {
+            console.error('Error sending test MFA:', error);
+            alert('An error occurred while sending test MFA');
+        }
+    });
+
+    // MFA Modal event handlers - Delayed focus to prevent layout forcing
+    const mfaModalElement = document.getElementById('mfaModal');
+    
+    // Delayed focus when modal opens to prevent forced layout
+    mfaModalElement.addEventListener('shown.bs.modal', function () {
+        // Wait longer to ensure all layout is complete
+        setTimeout(async () => {
+            await waitForStylesLoaded(); // Double-check styles are loaded
+            
+            const mfaInput = document.getElementById('mfaCodeInput');
+            const resultDiv = document.getElementById('mfaResult');
+            
+            // Clear previous results and input
+            resultDiv.innerHTML = '';
+            mfaInput.value = '';
+            
+            // Simple focus without aggressive style manipulation
+            mfaInput.disabled = false;
+            mfaInput.readOnly = false;
+            
+            // Gentle focus attempt
+            try {
+                mfaInput.focus();
+            } catch (e) {
+                // Ignore focus errors
+                console.log('Focus attempt failed, but continuing...');
+            }
+        }, 500); // Longer delay to ensure layout is stable
+    });
+    
+    // Clear form when modal is hidden
+    mfaModalElement.addEventListener('hidden.bs.modal', function () {
+        document.getElementById('mfaForm').reset();
+        document.getElementById('mfaResult').innerHTML = '';
+    });
+
+    // MFA form handler
+    document.getElementById('mfaForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        
+        try {
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Verifying...';
+            
+            const response = await fetchWithCSRF('/api/verify-mfa', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    mfa_id: document.getElementById('mfaIdInput').value,
+                    code: document.getElementById('mfaCodeInput').value
+                })
+            });
+            
+            const data = await response.json();
+            const resultDiv = document.getElementById('mfaResult');
+            
+            if (data.success) {
+                resultDiv.innerHTML = '<div class="alert alert-success"><i class="bi bi-check-circle me-2"></i>MFA verification successful!</div>';
+                setTimeout(() => {
+                    bootstrap.Modal.getInstance(document.getElementById('mfaModal')).hide();
+                }, 2000);
+            } else {
+                resultDiv.innerHTML = '<div class="alert alert-danger"><i class="bi bi-x-circle me-2"></i>Invalid MFA code. Please try again.</div>';
+                // Gentle refocus for retry
+                setTimeout(() => {
+                    try {
+                        document.getElementById('mfaCodeInput').focus();
+                        document.getElementById('mfaCodeInput').select();
+                    } catch (e) {
+                        // Ignore focus errors
+                    }
+                }, 100);
+            }
+        } catch (error) {
+            console.error('Error verifying MFA:', error);
+            document.getElementById('mfaResult').innerHTML = '<div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-2"></i>An error occurred while verifying MFA</div>';
+        } finally {
+            // Restore button state
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        }
+    });
+});
+</script>
+{% endblock %} 

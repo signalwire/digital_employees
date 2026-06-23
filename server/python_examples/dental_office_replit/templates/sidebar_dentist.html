@@ -1,0 +1,77 @@
+<div class="sidebar d-flex flex-column" id="sidebar-navigation">
+    <!-- Sidebar Header -->
+    <div class="d-flex align-items-center mb-4">
+        <img src="{{ url_for('serve_static', filename='css/dental_logo.png') }}" 
+             alt="Dental Office Logo" 
+             height="36" 
+             width="46"
+             style="height: 36px !important; width: 46px !important; max-height: 36px !important; max-width: 46px !important; min-height: 36px !important; min-width: 46px !important; object-fit: contain; display: block !important;"
+             class="me-3">
+        <h4 class="mb-0">SignalWire Dental Office</h4>
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="nav nav-pills flex-column mb-auto" aria-label="Dentist navigation" style="gap: 0 !important;">
+        <ul class="nav flex-column" role="list" style="gap: 0 !important; margin: 0 !important;">
+            <li class="nav-item" role="listitem" style="margin: 0 !important;">
+                <a href="{{ url_for('dentist_dashboard') }}" 
+                   class="nav-link {% if request.endpoint == 'dentist_dashboard' %}active{% endif %}"
+                   {% if request.endpoint == 'dentist_dashboard' %}aria-current="page"{% endif %}
+                   style="margin: 0 !important; margin-bottom: 0 !important;">
+                    <i class="bi bi-house-door sidebar-icon" aria-hidden="true"></i>
+                    Dashboard
+                </a>
+            </li>
+            
+            <li class="nav-item" role="listitem" style="margin: 0 !important;">
+                <a href="{{ url_for('dentist_patients') }}" 
+                   class="nav-link {% if request.endpoint == 'dentist_patients' %}active{% endif %}"
+                   {% if request.endpoint == 'dentist_patients' %}aria-current="page"{% endif %}
+                   style="margin: 0 !important; margin-bottom: 0 !important;">
+                    <i class="bi bi-people sidebar-icon" aria-hidden="true"></i>
+                    Patients
+                </a>
+            </li>
+            
+            <li class="nav-item" role="listitem" style="margin: 0 !important;">
+                <a href="{{ url_for('dentist_treatment_records') }}" 
+                   class="nav-link {% if request.endpoint == 'dentist_treatment_records' %}active{% endif %}"
+                   {% if request.endpoint == 'dentist_treatment_records' %}aria-current="page"{% endif %}
+                   style="margin: 0 !important; margin-bottom: 0 !important;">
+                    <i class="bi bi-clipboard2-pulse sidebar-icon" aria-hidden="true"></i>
+                    Treatment Records
+                </a>
+            </li>
+            
+            <li class="nav-item" role="listitem" style="margin: 0 !important;">
+                <a href="{{ url_for('dentist_billing') }}" 
+                   class="nav-link {% if request.endpoint == 'dentist_billing' %}active{% endif %}"
+                   {% if request.endpoint == 'dentist_billing' %}aria-current="page"{% endif %}
+                   style="margin: 0 !important; margin-bottom: 0 !important;">
+                    <i class="bi bi-credit-card sidebar-icon" aria-hidden="true"></i>
+                    Billing
+                </a>
+            </li>
+            
+            <li class="nav-item" role="listitem" style="margin: 0 !important;">
+                <a href="{{ url_for('dentist_profile') }}" 
+                   class="nav-link {% if request.endpoint == 'dentist_profile' %}active{% endif %}"
+                   {% if request.endpoint == 'dentist_profile' %}aria-current="page"{% endif %}
+                   style="margin: 0 !important; margin-bottom: 0 !important;">
+                    <i class="bi bi-person sidebar-icon" aria-hidden="true"></i>
+                    My Profile
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+    <!-- Footer -->
+    <div class="border-top pt-3 mt-auto">
+        <a href="{{ url_for('logout') }}" 
+           class="nav-link d-flex align-items-center"
+           role="button">
+            <i class="bi bi-box-arrow-right sidebar-icon" aria-hidden="true"></i>
+            Logout
+        </a>
+    </div>
+</div> 

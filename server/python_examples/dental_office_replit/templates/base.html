@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{% block title %}SignalWire Dental Office System{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{{ url_for('serve_static', filename='css/dental_logo.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="{{ url_for('serve_static', filename='css/style.css') }}?v=1748733800" rel="stylesheet" />
+    {% block extra_head %}{% endblock %}
+    <style>
+        :root {
+            --signalwire-blue: #0A84FF;
+            --signalwire-dark-blue: #004999;
+            --signalwire-light-blue: #E6F0FF;
+            --signalwire-gray: #333333;
+        }
+        
+        /* Mobile-specific header */
+        @media (max-width: 767px) {
+            .mobile-header {
+                display: flex !important;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.75rem 1rem;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(20px);
+                border-bottom: 1px solid var(--gray-200);
+                position: sticky;
+                top: 0;
+                z-index: 1030;
+                box-shadow: var(--shadow-sm);
+                min-height: 56px;
+            }
+            
+            body.dark-mode .mobile-header {
+                background: rgba(15, 23, 42, 0.95);
+                border-bottom: 1px solid var(--dark-border);
+            }
+            
+            .mobile-header .navbar-brand {
+                font-size: 1rem !important;
+                font-weight: 600;
+                color: var(--gray-900);
+                text-decoration: none;
+                flex: 1;
+                text-align: center;
+                letter-spacing: -0.01em;
+                line-height: 1.2;
+            }
+            
+            .mobile-header .navbar-brand img {
+                height: 40px !important;
+                width: 51px !important;
+                max-height: 40px !important;
+                max-width: 51px !important;
+                min-height: 40px !important;
+                min-width: 51px !important;
+                margin-right: 0.5rem;
+                object-fit: contain;
+                object-position: center;
+                display: block !important;
+                flex-shrink: 0 !important;
+            }
+            
+            body.dark-mode .mobile-header .navbar-brand {
+                color: var(--dark-text-primary);
+            }
+            
+            .mobile-menu-toggle {
+                background: none;
+                border: none;
+                color: var(--gray-700);
+                font-size: 1.25rem;
+                padding: 0.5rem;
+                border-radius: var(--radius-md);
+                cursor: pointer;
+                min-width: 44px;
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            body.dark-mode .mobile-menu-toggle {
+                color: var(--dark-text-secondary);
+            }
+            
+            .mobile-menu-toggle:hover {
+                background-color: var(--gray-100);
+                color: var(--gray-900);
+            }
+            
+            body.dark-mode .mobile-menu-toggle:hover {
+                background-color: var(--dark-bg-tertiary);
+                color: var(--dark-text-primary);
+            }
+            
+            /* Mobile sidebar positioning */
+            .sidebar {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 320px !important;
+                height: 100vh !important;
+                z-index: 1050 !important;
+                transform: translateX(-100%) !important;
+                transition: transform 0.3s ease !important;
+                overflow-y: auto !important;
+                padding: 1rem !important;
+            }
+            
+            .sidebar.show {
+                transform: translateX(0) !important;
+            }
+            
+            /* Allow both hamburger menus to show and function */
+            .main-content > header {
+                display: block !important;
+            }
+            
+            .main-content > header .navbar {
+                display: flex !important;
+            }
+            
+            /* Ensure sidebar navigation is visible and functional */
+            .sidebar .nav,
+            .sidebar .nav-link,
+            .sidebar .nav-item {
+                display: flex !important;
+            }
+            
+            .sidebar .nav {
+                flex-direction: column !important;
+            }
+            
+            .sidebar .nav-link {
+                align-items: center !important;
+                padding: 0.75rem 1rem !important;
+                color: inherit !important;
+                text-decoration: none !important;
+            }
+            
+            /* Show mobile header on mobile */
+            .mobile-header {
+                display: flex !important;
+            }
+            
+            /* Adjust main content for mobile header */
+            .main-content {
+                padding-top: 0 !important;
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            
+            /* Mobile sidebar overlay */
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1040;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
+            }
+            
+            .sidebar-overlay.show {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+        
+        /* Desktop logo sizing - industry standards */
+        @media (min-width: 769px) {
+            .mobile-header {
+                display: none !important;
+            }
+            
+            .navbar-brand img {
+                height: 40px !important; /* Industry standard desktop logo height */
+                width: auto !important;
+                max-width: 120px !important;
+                min-height: 40px !important;
+                min-width: 51px !important;
+                object-fit: contain;
+            }
+            
+            .sidebar .d-flex.align-items-center img {
+                height: 36px !important; /* Slightly smaller for sidebar */
+                width: auto !important;
+                max-width: 120px !important;
+                min-height: 36px !important;
+                min-width: 46px !important;
+                object-fit: contain;
+            }
+        }
+        
+        /* Tablet specific fixes */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .mobile-header {
+                display: none !important;
+            }
+            
+            .navbar-brand img {
+                height: 40px !important;
+                width: 51px !important;
+                max-height: 40px !important;
+                max-width: 51px !important;
+                min-height: 40px !important;
+                min-width: 51px !important;
+                object-fit: contain;
+                display: block !important;
+                visibility: visible !important;
+            }
+        }
+        
+        /* Mobile and small tablet */
+        @media (max-width: 767px) {
+            .mobile-header {
+                display: flex !important;
+            }
+            
+            .mobile-header .navbar-brand img {
+                height: 40px !important;
+                width: 51px !important;
+                max-height: 40px !important;
+                max-width: 51px !important;
+                min-height: 40px !important;
+                min-width: 51px !important;
+            }
+        }
+        
+        /* Force logo visibility and sizing across all viewports */
+        .navbar-brand img, 
+        .sidebar img[alt*="Logo"], 
+        img[alt*="Dental Office Logo"] {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            min-height: 30px !important;
+            min-width: 38px !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip Navigation Link -->
+    <a href="#main-content" class="skip-link visually-hidden-focusable">Skip to main content</a>
+    
+    <!-- Sidebar Navigation (hidden on mobile) -->
+    <aside class="sidebar d-none d-md-block" aria-label="Main navigation">
+        {% if session.get('user_type') == 'dentist' %}
+            {% include 'sidebar_dentist.html' %}
+        {% elif session.get('user_type') == 'patient' %}
+            {% include 'sidebar_patient.html' %}
+        {% endif %}
+    </aside>
+    
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Top Menu -->
+        <header role="banner">
+            {% include 'top_menu.html' %}
+        </header>
+        
+        <!-- Breadcrumb Navigation -->
+        {% block breadcrumb %}
+            {% include 'breadcrumb.html' %}
+        {% endblock %}
+        
+        <!-- Page Content -->
+        <main id="main-content" class="p-4" role="main" tabindex="-1">
+            <!-- Page Title and Description for Screen Readers -->
+            <div class="visually-hidden">
+                <h1>{% block page_title %}{{ self.title() }}{% endblock %}</h1>
+                {% block page_description %}{% endblock %}
+            </div>
+            
+            {% block content %}{% endblock %}
+        </main>
+        
+        <!-- Footer -->
+        <footer class="mt-5 py-4 text-center border-top" role="contentinfo">
+            <div class="container">
+                <p class="mb-0 text-muted">
+                    <small>Powered by <a href="https://signalwire.ai" target="_blank" class="text-decoration-none" style="color: var(--signalwire-blue);">SignalWire</a></small>
+                </p>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Mobile Sidebar Overlay -->
+    <!-- (Removed: no longer needed) -->
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('serve_static', filename='js/service-colors.js') }}"></script>
+    <script>
+    // Apply saved theme and menu position on every page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        const savedMenuPosition = localStorage.getItem('menuPosition') || 'top';
+        
+        // Apply theme
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.body.classList.remove('light-mode');
+        } else {
+            document.body.classList.add('light-mode');
+            document.body.classList.remove('dark-mode');
+        }
+        
+        // Apply menu position using our new CSS classes
+        if (savedMenuPosition === 'top') {
+            document.body.classList.add('top-menu');
+            document.body.classList.remove('side-menu');
+        } else {
+            document.body.classList.add('side-menu');
+            document.body.classList.remove('top-menu');
+        }
+        
+        console.log('Applied theme:', savedTheme, 'Menu position:', savedMenuPosition);
+        
+        // Initialize focus management
+        initializeFocusManagement();
+    });
+    
+    // CSRF Token Helper
+    window.getCSRFToken = function() {
+        return "{{ csrf_token() }}";
+    };
+    
+    // Enhanced fetch with CSRF token
+    window.fetchWithCSRF = function(url, options = {}) {
+        // Set default options
+        options.headers = options.headers || {};
+        
+        // Add CSRF token to headers
+        options.headers['X-CSRFToken'] = window.getCSRFToken();
+        
+        // If it's a POST request with JSON data, add CSRF token to the body as well
+        if (options.method === 'POST' && options.headers['Content-Type'] === 'application/json' && options.body) {
+            try {
+                const data = JSON.parse(options.body);
+                data.csrf_token = window.getCSRFToken();
+                options.body = JSON.stringify(data);
+            } catch (e) {
+                // If body is not JSON, just continue with headers
+            }
+        }
+        
+        return fetch(url, options);
+    };
+    
+    // Setup global AJAX defaults for jQuery if it's available
+    if (window.$) {
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                // Add CSRF token to headers for all AJAX requests
+                xhr.setRequestHeader('X-CSRFToken', window.getCSRFToken());
+            }
+        });
+    }
+    
+    // Focus Management for Better Keyboard Navigation
+    function initializeFocusManagement() {
+        // Focus main content when skip link is used
+        const skipLink = document.querySelector('.skip-link');
+        const mainContent = document.querySelector('#main-content');
+        
+        if (skipLink && mainContent) {
+            skipLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                mainContent.focus();
+                mainContent.scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+        
+        // Enhanced keyboard navigation for dropdowns and modals
+        document.addEventListener('keydown', function(e) {
+            // Arrow key navigation for nav items
+            if (e.target.closest('.navbar-nav') && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
+                const navItems = Array.from(document.querySelectorAll('.navbar-nav .nav-link'));
+                const currentIndex = navItems.indexOf(e.target);
+                
+                if (currentIndex !== -1) {
+                    e.preventDefault();
+                    let nextIndex;
+                    if (e.key === 'ArrowRight') {
+                        nextIndex = (currentIndex + 1) % navItems.length;
+                    } else {
+                        nextIndex = currentIndex === 0 ? navItems.length - 1 : currentIndex - 1;
+                    }
+                    navItems[nextIndex].focus();
+                }
+            }
+        });
+    }
+    </script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html> 

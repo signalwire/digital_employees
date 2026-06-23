@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+{% block title %}My Appointments - Dental Office{% endblock %}
+
+{% block page_title %}My Appointments{% endblock %}
+{% block page_description %}
+  <p>View and manage your dental appointments. You can see your upcoming appointments in the calendar and schedule new ones using the form.</p>
+{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0 font-semibold" id="page-heading">
+      <i class="bi bi-calendar3 me-2 text-primary" aria-hidden="true"></i>My Appointments
+    </h2>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card card-elevated mb-4">
+        <div class="card-header">
+          <h5 class="mb-0 font-semibold">
+            <i class="bi bi-calendar-week me-2" aria-hidden="true"></i>Your Appointments
+          </h5>
+        </div>
+        <div class="card-body">
+          <div id="calendar" role="application" aria-label="Appointment calendar"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-outlined mb-4">
+        <div class="card-header">
+          <h5 class="mb-0 font-semibold">
+            <i class="bi bi-plus-circle me-2 text-success" aria-hidden="true"></i>Schedule New Appointment
+          </h5>
+        </div>
+        <div class="card-body">
+          <form id="appointmentForm" class="needs-validation" novalidate role="form" aria-labelledby="schedule-heading">
+            <h6 id="schedule-heading" class="visually-hidden">Schedule New Appointment Form</h6>
+            {% if csrf_token %}
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            {% endif %}
+            <div class="mb-3">
+              <label for="service" class="form-label">Service <span class="text-danger" aria-label="required">*</span></label>
+              <select class="form-select" id="service" required aria-describedby="service-help">
+                <option value="">Select Service</option>
+                {% for service in services %}
+                <option value="{{ service.id }}">{{ service.name }}</option>
+                {% endfor %}
+              </select>
+              <div class="invalid-feedback">Please select a service</div>
+              <div id="service-help" class="form-text">Choose the type of dental service you need</div>
+            </div>
+            <div class="mb-3">
+              <label for="dentist" class="form-label">Dentist <span class="text-danger" aria-label="required">*</span></label>
+              <select class="form-select" id="dentist" required aria-describedby="dentist-help">
+                <option value="">Select Dentist</option>
+                {% for dentist in dentists %}
+                <option value="{{ dentist.id }}">{{ dentist.name }}</option>
+                {% endfor %}
+              </select>
+              <div class="invalid-feedback">Please select a dentist</div>
+              <div id="dentist-help" class="form-text">Choose your preferred dentist</div>
+            </div>
+            <div class="mb-3">
+              <label for="date" class="form-label">Date <span class="text-danger" aria-label="required">*</span></label>
+              <input type="date" class="form-control" id="date" required aria-describedby="date-help">
+              <div class="invalid-feedback">Please select a date</div>
+              <div id="date-help" class="form-text">Select your preferred appointment date</div>
+            </div>
+            <div class="mb-3">
+              <label for="timeSlot" class="form-label">Time Slot <span class="text-danger" aria-label="required">*</span></label>
+              <select class="form-select" id="timeSlot" required aria-describedby="time-help">
+                <option value="">Select Time Slot</option>
+                <option value="morning">Morning (9:00 AM - 12:00 PM)</option>
+                <option value="afternoon">Afternoon (1:00 PM - 4:00 PM)</option>
+                <option value="evening">Evening (4:00 PM - 7:00 PM)</option>
+              </select>
+              <div class="invalid-feedback">Please select a time slot</div>
+              <div id="time-help" class="form-text">Choose your preferred time of day</div>
+            </div>
+            <div class="mb-3">
+              <label for="notes" class="form-label">Notes (Optional)</label>
+              <textarea class="form-control" id="notes" rows="3" placeholder="Any specific concerns or requests..." aria-describedby="notes-help"></textarea>
+              <div id="notes-help" class="form-text">Add any additional information about your appointment</div>
+            </div>
+            <button type="submit" class="btn btn-primary shadow-soft">
+              <i class="bi bi-calendar-plus me-2" aria-hidden="true"></i>Schedule Appointment
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Appointment Details Modal -->
+<div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="appointmentModalLabel">Appointment Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <dl>
+          <dt>Service:</dt>
+          <dd id="modalTitle"></dd>
+          <dt>Date:</dt>
+          <dd id="modalDate"></dd>
+          <dt>Time:</dt>
+          <dd id="modalTime"></dd>
+          <dt>Dentist:</dt>
+          <dd id="modalDentist"></dd>
+          <dt>Status:</dt>
+          <dd id="modalStatus"></dd>
+        </dl>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+    initialView: 'dayGridMonth',
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    },
+    events: '/api/appointments',
+    eventClick: function(info) {
+      showAppointmentDetails(info.event);
+    },
+    // Accessibility improvements
+    buttonText: {
+      today: 'Today',
+      month: 'Month view',
+      week: 'Week view',
+      day: 'Day view'
+    }
+  });
+  calendar.render();
+
+  // Handle form submission
+  const form = document.getElementById('appointmentForm');
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    if (!form.checkValidity()) {
+      e.stopPropagation();
+      form.classList.add('was-validated');
+      // Announce validation errors to screen readers
+      const firstInvalid = form.querySelector(':invalid');
+      if (firstInvalid) {
+        firstInvalid.focus();
+        const errorMsg = firstInvalid.parentNode.querySelector('.invalid-feedback');
+        if (errorMsg) {
+          const announcement = document.createElement('div');
+          announcement.setAttribute('aria-live', 'polite');
+          announcement.textContent = errorMsg.textContent;
+          announcement.className = 'visually-hidden';
+          document.body.appendChild(announcement);
+          setTimeout(() => document.body.removeChild(announcement), 3000);
+        }
+      }
+      return;
+    }
+
+    // Show loading state
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Scheduling...';
+    submitBtn.disabled = true;
+
+    try {
+      const response = await fetchWithCSRF('/api/appointments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          service_id: document.getElementById('service').value,
+          dentist_id: document.getElementById('dentist').value,
+          date: document.getElementById('date').value,
+          time_slot: document.getElementById('timeSlot').value,
+          notes: document.getElementById('notes').value
+        })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        // Success announcement for screen readers
+        const announcement = document.createElement('div');
+        announcement.setAttribute('aria-live', 'polite');
+        announcement.textContent = 'Appointment scheduled successfully';
+        announcement.className = 'visually-hidden';
+        document.body.appendChild(announcement);
+        setTimeout(() => document.body.removeChild(announcement), 3000);
+        
+        alert('Appointment scheduled successfully');
+        calendar.refetchEvents();
+        form.reset();
+        form.classList.remove('was-validated');
+      } else {
+        throw new Error(data.error || 'Failed to schedule appointment');
+      }
+    } catch (error) {
+      console.error('Error scheduling appointment:', error);
+      alert(error.message || 'An error occurred while scheduling the appointment');
+    } finally {
+      // Restore button state
+      submitBtn.innerHTML = originalText;
+      submitBtn.disabled = false;
+    }
+  });
+
+  // Show appointment details
+  function showAppointmentDetails(event) {
+    const modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
+    document.getElementById('modalTitle').textContent = event.title;
+    document.getElementById('modalDate').textContent = event.start.toLocaleDateString();
+    document.getElementById('modalTime').textContent = event.extendedProps.time_slot;
+    document.getElementById('modalDentist').textContent = event.extendedProps.dentist_name;
+    document.getElementById('modalStatus').textContent = event.extendedProps.status;
+    modal.show();
+  }
+});
+
+// Add error handling for AJAX requests
+function handleAjaxError(error) {
+  console.error('AJAX Error:', error);
+  alert('An error occurred. Please try again later.');
+}
+
+// Add CSRF token to all AJAX requests if enabled
+{% if csrf_token %}
+$.ajaxSetup({
+  beforeSend: function(xhr, settings) {
+    if (settings.type === 'POST') {
+      xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+    }
+  }
+});
+{% endif %}
+</script>
+{% endblock %} 

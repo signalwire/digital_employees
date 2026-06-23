@@ -1,0 +1,31 @@
+# Copy this to .env file in your project root
+# Environment Variables Configuration
+
+# Database Configuration
+DATABASE_PATH=dental_office.db
+
+# Flask Configuration  
+SECRET_KEY=your-secret-key-here
+FLASK_ENV=development
+ENABLE_CSRF=false
+
+# SignalWire Configuration (for SMS/MFA)
+SIGNALWIRE_PROJECT_ID=your-signalwire-project-id
+SIGNALWIRE_TOKEN=your-signalwire-token
+SIGNALWIRE_SPACE=your-signalwire-space-subdomain
+FROM_NUMBER=+1234567890
+
+# Project URL (for MMS image hosting)
+PROJECT_URL=http://localhost:8080
+
+# HTTP Authentication (for SWAIG endpoints)
+HTTP_USERNAME=your-username
+HTTP_PASSWORD=your-password
+
+# C2C (Call-to-Call) Configuration
+C2C_API_KEY=your-c2c-api-key-here
+C2C_ADDRESS=your-c2c-address-here
+
+# Server Configuration
+HOST=127.0.0.1
+PORT=8080 

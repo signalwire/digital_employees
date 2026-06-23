@@ -1,0 +1,584 @@
+{% extends "base.html" %}
+
+{% block title %}Dentist Dashboard - Dental Office{% endblock %}
+
+{% block content %}
+<div class="page-container-fluid">
+    <div class="row">
+        <div class="col-md-9 col-lg-10 main-content">
+            <!-- Professional Welcome Banner -->
+            <div class="welcome-banner">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="mb-2">Welcome, Dr. {{ session.name }}</h2>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <button class="btn btn-primary shadow-soft" data-bs-toggle="modal" data-bs-target="#newAppointmentModal">
+                            <i class="bi bi-plus-circle me-2"></i>New Appointment
+                        </button>
+                        <button class="btn btn-success shadow-soft" data-bs-toggle="modal" data-bs-target="#newTreatmentModal">
+                            <i class="bi bi-clipboard-plus me-2"></i>Record Treatment
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="data-grid mb-5">
+                <div class="stat-card">
+                    <div class="stat-value">{{ today_appointments|length }}</div>
+                    <div class="stat-label">Today's Appointments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ total_patients }}</div>
+                    <div class="stat-label">Total Patients</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ pending_treatments|length }}</div>
+                    <div class="stat-label">Pending Treatments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${{ "%.2f"|format(monthly_revenue) }}</div>
+                    <div class="stat-label">Monthly Revenue</div>
+                </div>
+            </div>
+
+            <!-- Today's Appointments -->
+            <div class="card card-elevated mb-5">
+                <div class="card-header">
+                    <h4 class="mb-0 font-semibold">
+                        <i class="bi bi-calendar-event me-2 text-primary"></i>Today's Appointments
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% if today_appointments %}
+                    <div class="row g-4">
+                        {% for appointment in today_appointments %}
+                        <div class="col-md-6">
+                            <div class="service-card">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h5 class="font-semibold text-gray-900 mb-2">{{ appointment.patient_first_name }} {{ appointment.patient_last_name }}</h5>
+                                        <span class="service-label {{ appointment.service_name|service_class }}">{{ appointment.service_name }}</span>
+                                    </div>
+                                    <span class="badge status-{{ appointment.status }} px-3 py-2">{{ appointment.status|title }}</span>
+                                </div>
+                                <div class="space-y-2">
+                                    <p class="text-gray-600 mb-2">
+                                        <i class="bi bi-clock me-2"></i>
+                                        <span class="font-medium">{{ appointment.appointment_time }}</span>
+                                    </p>
+                                    <p class="text-gray-600 mb-0">
+                                        <i class="bi bi-clipboard2 me-2"></i>
+                                        <span class="font-medium">{{ appointment.service_name }}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-calendar-x text-gray-400" style="font-size: 3rem;"></i>
+                        <h5 class="text-gray-600 mt-3 mb-2">No appointments scheduled for today</h5>
+                        <p class="text-gray-500">Your schedule is clear today</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Recent Patients -->
+            <div class="card card-outlined mb-5">
+                <div class="card-header">
+                    <h4 class="mb-0 font-semibold">
+                        <i class="bi bi-people me-2 text-info"></i>Recent Patients
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        {% for patient in recent_patients %}
+                        <div class="col-md-4">
+                            <div class="service-card">
+                                <h5 class="font-semibold text-gray-900 mb-3">{{ patient.first_name }} {{ patient.last_name }}</h5>
+                                <div class="space-y-2">
+                                    <p class="text-gray-600 mb-2">
+                                        <i class="bi bi-envelope me-2"></i>
+                                        <span class="font-medium">{{ patient.email }}</span>
+                                    </p>
+                                    <p class="text-gray-600 mb-2">
+                                        <i class="bi bi-telephone me-2"></i>
+                                        <span class="font-medium">{{ patient.phone }}</span>
+                                    </p>
+                                    <p class="text-gray-600 mb-3">
+                                        <i class="bi bi-person-badge me-2"></i>
+                                        <span class="font-medium">ID: {{ patient.patient_id }}</span>
+                                    </p>
+                                </div>
+                                <button class="btn btn-outline-primary shadow-soft" onclick="viewPatientHistory({{ patient.id }})">
+                                    <i class="bi bi-clock-history me-2"></i>View History
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Treatments -->
+            <div class="card card-featured mb-5">
+                <div class="card-header">
+                    <h4 class="mb-0 font-semibold">
+                        <i class="bi bi-clipboard2-pulse me-2 text-success"></i>Recent Treatments
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        {% for treatment in recent_treatments %}
+                        <div class="col-md-6">
+                            <div class="service-card">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h5 class="font-semibold text-gray-900 mb-2">{{ treatment.patient_first_name }} {{ treatment.patient_last_name }}</h5>
+                                        <span class="service-label {{ treatment.service_name|service_class }}">{{ treatment.service_name }}</span>
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <p class="text-gray-600 mb-2">
+                                        <i class="bi bi-calendar me-2"></i>
+                                        <span class="font-medium">{{ treatment.treatment_date|format_date('long') }}</span>
+                                    </p>
+                                </div>
+                                <button class="btn btn-outline-primary shadow-soft" onclick="viewTreatmentDetails({{ treatment.id }})">
+                                    <i class="bi bi-eye me-2"></i>View Details
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- New Appointment Modal -->
+<div class="modal fade" id="newAppointmentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Schedule New Appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="appointmentForm">
+                    <div class="mb-3">
+                        <label for="patient" class="form-label">Patient</label>
+                        <select class="form-select" id="patient" name="patient_id" required>
+                            <option value="">Select a patient</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="service" class="form-label">Service</label>
+                        <select class="form-select" id="service" name="service_id" required>
+                            <option value="">Select a service</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="date" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="date" name="date" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="time_slot" class="form-label">Time Slot</label>
+                        <select class="form-select" id="time_slot" name="time_slot" required>
+                            <option value="morning">Morning (8AM-11AM)</option>
+                            <option value="afternoon">Afternoon (2PM-4PM)</option>
+                            <option value="evening">Evening (6PM-8PM)</option>
+                            <option value="all_day">All Day (8AM-8PM)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="smsReminder" name="sms_reminder" checked>
+                        <label class="form-check-label" for="smsReminder">Send SMS Reminder</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitAppointment()">Schedule</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- New Treatment Modal -->
+<div class="modal fade" id="newTreatmentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Record New Treatment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="treatmentForm">
+                    <div class="mb-3">
+                        <label for="treatmentPatient" class="form-label">Patient</label>
+                        <select class="form-select" id="treatmentPatient" name="patient" required>
+                            <option value="">Select a patient</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="treatmentService" class="form-label">Service</label>
+                        <select class="form-select" id="treatmentService" name="service" required>
+                            <option value="">Select a service</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="diagnosis" class="form-label">Diagnosis</label>
+                        <textarea class="form-control" id="diagnosis" name="diagnosis" rows="2" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="treatmentNotes" class="form-label">Treatment Notes</label>
+                        <textarea class="form-control" id="treatmentNotes" name="treatment_notes" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="referenceNumber" class="form-label">Reference Number</label>
+                        <input type="text" class="form-control" id="referenceNumber" name="reference_number" placeholder="Auto-generated or enter manually" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="billAmount" class="form-label">Bill Amount ($)</label>
+                        <input type="number" class="form-control" id="billAmount" name="bill_amount" min="0" step="0.01" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="followUpDate" class="form-label">Follow-up Date (Optional)</label>
+                        <div class="input-group">
+                            <input type="date" class="form-control" id="followUpDate" name="follow_up_date">
+                            <select class="form-select" id="followUpTimeSlot" name="follow_up_time_slot" style="max-width: 180px;">
+                                <option value="">Time Slot</option>
+                                <option value="morning">Morning (8AM-11AM)</option>
+                                <option value="afternoon">Afternoon (2PM-4PM)</option>
+                                <option value="evening">Evening (6PM-8PM)</option>
+                                <option value="all_day">All Day (8AM-8PM)</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitTreatment()">Save Treatment</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Function to load available services and patients
+    async function loadAppointmentData() {
+        try {
+            const [servicesResponse, patientsResponse] = await Promise.all([
+                fetch('/api/services'),
+                fetch('/api/patients')
+            ]);
+            
+            if (!servicesResponse.ok || !patientsResponse.ok) {
+                throw new Error(`Services response: ${servicesResponse.status}, Patients response: ${patientsResponse.status}`);
+            }
+            
+            const services = await servicesResponse.json();
+            const patients = await patientsResponse.json();
+            
+            const serviceSelect = document.getElementById('service');
+            const patientSelect = document.getElementById('patient');
+            
+            serviceSelect.innerHTML = '<option value="">Select a service</option>';
+            patientSelect.innerHTML = '<option value="">Select a patient</option>';
+            
+            services.forEach(service => {
+                const option = document.createElement('option');
+                option.value = service.id;
+                option.textContent = service.name;
+                serviceSelect.appendChild(option);
+            });
+            
+            patients.forEach(patient => {
+                const option = document.createElement('option');
+                option.value = patient.id;
+                option.textContent = `${patient.patient_id ? patient.patient_id + ' - ' : ''}${patient.first_name} ${patient.last_name}`;
+                patientSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error loading appointment data:', {
+                error,
+                context: 'Loading services and patients for appointment form',
+                urls: ['/api/services', '/api/patients'],
+                timestamp: new Date().toISOString()
+            });
+            alert('Failed to load appointment data. Please try again.');
+        }
+    }
+
+    // Function to load treatment data
+    async function loadTreatmentData() {
+        try {
+            const [servicesResponse, patientsResponse] = await Promise.all([
+                fetch('/api/services'),
+                fetch('/api/patients')
+            ]);
+            
+            if (!servicesResponse.ok || !patientsResponse.ok) {
+                throw new Error(`Services response: ${servicesResponse.status}, Patients response: ${patientsResponse.status}`);
+            }
+            
+            const services = await servicesResponse.json();
+            const patients = await patientsResponse.json();
+            
+            const serviceSelect = document.getElementById('treatmentService');
+            const patientSelect = document.getElementById('treatmentPatient');
+            
+            serviceSelect.innerHTML = '<option value="">Select a service</option>';
+            patientSelect.innerHTML = '<option value="">Select a patient</option>';
+            
+            services.forEach(service => {
+                const option = document.createElement('option');
+                option.value = service.id;
+                option.textContent = service.name;
+                serviceSelect.appendChild(option);
+            });
+            
+            patients.forEach(patient => {
+                const option = document.createElement('option');
+                option.value = patient.id;
+                option.textContent = `${patient.patient_id ? patient.patient_id + ' - ' : ''}${patient.first_name} ${patient.last_name}`;
+                patientSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error loading treatment data:', {
+                error,
+                context: 'Loading services and patients for treatment form',
+                urls: ['/api/services', '/api/patients'],
+                timestamp: new Date().toISOString()
+            });
+            alert('Failed to load treatment data. Please try again.');
+        }
+    }
+
+    // Function to submit new appointment
+    async function submitAppointment() {
+        const form = document.getElementById('appointmentForm');
+        const formData = new FormData(form);
+        const date = formData.get('date');
+        const timeSlot = formData.get('time_slot');
+        let startTime, endTime;
+        if (timeSlot === 'morning') {
+            startTime = date + ' 08:00:00';
+            endTime = date + ' 11:00:00';
+        } else if (timeSlot === 'afternoon') {
+            startTime = date + ' 14:00:00';
+            endTime = date + ' 16:00:00';
+        } else if (timeSlot === 'evening') {
+            startTime = date + ' 18:00:00';
+            endTime = date + ' 20:00:00';
+        } else if (timeSlot === 'all_day') {
+            startTime = date + ' 08:00:00';
+            endTime = date + ' 20:00:00';
+        }
+        try {
+            const appointmentData = {
+                patient_id: formData.get('patient_id'),
+                service_id: formData.get('service_id'),
+                dentist_id: null, // backend will use session user
+                start_time: startTime,
+                end_time: endTime,
+                type: 'checkup',
+                notes: formData.get('notes'),
+                sms_reminder: formData.get('sms_reminder') === 'on'
+            };
+            
+            const response = await fetchWithCSRF('/api/appointments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(appointmentData)
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || errorData.message || `HTTP error! status: ${response.status}`);
+            }
+            
+            window.location.reload();
+        } catch (error) {
+            console.error('Error scheduling appointment:', {
+                error,
+                context: 'Submitting new appointment',
+                appointmentData: {
+                    patient_id: formData.get('patient_id'),
+                    service_id: formData.get('service_id'),
+                    start_time: startTime,
+                    end_time: endTime,
+                    type: 'checkup'
+                },
+                timestamp: new Date().toISOString()
+            });
+            alert('Failed to schedule appointment. Please try again.');
+        }
+    }
+
+    // Function to submit new treatment
+    async function submitTreatment() {
+        const form = document.getElementById('treatmentForm');
+        const formData = new FormData(form);
+        // Auto-generate reference number if blank
+        let referenceNumber = formData.get('reference_number');
+        if (!referenceNumber) {
+            referenceNumber = 'REF-' + Date.now() + '-' + Math.floor(Math.random()*1000);
+            document.getElementById('referenceNumber').value = referenceNumber;
+        }
+        // Combine follow-up date and time slot
+        let followUpDate = formData.get('follow_up_date');
+        const followUpTimeSlot = formData.get('follow_up_time_slot');
+        if (followUpDate && followUpTimeSlot) {
+            const slotTimes = {
+                morning: '08:00:00',
+                afternoon: '14:00:00',
+                evening: '18:00:00',
+                all_day: '08:00:00',
+            };
+            const time = slotTimes[followUpTimeSlot] || '08:00:00';
+            followUpDate = followUpDate + ' ' + time;
+        }
+        // Get treatment date (add a date input if you want user to pick, else use today)
+        let treatmentDate = formData.get('treatment_date');
+        if (!treatmentDate) {
+            treatmentDate = new Date().toISOString().slice(0, 10);
+        }
+        try {
+            const treatmentData = {
+                patient_id: formData.get('patient'),
+                service_id: formData.get('service'),
+                treatment_date: treatmentDate,
+                diagnosis: formData.get('diagnosis'),
+                treatment_notes: formData.get('treatment_notes'),
+                reference_number: referenceNumber,
+                bill_amount: formData.get('bill_amount'),
+                follow_up_date: followUpDate || null
+            };
+            const response = await fetchWithCSRF('/api/treatments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(treatmentData)
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+            }
+            window.location.reload();
+        } catch (error) {
+            console.error('Error saving treatment:', {
+                error,
+                context: 'Submitting new treatment',
+                treatmentData: {
+                    patient_id: formData.get('patient'),
+                    service_id: formData.get('service'),
+                    reference_number: referenceNumber,
+                    bill_amount: formData.get('bill_amount')
+                },
+                timestamp: new Date().toISOString()
+            });
+            alert('Failed to save treatment. Please try again.');
+        }
+    }
+
+    // Function to view patient history
+    function viewPatientHistory(patientId) {
+        try {
+            window.location.href = `/patient/${patientId}/history`;
+        } catch (error) {
+            console.error('Error navigating to patient history:', {
+                error,
+                context: 'Viewing patient history',
+                patientId,
+                timestamp: new Date().toISOString()
+            });
+            alert('Failed to view patient history. Please try again.');
+        }
+    }
+
+    // Function to view treatment details
+    function viewTreatmentDetails(treatmentId) {
+        try {
+            window.location.href = `/treatment/${treatmentId}`;
+        } catch (error) {
+            console.error('Error navigating to treatment details:', {
+                error,
+                context: 'Viewing treatment details',
+                treatmentId,
+                timestamp: new Date().toISOString()
+            });
+            alert('Failed to view treatment details. Please try again.');
+        }
+    }
+
+    // Load data when modals are shown
+    document.getElementById('newAppointmentModal').addEventListener('show.bs.modal', loadAppointmentData);
+    document.getElementById('newTreatmentModal').addEventListener('show.bs.modal', loadTreatmentData);
+
+    // Populate patient and service dropdowns when the modal is shown
+    function populateTreatmentModalDropdowns() {
+        Promise.all([
+            fetch('/api/patients').then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            }),
+            fetch('/api/services').then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+        ])
+        .then(([patients, services]) => {
+            const patientSelect = document.getElementById('treatmentPatient');
+            const serviceSelect = document.getElementById('treatmentService');
+            
+            patientSelect.innerHTML = '<option value="">Select a patient</option>';
+            serviceSelect.innerHTML = '<option value="">Select a service</option>';
+            
+            patients.forEach(patient => {
+                const option = document.createElement('option');
+                option.value = patient.id;
+                option.textContent = `${patient.patient_id ? patient.patient_id + ' - ' : ''}${patient.first_name} ${patient.last_name}`;
+                patientSelect.appendChild(option);
+            });
+            
+            services.forEach(service => {
+                const option = document.createElement('option');
+                option.value = service.id;
+                option.textContent = service.name;
+                serviceSelect.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error populating treatment modal dropdowns:', {
+                error,
+                context: 'Loading patients and services for treatment modal',
+                urls: ['/api/patients', '/api/services'],
+                timestamp: new Date().toISOString()
+            });
+            alert('Failed to load treatment form data. Please try again.');
+        });
+    }
+    document.getElementById('newTreatmentModal').addEventListener('show.bs.modal', populateTreatmentModalDropdowns);
+</script>
+{% endblock %} 

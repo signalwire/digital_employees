@@ -1,0 +1,115 @@
+<nav class="navbar navbar-expand-md navbar-dark" aria-label="Primary navigation">
+  <div class="container-fluid">
+    <!-- Mobile Sidebar Toggle Button (only show when we want sidebar functionality) -->
+    <button class="navbar-toggler me-2 d-none" 
+            type="button" 
+            onclick="toggleMobileSidebar()" 
+            aria-controls="sidebar-navigation"
+            aria-expanded="false"
+            aria-label="Toggle sidebar navigation">
+      <i class="bi bi-list"></i>
+    </button>
+    
+    <a class="navbar-brand d-flex align-items-center" href="{{ url_for('dentist_dashboard' if session.user_type == 'dentist' else 'patient_dashboard') }}">
+      <img src="{{ url_for('serve_static', filename='css/dental_logo.png') }}" 
+           alt="Dental Office Logo" 
+           height="40" 
+           width="51"
+           style="height: 40px !important; width: 51px !important; max-height: 40px !important; max-width: 51px !important; min-height: 40px !important; min-width: 51px !important; object-fit: contain; display: block !important;" 
+           class="me-2">
+      SignalWire Dental Office System
+    </a>
+    
+    <!-- Mobile/Tablet Navbar Toggle Button -->
+    <button class="navbar-toggler" 
+            type="button" 
+            data-bs-toggle="collapse" 
+            data-bs-target="#navbarNav" 
+            aria-controls="navbarNav" 
+            aria-expanded="false" 
+            aria-label="Toggle navigation menu">
+      <i class="bi bi-list"></i>
+    </button>
+    
+    <!-- Collapsible Navigation Menu -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto" role="list">
+        {% if session.user_type == 'dentist' %}
+          <li class="nav-item" role="listitem">
+            <a class="nav-link {% if request.endpoint == 'dentist_dashboard' %}active{% endif %}" 
+               href="{{ url_for('dentist_dashboard') }}"
+               {% if request.endpoint == 'dentist_dashboard' %}aria-current="page"{% endif %}>
+              <i class="bi bi-house-door me-1" aria-hidden="true"></i>Dashboard
+            </a>
+          </li>
+          <li class="nav-item" role="listitem">
+            <a class="nav-link {% if request.endpoint == 'dentist_patients' %}active{% endif %}" 
+               href="{{ url_for('dentist_patients') }}"
+               {% if request.endpoint == 'dentist_patients' %}aria-current="page"{% endif %}>
+              <i class="bi bi-people me-1" aria-hidden="true"></i>Patients
+            </a>
+          </li>
+          <li class="nav-item" role="listitem">
+            <a class="nav-link {% if request.endpoint == 'dentist_treatment_records' %}active{% endif %}" 
+               href="{{ url_for('dentist_treatment_records') }}"
+               {% if request.endpoint == 'dentist_treatment_records' %}aria-current="page"{% endif %}>
+              <i class="bi bi-clipboard2-pulse me-1" aria-hidden="true"></i>Treatment Records
+            </a>
+          </li>
+          <li class="nav-item" role="listitem">
+            <a class="nav-link {% if request.endpoint == 'dentist_billing' %}active{% endif %}" 
+               href="{{ url_for('dentist_billing') }}"
+               {% if request.endpoint == 'dentist_billing' %}aria-current="page"{% endif %}>
+              <i class="bi bi-credit-card me-1" aria-hidden="true"></i>Billing
+            </a>
+          </li>
+          <li class="nav-item" role="listitem">
+            <a class="nav-link {% if request.endpoint == 'dentist_profile' %}active{% endif %}" 
+               href="{{ url_for('dentist_profile') }}"
+               {% if request.endpoint == 'dentist_profile' %}aria-current="page"{% endif %}>
+              <i class="bi bi-person me-1" aria-hidden="true"></i>My Profile
+            </a>
+          </li>
+        {% else %}
+          <li class="nav-item" role="listitem">
+            <a class="nav-link {% if request.endpoint == 'patient_dashboard' %}active{% endif %}" 
+               href="{{ url_for('patient_dashboard') }}"
+               {% if request.endpoint == 'patient_dashboard' %}aria-current="page"{% endif %}>
+              <i class="bi bi-house-door me-1" aria-hidden="true"></i>Dashboard
+            </a>
+          </li>
+          <li class="nav-item" role="listitem">
+            <a class="nav-link {% if request.endpoint == 'patient_treatment_history' %}active{% endif %}" 
+               href="{{ url_for('patient_treatment_history') }}"
+               {% if request.endpoint == 'patient_treatment_history' %}aria-current="page"{% endif %}>
+              <i class="bi bi-clipboard2-pulse me-1" aria-hidden="true"></i>Treatment History
+            </a>
+          </li>
+          <li class="nav-item" role="listitem">
+            <a class="nav-link {% if request.endpoint == 'patient_billing' %}active{% endif %}" 
+               href="{{ url_for('patient_billing') }}"
+               {% if request.endpoint == 'patient_billing' %}aria-current="page"{% endif %}>
+              <i class="bi bi-credit-card me-1" aria-hidden="true"></i>Billing & Insurance
+            </a>
+          </li>
+          <li class="nav-item" role="listitem">
+            <a class="nav-link {% if request.endpoint == 'patient_profile' %}active{% endif %}" 
+               href="{{ url_for('patient_profile') }}"
+               {% if request.endpoint == 'patient_profile' %}aria-current="page"{% endif %}>
+              <i class="bi bi-person me-1" aria-hidden="true"></i>My Profile
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+      
+      <div class="d-flex align-items-center">
+        <span class="navbar-text me-3" aria-label="Current user">
+          Welcome, {{ session.name }}
+        </span>
+        <a href="{{ url_for('logout') }}" 
+           class="btn btn-outline-light btn-sm"
+           role="button">Logout</a>
+      </div>
+    </div>
+  </div>
+</nav> 

@@ -1,0 +1,279 @@
+{% extends "base.html" %}
+
+{% block title %}Billing Management - Dental Office{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <!-- Page Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <h2 class="mb-1">
+        <i class="bi bi-credit-card me-2 text-primary"></i>Billing Management
+      </h2>
+      <p class="text-muted mb-0">Manage patient billing and payment history</p>
+    </div>
+  </div>
+  
+  <!-- Total Outstanding Card -->
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="bi bi-cash-stack me-2 text-warning"></i>Total Outstanding
+          </h5>
+          <h2 class="text-primary">${{ "%.2f"|format(current_balance) }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment History Section -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="bi bi-clock-history me-2 text-success"></i>Payment History
+          </h5>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th><i class="bi bi-calendar-event me-1"></i>Date</th>
+                  <th><i class="bi bi-person me-1"></i>Patient</th>
+                  <th><i class="bi bi-currency-dollar me-1"></i>Amount</th>
+                  <th><i class="bi bi-credit-card me-1"></i>Method</th>
+                  <th><i class="bi bi-check-circle me-1"></i>Status</th>
+                  <th><i class="bi bi-receipt me-1"></i>Transaction ID</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for payment in payment_history %}
+                <tr>
+                  <td>{{ payment.payment_date[:10] }}</td>
+                  <td>{{ payment.patient_name }}</td>
+                  <td>${{ "%.2f"|format(payment.amount) }}</td>
+                  <td>{{ payment.payment_method|title }}</td>
+                  <td><span class="badge bg-{{ payment.status|status_color }}">{{ payment.status|title }}</span></td>
+                  <td><small>{{ payment.transaction_id }}</small></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Billing Records Section - Optimized for better layout -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="bi bi-file-earmark-text me-2 text-info"></i>Billing Records
+          </h5>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th><i class="bi bi-calendar3 me-1"></i>Date</th>
+                  <th><i class="bi bi-person-badge me-1"></i>Patient</th>
+                  <th><i class="bi bi-gear me-1"></i>Service</th>
+                  <th><i class="bi bi-currency-dollar me-1"></i>Amount</th>
+                  <th><i class="bi bi-flag me-1"></i>Status</th>
+                  <th><i class="bi bi-calendar-check me-1"></i>Due Date</th>
+                  <th><i class="bi bi-hash me-1"></i>Reference</th>
+                  <th><i class="bi bi-eye me-1"></i>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for b in bills %}
+                <tr>
+                  <td>{{ b.created_at[:10] if b.created_at else 'N/A' }}</td>
+                  <td>
+                    <div class="fw-medium">{{ b.patient_name }}</div>
+                  </td>
+                  <td>
+                    <span class="service-label {{ b.service_name|service_class }}">{{ b.service_name }}</span>
+                  </td>
+                  <td>
+                    <div class="fw-bold text-primary">${{ "%.2f"|format(b.amount) }}</div>
+                    <small class="{% if b.patient_portion > 0 %}text-danger{% else %}text-success{% endif %}">
+                      Balance: ${{ "%.2f"|format(b.patient_portion) }}
+                    </small>
+                  </td>
+                  <td>
+                    <span class="badge status-{{ b.status }} px-2 py-1">{{ b.status|title }}</span>
+                  </td>
+                  <td>{{ b.due_date[:10] if b.due_date else 'N/A' }}</td>
+                  <td>
+                    <small class="text-muted">{{ b.reference_number or 'N/A' }}</small>
+                  </td>
+                  <td>
+                    <div class="btn-group" role="group">
+                      <button class="btn btn-outline-info btn-sm" onclick="showBillDetails({{ b.id }})" title="View Details">
+                        <i class="bi bi-eye"></i>
+                      </button>
+                      <button class="btn btn-outline-success btn-sm" onclick="showPaymentHistory({{ b.id }})" title="Payment History">
+                        <i class="bi bi-clock-history"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bill Details Modal -->
+<div class="modal fade" id="billDetailsModal" tabindex="-1" aria-labelledby="billDetailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="billDetailsModalLabel">
+          <i class="bi bi-file-earmark-text me-2"></i>Bill Details
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="billDetailsContent">
+        <!-- Bill details will be loaded here -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="bi bi-x-circle me-1"></i>Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Payment History Modal -->
+<div class="modal fade" id="paymentHistoryModal" tabindex="-1" aria-labelledby="paymentHistoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="paymentHistoryModalLabel">
+          <i class="bi bi-clock-history me-2"></i>Payment History
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table" id="paymentHistoryTable">
+          <thead>
+            <tr>
+              <th><i class="bi bi-calendar3 me-1"></i>Date</th>
+              <th><i class="bi bi-currency-dollar me-1"></i>Amount</th>
+              <th><i class="bi bi-wallet2 me-1"></i>Balance After</th>
+            </tr>
+          </thead>
+          <tbody id="paymentHistoryTableBody">
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="bi bi-x-circle me-1"></i>Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function showBillDetails(billId) {
+  fetch(`/api/bill-details/${billId}`)
+    .then(response => response.json())
+    .then(data => {
+      const content = document.getElementById('billDetailsContent');
+      
+      // Handle phone number field variations and null values
+      const patientPhone = data.patient_phone || data.phone || data.phone_number || 'N/A';
+      const patientFirstName = data.patient_first_name || 'N/A';
+      const patientLastName = data.patient_last_name || '';
+      const patientEmail = data.patient_email || 'N/A';
+      const billNumber = data.bill_number || data.id || 'N/A';
+      const statusDisplay = data.status ? data.status.charAt(0).toUpperCase() + data.status.slice(1) : 'N/A';
+      
+      content.innerHTML = `
+        <div class="row">
+          <div class="col-md-6">
+            <h6><i class="bi bi-person-badge me-1"></i>Patient Information</h6>
+            <p><strong>Name:</strong> ${patientFirstName} ${patientLastName}</p>
+            <p><strong>Email:</strong> ${patientEmail}</p>
+            <p><strong>Phone:</strong> ${patientPhone}</p>
+          </div>
+          <div class="col-md-6">
+            <h6><i class="bi bi-file-earmark-text me-1"></i>Bill Information</h6>
+            <p><strong>Bill #:</strong> ${billNumber}</p>
+            <p><strong>Reference:</strong> ${data.reference_number || 'N/A'}</p>
+            <p><strong>Status:</strong> <span class="badge status-${data.status || 'unknown'}">${statusDisplay}</span></p>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-md-6">
+            <h6><i class="bi bi-gear me-1"></i>Service Details</h6>
+            <p><strong>Service:</strong> <span class="service-label ${(data.service_name || '').toLowerCase().replace(/\s+/g, '-')}">${data.service_name || 'N/A'}</span></p>
+            <p><strong>Date:</strong> ${data.treatment_date ? data.treatment_date.substring(0, 10) : 'N/A'}</p>
+            <p><strong>Diagnosis:</strong> ${data.diagnosis || 'N/A'}</p>
+            <p><strong>Notes:</strong> ${data.treatment_notes || 'N/A'}</p>
+          </div>
+          <div class="col-md-6">
+            <h6><i class="bi bi-currency-dollar me-1"></i>Financial Details</h6>
+            <p><strong>Total Amount:</strong> $${parseFloat(data.amount || 0).toFixed(2)}</p>
+            <p><strong>Patient Portion:</strong> $${parseFloat(data.patient_portion || 0).toFixed(2)}</p>
+            <p><strong>Insurance Coverage:</strong> $${parseFloat(data.insurance_coverage || 0).toFixed(2)}</p>
+            <p><strong>Amount Paid:</strong> $${parseFloat(data.amount_paid || 0).toFixed(2)}</p>
+            <p><strong>Due Date:</strong> ${data.due_date ? data.due_date.substring(0, 10) : 'N/A'}</p>
+          </div>
+        </div>
+      `;
+      new bootstrap.Modal(document.getElementById('billDetailsModal')).show();
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Failed to load bill details');
+    });
+}
+
+function showPaymentHistory(billId) {
+  fetch(`/api/bill-payments/${billId}`)
+    .then(response => response.json())
+    .then(data => {
+      const tbody = document.getElementById('paymentHistoryTableBody');
+      tbody.innerHTML = '';
+      
+      if (data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">No payments found for this bill</td></tr>';
+      } else {
+        data.forEach(payment => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td><i class="bi bi-calendar3 me-1 text-muted"></i>${payment.payment_date}</td>
+            <td><i class="bi bi-currency-dollar me-1 text-success"></i>$${payment.amount.toFixed(2)}</td>
+            <td><i class="bi bi-wallet2 me-1 text-info"></i>$${payment.balance_after.toFixed(2)}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+      
+      new bootstrap.Modal(document.getElementById('paymentHistoryModal')).show();
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Failed to load payment history');
+    });
+}
+</script>
+{% endblock %} 
