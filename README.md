@@ -94,7 +94,7 @@ Examples using SWAIG (SignalWire AI Gateway) with various backend languages.
 #### 📽️ [Movie Bot](https://github.com/signalwire/digital_employees/tree/main/server/python_examples/moviebot)
   * Movie Expert AI Agent with SignalWire AI Gateway.
 
-#### 🦷 [Dental Office](https://github.com/signalwire/digital_employees/tree/main/server/python_examples/dental_office)
+#### 🦷 [Dental Office](https://github.com/signalwire/digital_employees/tree/main/server/python_examples/dental_office_replit)
   * Jen - A click-to-call example paired with an interactive web calendar featuring multi-factor authentication (MFA), PSTN connectivity, AI agent (digital employee) interaction, and the ability to schedule, move, and delete appointments that interact with SQLite and mock patient and dentist data.
 
 #### 💐 [Flo's Flowers 2](https://github.com/signalwire/digital_employees/tree/main/server/perl_examples/flos_flowers)
