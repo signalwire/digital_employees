@@ -2323,7 +2323,8 @@ if __name__ == '__main__':
     if not os.path.exists(app.config['DATABASE']):
         logging.info("Creating new database")
         init_db()
-    app.run(host='0.0.0.0', port=5000)
+    port = int(os.getenv("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
 EOF
 
 # Install required Python packages
@@ -2345,12 +2346,6 @@ EOF
 # Make script executable and run setup
 # apt is unavailable on Replit; python3-venv ships with the Replit Python module
 chmod +x $0
-echo "Setting up environment..."
-python3 -m venv dental_app/venv
-source dental_app/venv/bin/activate
-export PIP_USER=0  # Replit sets PIP_USER=1 globally; it breaks pip installs inside a venv
-pip install --upgrade pip
-pip install -r dental_app/requirements.txt
 echo "Initializing database..."
 python dental_app/init_db.py
 echo "Creating fake data..."
@@ -2358,7 +2353,7 @@ python dental_app/create_fake_data.py
 
 echo "----------------"
 echo "Setup Complete"
-echo "Start your venv with: source dental_app/venv/bin/activate"
+echo "Deps install natively (no venv). Run: cd dental_app && python app.py"
 echo "Run your Flask app with: python dental_app/app.py"
 
 echo " ----Edit dental_app/rename.env to .env and complete the VARIABLES---- "

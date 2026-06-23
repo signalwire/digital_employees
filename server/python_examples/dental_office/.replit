@@ -1,31 +1,36 @@
 modules = ["python-3.11", "bash"]
 
-# setup_all_with_replit.sh is the single source of truth: it generates the app
-# into dental_app/, builds a venv, installs deps, and seeds the DB. Gated on the
-# venv so it only runs on first boot; later boots start the app directly.
-run = "if [ ! -d dental_app/venv ]; then bash setup_all_with_replit.sh; fi && cd dental_app && source venv/bin/activate && python app.py"
+# Native deps (no venv): task 1 installs requirements.txt into the Replit Python
+# environment and generates the app on first boot; task 2 runs it. This mirrors
+# what the Replit AI did (installLanguagePackages + `cd dental_app && python app.py`),
+# made reproducible from the repo. app.py honors $PORT (default 5000).
+run = "pip install -r requirements.txt && (if [ ! -f dental_app/app.py ]; then bash setup_all_with_replit.sh; fi) && cd dental_app && python app.py"
 
 [nix]
 channel = "stable-24_05"
 
 [deployment]
-run = ["sh", "-c", "if [ ! -d dental_app/venv ]; then bash setup_all_with_replit.sh; fi && cd dental_app && source venv/bin/activate && python app.py"]
+run = ["sh", "-c", "pip install -r requirements.txt && (if [ ! -f dental_app/app.py ]; then bash setup_all_with_replit.sh; fi) && cd dental_app && python app.py"]
 
 [[ports]]
 localPort = 5000
 externalPort = 80
 
-# Replit drives the Run button through a workflow. This one runs the first-boot
-# setup (only when no venv exists yet), then launches the app and waits for
-# port 5000 so the webview opens. Mirrors the `run`/`deployment` commands above.
+# Replit drives the Run button through a workflow. Two sequential tasks:
+#   1) install deps natively + generate the app (first boot only)
+#   2) launch the app, waiting for port 5000 so the webview opens
 [workflows]
-runButton = "Start Dental Office"
+runButton = "Start application"
 
 [[workflows.workflow]]
-name = "Start Dental Office"
+name = "Start application"
 mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "if [ ! -d dental_app/venv ]; then bash setup_all_with_replit.sh; fi && cd dental_app && source venv/bin/activate && python app.py"
+args = "pip install -r requirements.txt && if [ ! -f dental_app/app.py ]; then bash setup_all_with_replit.sh; fi"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd dental_app && python app.py"
 waitForPort = 5000
