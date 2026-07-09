@@ -35,15 +35,15 @@ Try out the following serverless examples in the dashboard of your SignalWire Sp
 
 ## Server
 
-### Agents SDK Examples
+### SignalWire SDK (signalwire-python) Examples
 
-Examples using the [SignalWire Agents SDK](https://github.com/signalwire/signalwire-agents) for building AI-powered digital employees.
+Examples using the [SignalWire SDK](https://github.com/signalwire/signalwire-python) for building AI-powered digital employees.
 
-#### 🍽️  [Bobby's Table (Agents SDK)](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/bobbys_table)
-  * Bobby - A comprehensive restaurant reservation system built with the SignalWire Agents SDK. Features skills-based architecture, menu management, Stripe payment integration, and a kitchen dashboard.
+#### 🍽️  [Bobby's Table (SignalWire SDK)](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/bobbys_table)
+  * Bobby - A comprehensive restaurant reservation system built with the SignalWire SDK. Features skills-based architecture, menu management, Stripe payment integration, and a kitchen dashboard.
 
 #### 🛒  [Fresh Valley Market](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/fresh_valley_market)
-  * A grocery store digital employee built with the SignalWire Agents SDK.
+  * A grocery store digital employee built with the SignalWire SDK.
 
 #### 🃏  [Sigmond Blackjack](https://github.com/signalwire/digital_employees/tree/main/server/agents_sdk_examples/sigmond_blackjack)
   * A video blackjack game with an AI dealer. Players connect via WebRTC video call to play blackjack with real-time UI updates. ([Live Demo](https://blackjack.signalwire.io) | [Source Repo](https://github.com/signalwire-demos/blackjack))
